@@ -28,6 +28,8 @@ def option():
         type=int,
         default=1,
     )
+    parser.add_argument("--path_data_idx",type=str, default="dataset_idx.json")
+    parser.add_argument("--load_data_idx",type=bool,default=False)
     parser.add_argument("--print_every", type=int, default=2)
     parser.add_argument(
         "--learning_rate",

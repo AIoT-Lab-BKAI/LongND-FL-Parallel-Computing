@@ -20,10 +20,12 @@ def iid_partition(dataset, clients):
     image_idxs = [i for i in range(len(dataset))]
 
     for i in range(clients):
-        client_dict[i] = set(
-            np.random.choice(image_idxs, num_items_per_client, replace=False)
-        )
-        image_idxs = list(set(image_idxs) - client_dict[i])
+        tmp = set(
+              np.random.choice(image_idxs, num_items_per_client, replace=False)
+          )
+        client_dict[i] = [int(i) for i in tmp]
+        
+        image_idxs = list(set(image_idxs) - tmp)
 
     return client_dict
 

@@ -201,6 +201,7 @@ import json
 
 
 def save_infor(list_sam, path="sample.json"):
+    
     with open(path, "w+") as outfile:
         json.dump(list_sam, outfile)
 
@@ -212,6 +213,13 @@ def get_train_time(n_sample, list_abiprocess):
     delay = max_time - min_time
     return train_time, delay, max_time, min_time
 
+def save_dataset_idx(list_idx_sample,path="dataset_idx.json"):
+    with open(path, "w+") as outfile:
+        json.dump(list_idx_sample, outfile)
+
+def load_dataset_idx(path="data"):
+    list_idx =json.load(open(path,'r'))
+    return {int(k):v for k,v in list_idx.items()}
 
 import numpy as np
 

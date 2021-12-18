@@ -3,6 +3,7 @@ from os import stat
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
 from numpy.lib.function_base import _percentile_dispatcher
+from numpy.lib.npyio import save
 from torchvision.datasets import mnist
 from torchvision import transforms, datasets
 from modules.Client import Client
@@ -26,7 +27,8 @@ from torch.utils.data import DataLoader
 from utils.utils import read_abiprocesss, generate_abiprocess
 from utils.utils import convert_tensor_to_list, get_train_time
 from utils.option import option
-
+from models.models import MNIST_CNN
+from utils.utils import save_dataset_idx,load_dataset_idx
 
 def main():
     """ Parse command line arguments or load defaults """
@@ -59,11 +61,15 @@ def main():
     test_dataset = datasets.MNIST(
         "../data/mnist/", train=False, download=True, transform=transforms_mnist
     )
-    from models.models import MNIST_CNN
 
     mnist_cnn = MNIST_CNN()
-    list_idx_sample = iid_partition(train_dataset, args.num_clients)
-
+    if args.load_data_idx:
+        list_idx_sample = load_dataset_idx(args.path_data_idx)
+    else:
+        list_idx_sample = iid_partition(train_dataset, args.num_clients)
+        save_dataset_idx(list_idx_sample,args.path_data_idx)
+    
+    # exit()
     list_client = [
         Client(
             idx=idx,
