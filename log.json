@@ -1,0 +1,1 @@
+[{"round": 1, "clients_per_round": 4, "n_epochs": 1, "selected_clients": [46, 31, 34, 3], "drop_clients": [34], "local_loss": [[1.5579521656036377], [1.567526936531067], [1.5842946767807007]], "local_train_time": 12.338893264719797, "delay": 0.3338608452101859, "accuracy": 0.8423}]
