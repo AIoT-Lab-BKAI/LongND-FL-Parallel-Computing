@@ -38,11 +38,12 @@ def option():
         default=0.003,
     )
 
-    parser.add_argument("--mu", help="constant for prox;", type=float, default=0)
+    parser.add_argument("--mu", help="constant for prox;", type=float, default=0.1)
     parser.add_argument("--seed", help="seed for randomness;", type=int, default=10)
     parser.add_argument(
         "--drop_percent", help="percentage of slow devices", type=float, default=0.1
     )
+    parser.add_argument("--algorithm",type=str,default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
     args = parser.parse_args()
     return args

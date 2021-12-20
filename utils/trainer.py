@@ -8,7 +8,7 @@ from utils.utils import flatten_model
 
 
 def train(args):
-    (id, pid, model, client, local_model_weight, train_local_loss) = args
+    (id, pid, model, client, local_model_weight, train_local_loss,algorithm) = args
     local_model = copy.deepcopy(model)
     optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)
     criterion = nn.CrossEntropyLoss()
@@ -22,7 +22,14 @@ def train(args):
         for X, y in tqdm(train_dataloader):
             optimizer.zero_grad()
             output = local_model(X)
-            loss = criterion(output, y)
+            
+            if algorithm == "fedprox":
+                proximal_term = 0.0
+                for w, w_t in zip(local_model.parameters(), model.parameters()):
+                    proximal_term += (w-w_t).norm(2)
+                loss = criterion(output, y) + proximal_term * client.mu
+            else:
+                loss = criterion(output, y)
             loss.backward()
             optimizer.step()
             train_loss += loss.item()
@@ -31,9 +38,6 @@ def train(args):
             f"Client : {pid} Number sample : {client.n_samples} Epoch : {i}   Ep loss : {train_loss/len(train_dataloader)}"
         )
         train_local_loss[id, i] = ep_loss
-    # logging(
-    #     f"Time traing of process {pid} : {time.time() - t} loss : {ep_loss/client.eps}"
-    # )
     local_model_weight[id] = flatten_model(local_model)
 
 

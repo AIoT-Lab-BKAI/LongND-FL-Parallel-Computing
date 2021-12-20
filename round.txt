@@ -22,3 +22,17 @@
 15:04:07,358 INFO Round 0 Selected client : 3 46 31  
 15:07:13,363 INFO Round 0 Selected client : 3 46 31  
 15:07:51,228 INFO Round 0 Selected client : 3 46 31  
+22:16:14,738 INFO Round 0 Selected client : 3 46 31  
+22:18:46,841 INFO Round 0 Selected client : 3 46 31  
+22:19:24,118 INFO Round 0 Selected client : 3 46 31  
+22:20:20,433 INFO Round 0 Selected client : 3 46 31  
+22:20:31,749 INFO Round 0 Selected client : 3 46 31  
+22:20:49,496 INFO Round 0 Selected client : 3 46 31  
+22:21:22,89 INFO Round 0 Selected client : 3 46 31  
+22:23:22,529 INFO Round 0 Selected client : 3 46 31  
+22:23:45,473 INFO Round 0 Selected client : 3 46 31  
+22:25:23,470 INFO Round 0 Selected client : 3 46 31  
+22:28:56,6 INFO Round 0 Selected client : 3 46 31  
+22:30:12,833 INFO Round 0 Selected client : 3 46 31  
+22:30:52,902 INFO Round 0 Selected client : 3 46 31  
+22:31:41,563 INFO Round 0 Selected client : 3 46 31  

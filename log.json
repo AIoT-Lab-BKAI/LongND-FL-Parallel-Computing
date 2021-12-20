@@ -1,1 +1,1 @@
-[{"round": 1, "clients_per_round": 4, "n_epochs": 1, "selected_clients": [46, 31, 34, 3], "drop_clients": [34], "local_loss": [[1.5547559261322021], [1.5641511678695679], [1.581346035003662]], "local_train_time": 12.338893264719797, "delay": 0.3338608452101859, "accuracy": 0.8468}]
+[{"round": 1, "clients_per_round": 4, "n_epochs": 1, "selected_clients": [46, 31, 34, 3], "drop_clients": [34], "local_loss": [[1.825329303741455], [1.8254581689834595], [1.845266580581665]], "local_train_time": 12.338893264719797, "delay": 0.3338608452101859, "accuracy": 0.8252}]

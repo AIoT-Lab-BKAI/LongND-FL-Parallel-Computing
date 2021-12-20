@@ -79,7 +79,7 @@ def main():
             batch_size=args.batch_size,
             lr=args.learning_rate,
             epochs=args.num_epochs,
-            mu=0,
+            mu=args.mu,
         )
         for idx in range(args.num_clients)
     ]
@@ -122,13 +122,14 @@ def main():
                         list_client[train_clients[i]],
                         local_model_weight,
                         train_local_loss,
+                        args.algorithm,
                     )
                     for i in range(len(train_clients))
                 ],
             )
         # FedAvg weight local model va cap nhat weight global
         flat_tensor = aggregate(
-            local_model_weight, torch.tensor(local_n_sample).float()
+            local_model_weight, len(train_clients)
         )
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test

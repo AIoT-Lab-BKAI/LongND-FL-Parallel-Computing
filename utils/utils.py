@@ -166,9 +166,8 @@ def communicate(tensors, communication_op):
 import torch
 
 
-def aggregate(local_weight, local_sample):
-    ratio = local_sample / local_sample.sum()
-    local_sample = torch.squeeze(local_sample, 0)
+def aggregate(local_weight, n_models):
+    ratio = torch.ones(1,n_models)/n_models
     return torch.squeeze(ratio @ local_weight)
 
 
