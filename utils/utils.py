@@ -146,6 +146,10 @@ def unflatten_model(flat, model):
     # retrun temp
     return temp
 
+def load_epoch(list_client,list_epochs):
+    n_client = len(list_client)
+    for i in range(n_client):
+        list_client[i].eps = list_epochs[i]
 
 def communicate(tensors, communication_op):
     """
