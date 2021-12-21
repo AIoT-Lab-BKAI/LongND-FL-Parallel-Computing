@@ -25,5 +25,5 @@ Giá trị tham số được lấy trong options.py. Chi tiết một số tham
 ## File 
 * ```dataset_idx.json``` Lưu thông tin idx dữ liệu của từng client.
 * ```abi_process``` Lưu thông tin khả năng tính toán của từng client.
-* ```round.txt``` Lưu những client được train mỗi round
-* ```log.json``` Lưu những thông tin chi tiết trong lúc train
+* ```round.txt``` Lưu những client được train mỗi round.
+* ```log.json``` Lưu những thông tin chi tiết trong lúc train.
