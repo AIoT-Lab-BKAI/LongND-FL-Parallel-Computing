@@ -21,3 +21,9 @@ Giá trị tham số được lấy trong options.py. Chi tiết một số tham
 * ```--path_data_idx``` Địa chỉ lưu idx dữ liệu của từng client.
 * ```--load_data_idx``` Default: False. Có tải dữ liệu idx của client đã có sẵn hay không.
 * ```--mu``` Default:0. Giá trị trọng số µ trong Fedprox loss. FedAvg là trường hợp đặc biệt của FedProx khi µ = 0.
+
+## File 
+* ```dataset_idx.json``` Lưu thông tin idx dữ liệu của từng client.
+* ```abi_process``` Lưu thông tin khả năng tính toán của từng client.
+* ```round.txt``` Lưu những client được train mỗi round
+* ```log.json``` Lưu những thông tin chi tiết trong lúc train
