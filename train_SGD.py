@@ -13,9 +13,8 @@ from utils.utils import (
     select_client,
     select_drop_client,
 )
-from utils.loader import iid_partition, non_iid_partition
+from utils.loader import iid_partition, non_iid_partition, mnist_extr_noniid
 from utils.trainer import train
-from utils.utils import count_params, aggregate, unflatten_model, flatten_model
 import random
 import numpy as np
 import torch
@@ -24,11 +23,21 @@ import copy
 import logging
 from utils.trainer import test
 from torch.utils.data import DataLoader
-from utils.utils import read_abiprocesss, generate_abiprocess
-from utils.utils import convert_tensor_to_list, get_train_time
+from utils.utils import (
+    read_abiprocesss,
+    generate_abiprocess,
+    save_dataset_idx,
+    load_dataset_idx,
+    convert_tensor_to_list,
+    get_train_time,
+    count_params,
+    aggregate,
+    unflatten_model,
+    flatten_model,
+)
 from utils.option import option
 from models.models import MNIST_CNN
-from utils.utils import save_dataset_idx,load_dataset_idx
+
 
 def main():
     """ Parse command line arguments or load defaults """
@@ -66,9 +75,9 @@ def main():
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
-        list_idx_sample = iid_partition(train_dataset, args.num_clients)
-        save_dataset_idx(list_idx_sample,args.path_data_idx)
-    
+        list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
+        save_dataset_idx(list_idx_sample, args.path_data_idx)
+
     # exit()
     list_client = [
         Client(
@@ -128,11 +137,9 @@ def main():
                 ],
             )
         # FedAvg weight local model va cap nhat weight global
-        flat_tensor = aggregate(
-            local_model_weight, len(train_clients)
-        )
+        flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
-        # Test
+        # Testcccccccccccccccccc
         acc = test(mnist_cnn, DataLoader(test_dataset, 32, False))
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess

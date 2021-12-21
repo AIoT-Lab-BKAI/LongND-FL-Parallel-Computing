@@ -20,11 +20,9 @@ def iid_partition(dataset, clients):
     image_idxs = [i for i in range(len(dataset))]
 
     for i in range(clients):
-        tmp = set(
-              np.random.choice(image_idxs, num_items_per_client, replace=False)
-          )
+        tmp = set(np.random.choice(image_idxs, num_items_per_client, replace=False))
         client_dict[i] = [int(i) for i in tmp]
-        
+
         image_idxs = list(set(image_idxs) - tmp)
 
     return client_dict
@@ -75,7 +73,99 @@ def non_iid_partition(
             )
     return client_dict
 
+
+import numpy as np
+from torchvision import datasets, transforms
+
+
+def get_dataset_mnist_extr_noniid(num_users, n_class, nsamples, rate_unbalance):
+    data_dir = "../data/mnist/"
+    apply_transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+    )
+    train_dataset = datasets.MNIST(
+        data_dir, train=True, download=True, transform=apply_transform
+    )
+
+    # Chose euqal splits for every user
+    user_groups_train = mnist_extr_noniid(
+        train_dataset, num_users, n_class, nsamples, rate_unbalance
+    )
+    return train_dataset, user_groups_train
+
+
+def mnist_extr_noniid(train_dataset, num_users, n_class, num_samples, rate_unbalance):
+    num_shards_train, num_imgs_train = int(60000 / num_samples), num_samples
+    num_classes = 10
+    assert n_class * num_users <= num_shards_train
+    assert n_class <= num_classes
+    idx_shard = [i for i in range(num_shards_train)]
+    dict_users_train = {i: np.array([]) for i in range(num_users)}
+    idxs = np.arange(num_shards_train * num_imgs_train)
+    labels = np.array(train_dataset.targets)
+
+    # sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
+    labels = idxs_labels[1, :]
+
+    # divide and assign
+    for i in range(num_users):
+        user_labels = np.array([])
+        rand_set = set(np.random.choice(idx_shard, n_class, replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        unbalance_flag = 0
+        for rand in rand_set:
+            if unbalance_flag == 0:
+                dict_users_train[i] = np.concatenate(
+                    (
+                        dict_users_train[i],
+                        idxs[rand * num_imgs_train : (rand + 1) * num_imgs_train],
+                    ),
+                    axis=0,
+                )
+                user_labels = np.concatenate(
+                    (
+                        user_labels,
+                        labels[rand * num_imgs_train : (rand + 1) * num_imgs_train],
+                    ),
+                    axis=0,
+                )
+            else:
+                dict_users_train[i] = np.concatenate(
+                    (
+                        dict_users_train[i],
+                        idxs[
+                            rand
+                            * num_imgs_train : int(
+                                (rand + rate_unbalance) * num_imgs_train
+                            )
+                        ],
+                    ),
+                    axis=0,
+                )
+                user_labels = np.concatenate(
+                    (
+                        user_labels,
+                        labels[
+                            rand
+                            * num_imgs_train : int(
+                                (rand + rate_unbalance) * num_imgs_train
+                            )
+                        ],
+                    ),
+                    axis=0,
+                )
+            unbalance_flag = 1
+            idxi = dict_users_train[i]
+            dict_users_train[i] = [int(i) for i in idxi]
+    return dict_users_train
+
+
 from torch.utils.data import Dataset
+
+
 class CustomDataset(Dataset):
     def __init__(self, dataset, idxs):
         self.dataset = dataset

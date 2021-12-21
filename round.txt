@@ -36,3 +36,8 @@
 22:30:12,833 INFO Round 0 Selected client : 3 46 31  
 22:30:52,902 INFO Round 0 Selected client : 3 46 31  
 22:31:41,563 INFO Round 0 Selected client : 3 46 31  
+08:07:01,855 INFO Round 0 Selected client : 3 25 19  
+08:08:53,10 INFO Round 0 Selected client : 3 25 19  
+08:09:14,840 INFO Round 0 Selected client : 3 25 19  
+08:09:51,431 INFO Round 0 Selected client : 3 25 19  
+08:24:15,499 INFO Round 0 Selected client : 3 25 19  
