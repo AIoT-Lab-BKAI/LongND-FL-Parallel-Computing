@@ -65,6 +65,9 @@ def select_drop_client(list_cl_per_round, drop_percent):
     import math
 
     n_drop = max(math.floor(n_cl * drop_percent), 1)
+    # Dung test for use all clients at a time
+    if drop_percent == 0.0:
+        n_drop = 0
     drop_client = np.random.choice(list_cl_per_round, n_drop)
     train_clinet = list(set(list_cl_per_round) - set(drop_client))
     return drop_client, train_clinet

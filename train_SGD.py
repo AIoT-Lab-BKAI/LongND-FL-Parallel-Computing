@@ -37,6 +37,7 @@ from utils.utils import (
 )
 from utils.option import option
 from models.models import MNIST_CNN
+from ddpg_agent.ddpg import *
 
 
 def main():
@@ -97,8 +98,18 @@ def main():
     list_abiprocess = []
     list_sam = []
 
+    # Agent to get next settings for this round
+    # This is dimensions' configurations for the DQN agent
+    state_dim = args.num_clients * 3 # each agent {L, e, n}
+    action_dim = args.num_clients * 2
+
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
+
+
     for round in range(args.num_rounds):
         print("Train :------------------------------")
+        # mocking the number of epochs that are assigned for each client.
+        local_num_epochs = [1 for _ in range(0, args.num_clients)]
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(
@@ -137,6 +148,8 @@ def main():
                 ],
             )
         # FedAvg weight local model va cap nhat weight global
+        done = None
+        dqn_weights = agent.get_action(train_local_loss, local_n_sample, local_num_epochs, done)
         flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Testcccccccccccccccccc

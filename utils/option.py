@@ -14,7 +14,7 @@ def option():
         "--clients_per_round",
         help="number of clients trained per round;",
         type=int,
-        default=4,
+        default=50,
     )
     parser.add_argument("--num_samples_per_client", type=int, default=10)
     parser.add_argument("--num_class_per_client", type=int, default=2)
@@ -43,7 +43,7 @@ def option():
     parser.add_argument("--mu", help="constant for prox;", type=float, default=0.1)
     parser.add_argument("--seed", help="seed for randomness;", type=int, default=10)
     parser.add_argument(
-        "--drop_percent", help="percentage of slow devices", type=float, default=0.1
+        "--drop_percent", help="percentage of slow devices", type=float, default=0.0
     )
     parser.add_argument("--algorithm", type=str, default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
