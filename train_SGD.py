@@ -1,9 +1,4 @@
 import argparse
-from os import stat
-from numpy.core.arrayprint import str_format
-from numpy.core.defchararray import count
-from numpy.lib.function_base import _percentile_dispatcher
-from numpy.lib.npyio import save
 from torchvision.datasets import mnist
 from torchvision import transforms, datasets
 from modules.Client import Client
@@ -39,11 +34,11 @@ from utils.option import option
 from models.models import MNIST_CNN
 from ddpg_agent.ddpg import *
 
+from utils.utils import load_epoch
 
 def main():
     """ Parse command line arguments or load defaults """
     args = option()
-
     random.seed(args.seed)
     np.random.seed(args.seed)
     torch.cuda.manual_seed(args.seed)
@@ -105,6 +100,7 @@ def main():
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
 
+    list_epochs = [2 for i in range(args.num_clients)]
 
     for round in range(args.num_rounds):
         print("Train :------------------------------")
@@ -120,16 +116,17 @@ def main():
         local_model_weight = torch.zeros(len(train_clients), n_params)
         local_model_weight.share_memory_()
 
-        train_local_loss = torch.zeros(len(train_client), args.num_epochs)
+        # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
+        train_local_loss = torch.zeros(len(train_client),100)
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess.append([list_client[i].abiprocess for i in train_clients])
-        local_n_sample = [list_client[i].n_samples for i in train_clients]
+        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * np.array([list_client[i].eps for i in train_clients])
         str_sltc = ""
         for i in train_clients:
             str_sltc += str(i) + " "
         logging.info(f"Round {round} Selected client : {str_sltc} ")
-
+        list_client[0].eps = 10
         # Huan luyen song song tren cac client
         with mp.Pool(args.num_core) as pool:
             pool.map(
@@ -152,7 +149,7 @@ def main():
         dqn_weights = agent.get_action(train_local_loss, local_n_sample, local_num_epochs, done)
         flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
-        # Testcccccccccccccccccc
+        # Test
         acc = test(mnist_cnn, DataLoader(test_dataset, 32, False))
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess
@@ -169,6 +166,7 @@ def main():
             "accuracy": acc,
         }
         list_sam.append(sample)
+        load_epoch(list_client,list_epochs)
     save_infor(list_sam, "log.json")
 
 

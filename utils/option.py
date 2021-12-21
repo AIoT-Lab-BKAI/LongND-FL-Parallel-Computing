@@ -16,7 +16,7 @@ def option():
         type=int,
         default=50,
     )
-    parser.add_argument("--num_samples_per_client", type=int, default=10)
+    # parser.add_argument("--", type=int, default=10)
     parser.add_argument("--num_class_per_client", type=int, default=2)
     parser.add_argument("--rate_balance", type=int, default=0, help="0 is unbalance")
     parser.add_argument(
@@ -39,7 +39,7 @@ def option():
         type=float,
         default=0.003,
     )
-
+    parser.add_argument("--num_samples_per_client",type=int, default=10)
     parser.add_argument("--mu", help="constant for prox;", type=float, default=0.1)
     parser.add_argument("--seed", help="seed for randomness;", type=int, default=10)
     parser.add_argument(
