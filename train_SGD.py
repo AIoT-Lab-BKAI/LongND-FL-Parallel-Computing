@@ -146,7 +146,7 @@ def main():
             )
         # FedAvg weight local model va cap nhat weight global
         done = None
-        dqn_weights = agent.get_action(train_local_loss, local_n_sample, local_num_epochs, done)
+        dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, local_num_epochs, done)
         flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test

@@ -136,7 +136,7 @@ class DDPG_Agent:
         if self.frame_idx >= self.max_frames:
             # maybe stop training?
             state = self.reset_state()
-        # state  = torch.FloatTensor(state).unsqueeze(0).to(device) # current state
+        state = torch.FloatTensor(state).unsqueeze(0).to(device) # current state
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
         action = self.policy_net.get_action(state)

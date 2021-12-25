@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class ValueNetwork(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_size, init_w=3e-3):
         super(ValueNetwork, self).__init__()
@@ -12,6 +13,7 @@ class ValueNetwork(nn.Module):
         
         self.linear3.weight.data.uniform_(-init_w, init_w)
         self.linear3.bias.data.uniform_(-init_w, init_w)
+        # self.device = device
         
     def forward(self, state, action):
         x = torch.cat([state, action], 1)
@@ -40,6 +42,7 @@ class PolicyNetwork(nn.Module):
         return x
     
     def get_action(self, state):
-        # state  = torch.FloatTensor(state).unsqueeze(0).to(device)
+        # device = torch.device("cuda" if use_cuda else "cpu")
+        # state = torch.DoubleTensor(state).unsqueeze(0)
         action = self.forward(state)
         return action.detach().cpu().numpy()[0, 0]

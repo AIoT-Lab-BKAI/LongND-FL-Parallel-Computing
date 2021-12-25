@@ -12,7 +12,7 @@ def plot(frame_idx, rewards):
     plt.show()
 
 def get_state(losses, epochs, num_samples):
-    losses = np.asarray(losses)
+    losses = np.asarray(losses).reshape((len(epochs), 1))
     epochs = np.asarray(epochs).reshape((len(epochs), 1))
     num_samples = np.asarray(num_samples).reshape((len(num_samples), 1))
     print('break point here')
