@@ -6,6 +6,8 @@ import gym
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from gym import spaces
+
 import torch.nn.functional as F
 from torch.distributions import Normal
 
@@ -14,7 +16,8 @@ from torch.distributions import Normal
 from ddpg_agent.policy import NormalizedActions
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
-env = NormalizedActions(gym.make("Pendulum-v1"))
+# env = NormalizedActions(gym.make("Pendulum-v1"))
+# env = NormalizedActions(gym.make("Pendulum-v0"))
 
 
 class DDPG_Agent:
@@ -40,7 +43,8 @@ class DDPG_Agent:
         self.episode_reward = 0
 
         # self.env = NormalizedActions(gym.make("Pendulum-v0"))
-        self.ou_noise = OUNoise(env.action_space)
+        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
+        self.ou_noise = OUNoise(new_action_space)
 
         # state_dim = env.observation_space.shape[0]
         # action_dim = env.action_space.shape[0]
