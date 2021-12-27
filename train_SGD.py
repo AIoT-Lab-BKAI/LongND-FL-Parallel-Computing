@@ -40,6 +40,7 @@ from models.models import MNIST_CNN
 
 from utils.utils import load_epoch
 
+
 def main():
     """ Parse command line arguments or load defaults """
     args = option()
@@ -48,7 +49,7 @@ def main():
     torch.cuda.manual_seed(args.seed)
     torch.manual_seed(args.seed)
 
-    logname = "round.txt"
+    logname = args.logs_dir + "/" + args.logs_file + "_round.txt"
     logging.basicConfig(
         filename=logname,
         filemode="a",
@@ -75,7 +76,8 @@ def main():
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
-        list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
+        list_idx_sample = mnist_extr_noniid(
+            train_dataset, args.num_clients, args.num_class_per_client, args.num_samples_per_client, args.rate_balance)
         save_dataset_idx(list_idx_sample, args.path_data_idx)
 
     # exit()
@@ -102,7 +104,8 @@ def main():
     for round in range(args.num_rounds):
         print("Train :------------------------------")
         # Ngau nhien lua chon client de train
-        selected_client = select_client(args.num_clients, args.clients_per_round)
+        selected_client = select_client(
+            args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(
             selected_client, args.drop_percent
         )
@@ -111,17 +114,18 @@ def main():
         local_model_weight = torch.zeros(len(train_clients), n_params)
         local_model_weight.share_memory_()
 
-        # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
-        train_local_loss = torch.zeros(len(train_client),100)
+        train_local_loss = torch.zeros(len(train_client), args.num_epochs)
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
-        list_abiprocess.append([list_client[i].abiprocess for i in train_clients])
-        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * np.array([list_client[i].eps for i in train_clients])
+        list_abiprocess.append(
+            [list_client[i].abiprocess for i in train_clients])
+        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
+            np.array([list_client[i].eps for i in train_clients])
         str_sltc = ""
         for i in train_clients:
             str_sltc += str(i) + " "
         logging.info(f"Round {round} Selected client : {str_sltc} ")
-        list_client[0].eps = 10
+
         # Huan luyen song song tren cac client
         with mp.Pool(args.num_core) as pool:
             pool.map(
@@ -159,10 +163,9 @@ def main():
             "accuracy": acc,
         }
         list_sam.append(sample)
-        load_epoch(list_client,list_epochs)
-    save_infor(list_sam, "log.json")
+        load_epoch(list_client, list_epochs)
+    save_infor(list_sam, args.logs_dir + "/" + args.logs_file)
 
 
 if __name__ == "__main__":
     main()
-

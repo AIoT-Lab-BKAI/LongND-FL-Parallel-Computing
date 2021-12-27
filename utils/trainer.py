@@ -1,3 +1,5 @@
+import numpy as np
+from sklearn.metrics import accuracy_score
 import copy
 import logging
 import torch
@@ -8,7 +10,7 @@ from utils.utils import flatten_model
 
 
 def train(args):
-    (id, pid, model, client, local_model_weight, train_local_loss,algorithm) = args
+    (id, pid, model, client, local_model_weight, train_local_loss, algorithm) = args
     local_model = copy.deepcopy(model)
     optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)
     criterion = nn.CrossEntropyLoss()
@@ -22,7 +24,7 @@ def train(args):
         for X, y in tqdm(train_dataloader):
             optimizer.zero_grad()
             output = local_model(X)
-            
+
             if algorithm == "fedprox":
                 proximal_term = 0.0
                 for w, w_t in zip(local_model.parameters(), model.parameters()):
@@ -41,10 +43,6 @@ def train(args):
     local_model_weight[id] = flatten_model(local_model)
 
 
-from sklearn.metrics import accuracy_score
-import numpy as np
-
-
 def test(model, test_dataloader):
     print("Test :-------------------------------")
     y_prd = []
@@ -57,4 +55,3 @@ def test(model, test_dataloader):
     y_ = np.concatenate([i.numpy() for i in y_prd])
     y_gt = np.concatenate([i.numpy() for i in y_grt])
     return accuracy_score(y_, y_gt)
-
