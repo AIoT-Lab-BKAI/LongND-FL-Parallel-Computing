@@ -204,7 +204,6 @@ import json
 
 
 def save_infor(list_sam, path="sample.json"):
-    
     with open(path, "w+") as outfile:
         json.dump(list_sam, outfile)
 

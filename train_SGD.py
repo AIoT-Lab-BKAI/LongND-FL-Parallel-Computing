@@ -1,4 +1,9 @@
 import argparse
+from os import stat
+from numpy.core.arrayprint import str_format
+from numpy.core.defchararray import count
+from numpy.lib.function_base import _percentile_dispatcher
+from numpy.lib.npyio import save
 from torchvision.datasets import mnist
 from torchvision import transforms, datasets
 from modules.Client import Client
@@ -32,7 +37,6 @@ from utils.utils import (
 )
 from utils.option import option
 from models.models import MNIST_CNN
-
 from utils.utils import load_epoch
 
 def main():
@@ -89,10 +93,10 @@ def main():
     ]
     n_params = count_params(mnist_cnn)
     list_trained_client = []
-    list_abiprocess = []
+    
     list_sam = []
 
-    list_epochs = [2 for i in range(args.num_clients)]
+    list_epochs = [args.num_epochs for i in range(args.num_clients)]
 
     for round in range(args.num_rounds):
         print("Train :------------------------------")
@@ -110,13 +114,13 @@ def main():
         train_local_loss = torch.zeros(len(train_client),100)
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
-        list_abiprocess.append([list_client[i].abiprocess for i in train_clients])
+        list_abiprocess = [list_client[i].abiprocess for i in train_clients]
+        print([list_client[i].eps for i in train_clients])
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * np.array([list_client[i].eps for i in train_clients])
         str_sltc = ""
         for i in train_clients:
             str_sltc += str(i) + " "
         logging.info(f"Round {round} Selected client : {str_sltc} ")
-        list_client[0].eps = 10
         # Huan luyen song song tren cac client
         with mp.Pool(args.num_core) as pool:
             pool.map(
@@ -138,7 +142,7 @@ def main():
         flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
-        acc = test(mnist_cnn, DataLoader(test_dataset, 32, False))
+        acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess
         )
@@ -152,9 +156,10 @@ def main():
             "local_train_time": max_time,
             "delay": delay,
             "accuracy": acc,
+            "test_loss": test_loss
         }
         list_sam.append(sample)
-        load_epoch(list_client,list_epochs)
+        # load_epoch(list_client,list_epochs)
     save_infor(list_sam, "log.json")
 
 
