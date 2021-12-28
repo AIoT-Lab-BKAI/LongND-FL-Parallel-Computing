@@ -176,11 +176,11 @@ import torch
 def aggregate(local_weight, n_models, dqn_weights):
     weighted_ratio = []
     for cli in range(0, n_models):
-        weighted_ratio.append(np.random.normal(dqn_weights[cli*2], dqn_weights[cli*2+1], 1))
-    ratio = torch.Tensor(weighted_ratio)/n_models
+        weighted_ratio.append(np.random.normal(dqn_weights[0, cli*2], dqn_weights[0, cli*2+1], 1))
+    ratio = torch.Tensor(np.array(weighted_ratio))/n_models
     # ratio = torch.ones(1,n_models)/n_models
-    print(ratio.shape)
-    print(local_weight.shape)
+    # print(ratio.shape)
+    # print(local_weight.shape)
     # return torch.squeeze(ratio @ local_weight.t())
     return torch.squeeze(ratio.t() @ local_weight)
 
