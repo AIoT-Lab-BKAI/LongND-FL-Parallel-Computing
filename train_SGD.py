@@ -121,8 +121,8 @@ def main():
         local_model_weight = torch.zeros(len(train_clients), n_params)
         local_model_weight.share_memory_()
 
-        # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
-        train_local_loss = torch.zeros(len(train_client),100)
+        train_local_loss = torch.zeros(len(train_client), args.num_epochs)
+        # train_local_loss = torch.zeros(len(train_client),100)
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess.append([list_client[i].abiprocess for i in train_clients])
