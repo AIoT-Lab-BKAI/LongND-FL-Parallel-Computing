@@ -24,9 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="af667320-65f4-41db-98e9-da4c8ca4e8df" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/round.txt" beforeDir="false" afterPath="$PROJECT_DIR$/round.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_SGD.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_SGD.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/option.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/option.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ddpg_agent/ddpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/ddpg_agent/ddpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ddpg_agent/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/ddpg_agent/networks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -21,7 +21,7 @@ device = torch.device("cuda" if use_cuda else "cpu")
 
 
 class DDPG_Agent:
-    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=500, max_frames=12000, batch_size=128):
+    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=500, max_frames=12000, batch_size=16):
         # super(DDPG_Agent, self).__init__()
         self.lr = 3e-2
         self.num_steps = 20  # number of iterations for each episodes

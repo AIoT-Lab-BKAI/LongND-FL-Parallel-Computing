@@ -16,7 +16,7 @@ class ValueNetwork(nn.Module):
         # self.device = device
         
     def forward(self, state, action):
-        x = torch.cat([state, action], 1)
+        x = torch.cat([state, action], -1)
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
         x = self.linear3(x)
