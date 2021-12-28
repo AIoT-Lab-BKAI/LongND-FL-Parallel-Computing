@@ -53,6 +53,6 @@ def option():
     parser.add_argument("--num_core", type=int, default=2)
 
     parser.add_argument("--logs_dir", type=str, default="logs")
-    parser.add_argument("--logs_file", type=str, default="logs.json")
+    parser.add_argument("--logs_file", type=str, default="logs")
     args = parser.parse_args()
     return args

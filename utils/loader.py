@@ -1,3 +1,5 @@
+from torch.utils.data import Dataset
+from torchvision import datasets, transforms
 import numpy as np
 
 
@@ -6,7 +8,7 @@ def iid_partition(dataset, clients):
   I.I.D paritioning of data over clients
   Shuffle the data
   Split it between clients
-  
+
   params:
     - dataset (torch.utils.Dataset): Dataset containing the MNIST Images
     - clients (int): Number of Clients to split the data between
@@ -20,7 +22,8 @@ def iid_partition(dataset, clients):
     image_idxs = [i for i in range(len(dataset))]
 
     for i in range(clients):
-        tmp = set(np.random.choice(image_idxs, num_items_per_client, replace=False))
+        tmp = set(np.random.choice(
+            image_idxs, num_items_per_client, replace=False))
         client_dict[i] = [int(i) for i in tmp]
 
         image_idxs = list(set(image_idxs) - tmp)
@@ -68,14 +71,11 @@ def non_iid_partition(
 
         for rand in rand_set:
             client_dict[i] = np.concatenate(
-                (client_dict[i], idxs[rand * shards_size : (rand + 1) * shards_size]),
+                (client_dict[i], idxs[rand *
+                 shards_size: (rand + 1) * shards_size]),
                 axis=0,
             )
     return client_dict
-
-
-import numpy as np
-from torchvision import datasets, transforms
 
 
 def get_dataset_mnist_extr_noniid(num_users, n_class, nsamples, rate_unbalance):
@@ -121,14 +121,16 @@ def mnist_extr_noniid(train_dataset, num_users, n_class, num_samples, rate_unbal
                 dict_users_train[i] = np.concatenate(
                     (
                         dict_users_train[i],
-                        idxs[rand * num_imgs_train : (rand + 1) * num_imgs_train],
+                        idxs[rand *
+                             num_imgs_train: (rand + 1) * num_imgs_train],
                     ),
                     axis=0,
                 )
                 user_labels = np.concatenate(
                     (
                         user_labels,
-                        labels[rand * num_imgs_train : (rand + 1) * num_imgs_train],
+                        labels[rand *
+                               num_imgs_train: (rand + 1) * num_imgs_train],
                     ),
                     axis=0,
                 )
@@ -138,7 +140,7 @@ def mnist_extr_noniid(train_dataset, num_users, n_class, num_samples, rate_unbal
                         dict_users_train[i],
                         idxs[
                             rand
-                            * num_imgs_train : int(
+                            * num_imgs_train: int(
                                 (rand + rate_unbalance) * num_imgs_train
                             )
                         ],
@@ -150,7 +152,7 @@ def mnist_extr_noniid(train_dataset, num_users, n_class, num_samples, rate_unbal
                         user_labels,
                         labels[
                             rand
-                            * num_imgs_train : int(
+                            * num_imgs_train: int(
                                 (rand + rate_unbalance) * num_imgs_train
                             )
                         ],
@@ -161,9 +163,6 @@ def mnist_extr_noniid(train_dataset, num_users, n_class, num_samples, rate_unbal
             idxi = dict_users_train[i]
             dict_users_train[i] = [int(i) for i in idxi]
     return dict_users_train
-
-
-from torch.utils.data import Dataset
 
 
 class CustomDataset(Dataset):

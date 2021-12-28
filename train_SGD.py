@@ -99,7 +99,7 @@ def main():
     list_abiprocess = []
     list_sam = []
 
-    list_epochs = [2 for i in range(args.num_clients)]
+    # list_epochs = [2 for i in range(args.num_clients)]
 
     for round in range(args.num_rounds):
         print("Train :------------------------------")
@@ -117,7 +117,7 @@ def main():
         train_local_loss = torch.zeros(len(train_client), args.num_epochs)
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
-        list_abiprocess.append(
+        list_abiprocess = (
             [list_client[i].abiprocess for i in train_clients])
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
             np.array([list_client[i].eps for i in train_clients])
@@ -163,8 +163,10 @@ def main():
             "accuracy": acc,
         }
         list_sam.append(sample)
-        load_epoch(list_client, list_epochs)
-    save_infor(list_sam, args.logs_dir + "/" + args.logs_file)
+
+        # This function update for RL
+        # load_epoch(list_client, list_epochs)
+    save_infor(list_sam, args.logs_dir + "/" + args.logs_file + ".json")
 
 
 if __name__ == "__main__":
