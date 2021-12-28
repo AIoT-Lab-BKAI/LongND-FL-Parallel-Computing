@@ -1,4 +1,7 @@
 import argparse
+from math import ceil
+import os.path
+from os import path
 from os import stat
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
@@ -57,7 +60,12 @@ def main():
         datefmt="%H:%M:%S",
         level=logging.INFO,
     )
-
+    path_to_save_log = './'
+    if args.log_dir:
+        print(args.log_dir)
+        if not path.exists(args.log_dir):
+            os.mkdir(args.log_dir, mode=0o777, dir_fd=None)
+        path_to_save_log = args.log_dir
     generate_abiprocess(mu=100, sigma=5, n_client=args.num_clients)
     list_abiprocess_client = read_abiprocesss()
     assert len(list_abiprocess_client) == args.num_clients, "list abiprocesss k du"
@@ -101,7 +109,8 @@ def main():
     # Agent to get next settings for this round
     # This is dimensions' configurations for the DQN agent
     state_dim = args.num_clients * 3 # each agent {L, e, n}
-    action_dim = args.num_clients * 2
+    # action_dim = args.num_clients * 2
+    action_dim = args.num_clients * 3   # plus action for numbers of epochs for each client
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
 
@@ -110,7 +119,8 @@ def main():
     for round in range(args.num_rounds):
         print("Train :------------------------------")
         # mocking the number of epochs that are assigned for each client.
-        local_num_epochs = [1 for _ in range(0, args.num_clients)]
+        # local_num_epochs = [1 for _ in range(0, args.num_clients)]
+        dqn_list_epochs = [2 for _ in range(0, args.num_clients)]
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(
@@ -121,8 +131,8 @@ def main():
         local_model_weight = torch.zeros(len(train_clients), n_params)
         local_model_weight.share_memory_()
 
-        train_local_loss = torch.zeros(len(train_client), args.num_epochs)
-        # train_local_loss = torch.zeros(len(train_client),100)
+        # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
+        train_local_loss = torch.zeros(len(train_client), 100) # maximum number of epochs for client is 100
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess.append([list_client[i].abiprocess for i in train_clients])
@@ -151,7 +161,10 @@ def main():
             )
         # FedAvg weight local model va cap nhat weight global
         done = None
-        dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, local_num_epochs, done)
+        num_cli = len(train_clients)
+        dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
+        # dqn_list_epochs = int(dqn_weights[num_cli*2:]*10)
+        dqn_list_epochs = [ceil(dqn_weights[i]*100) if ceil(dqn_weights[i]*100) > 0 else 1  for i in range(num_cli*2, dqn_weights.shape[0])]
         flat_tensor = aggregate(local_model_weight, len(train_clients), dqn_weights)
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
@@ -171,8 +184,8 @@ def main():
             "accuracy": acc,
         }
         list_sam.append(sample)
-        load_epoch(list_client,list_epochs)
-    save_infor(list_sam, "log.json")
+        load_epoch(list_client, dqn_list_epochs)
+    save_infor(list_sam, path_to_save_log+"/log.json")
 
 
 if __name__ == "__main__":

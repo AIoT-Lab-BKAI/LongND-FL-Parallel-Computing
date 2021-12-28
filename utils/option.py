@@ -47,5 +47,6 @@ def option():
     )
     parser.add_argument("--algorithm", type=str, default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
+    parser.add_argument("--log_dir", type=str, default='./')
     args = parser.parse_args()
     return args
