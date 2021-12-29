@@ -21,7 +21,7 @@ device = torch.device("cuda" if use_cuda else "cpu")
 
 
 class DDPG_Agent:
-    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=500, max_frames=12000, batch_size=32):
+    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=500, max_frames=12000, batch_size=16):
         # super(DDPG_Agent, self).__init__()
         self.lr = 3e-2
         self.num_steps = 20  # number of iterations for each episodes
@@ -91,11 +91,11 @@ class DDPG_Agent:
         state, action, reward, next_state, done = self.replay_buffer.sample(
             self.batch_size)
 
-        state = torch.FloatTensor(state).to(device)
-        next_state = torch.FloatTensor(next_state).to(device)
-        action = torch.FloatTensor(action).to(device)
-        reward = torch.FloatTensor(reward).unsqueeze(1).to(device)
-        done = torch.FloatTensor(np.float32(done)).unsqueeze(1).to(device)
+        state = torch.FloatTensor(state).squeeze().to(device)
+        next_state = torch.FloatTensor(next_state).squeeze().to(device)
+        action = torch.FloatTensor(action).squeeze().to(device)
+        reward = torch.FloatTensor(reward).to(device)
+        done = torch.FloatTensor(np.float32(done)).to(device)
 
         policy_loss = self.value_net(state, self.policy_net(state))
         # print(policy_loss)
@@ -103,15 +103,18 @@ class DDPG_Agent:
         # print(policy_loss.item())
         next_action = self.target_policy_net(next_state)
         target_value = self.target_value_net(next_state, next_action.detach())
-        # print(f'DONE DONE DONE: {done}')
-        expected_value = reward + (1.0 - done) * gamma * target_value
+        # print(f'DONE DONE DONE: {done.shape}')
+        # print(f'Reward: {reward.shape}')
+        # print(f'target_value: {target_value.shape}')
+
+        expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
         expected_value = torch.clamp(expected_value, min_value, max_value)
 
         value = self.value_net(state, action)
         # print(f'VALUE: {value.shape}')
         # print(f'E VALUE: {expected_value.detach().shape}')
-        value_loss = self.value_criterion(value, expected_value.detach())
-        print(f'value loss: {value_loss.item()}')
+        value_loss = self.value_criterion(value, expected_value.unsqueeze(1).detach())
+        # print(f'value loss: {value_loss.item()}')
 
         self.policy_optimizer.zero_grad()
         policy_loss.backward()

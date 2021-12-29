@@ -165,7 +165,7 @@ def main():
         dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
         # dqn_list_epochs = int(dqn_weights[num_cli*2:]*10)
         # print(f'dqn weight: {dqn_weights.shape}')
-        dqn_list_epochs = [ceil(dqn_weights[0,i]*100) if ceil(dqn_weights[0,i]*100) > 0 else 1  for i in range(num_cli*2, dqn_weights.shape[1])]
+        dqn_list_epochs = [ceil(dqn_weights[0,i]*100) if ceil(dqn_weights[0,i]*100) > 0 else 1 for i in range(num_cli*2, dqn_weights.shape[1])]
         flat_tensor = aggregate(local_model_weight, len(train_clients), dqn_weights)
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
