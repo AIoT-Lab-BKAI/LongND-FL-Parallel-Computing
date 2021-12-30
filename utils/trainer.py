@@ -9,17 +9,22 @@ from utils.utils import flatten_model
 
 def train(args):
     (id, pid, model, client, local_model_weight, train_local_loss,algorithm) = args
-    local_model = copy.deepcopy(model)
+    device = torch.device("cuda")
+    model = model.to(device)
+    local_model = copy.deepcopy(model).to(device)
     optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)
     criterion = nn.CrossEntropyLoss()
     t = time.time()
     local_model.train()
 
     for i in range(client.eps):
+        
         ep_loss = 0
         train_dataloader = client.train_dataloader
         train_loss = 0.0
         for X, y in tqdm(train_dataloader):
+            X = X.to(device)
+            y = y.to(device)
             optimizer.zero_grad()
             output = local_model(X)
             

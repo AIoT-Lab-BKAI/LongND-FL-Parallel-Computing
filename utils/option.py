@@ -23,7 +23,7 @@ def option():
         "--batch_size",
         help="batch size when clients train on data;",
         type=int,
-        default=2,
+        default=32,
     )
     parser.add_argument(
         "--num_epochs",

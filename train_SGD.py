@@ -69,7 +69,7 @@ def main():
     test_dataset = datasets.MNIST(
         "../data/mnist/", train=False, download=True, transform=transforms_mnist
     )
-
+    # device = torch.device("cuda")
     mnist_cnn = MNIST_CNN()
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
