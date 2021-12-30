@@ -9,7 +9,7 @@ def option():
     parser.add_argument(
         "--eval_every", help="evaluate every ____ rounds;", type=int, default=-1
     )
-    parser.add_argument("--num_clients", type=int, default=50)
+    parser.add_argument("--num_clients", type=int, default=10)
     parser.add_argument(
         "--clients_per_round",
         help="number of clients trained per round;",

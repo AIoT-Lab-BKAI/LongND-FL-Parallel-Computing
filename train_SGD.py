@@ -13,7 +13,7 @@ from utils.utils import (
     select_client,
     select_drop_client,
 )
-from utils.loader import iid_partition, non_iid_partition, mnist_extr_noniid
+from utils.loader import iid_partition, non_iid_partition, mnist_extr_noniid,mnist_noniid_client_level
 from utils.trainer import train
 import random
 import numpy as np
@@ -74,10 +74,11 @@ def main():
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
-        list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
+        # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
+        list_idx_sample = mnist_noniid_client_level(train_dataset,args.num_samples_per_client)
         save_dataset_idx(list_idx_sample, args.path_data_idx)
-
     # exit()
+    
     list_client = [
         Client(
             idx=idx,
