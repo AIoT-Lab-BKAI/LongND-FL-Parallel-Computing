@@ -58,507 +58,63 @@
 16:51:42,407 INFO Round 0 Selected client : 3 25 19  
 17:16:09,36 INFO Round 0 Selected client : 3 25 19  
 17:18:42,788 INFO Round 0 Selected client : 3 25 19  
-18:51:56,317 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:56:52,687 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-16:10:26,843 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:03:44,758 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:17:37,635 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:22:45,8 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:29:01,430 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:37:06,373 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:39:28,150 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:42:22,221 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:44:53,329 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:47:05,847 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:47:18,54 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:47:30,346 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:47:42,238 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:47:54,224 INFO Round 4 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:48:06,741 INFO Round 5 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:48:19,530 INFO Round 6 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:48:31,932 INFO Round 7 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:48:43,962 INFO Round 8 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:48:56,4 INFO Round 9 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:49:07,339 INFO Round 10 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:49:18,514 INFO Round 11 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:49:31,371 INFO Round 12 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:49:43,121 INFO Round 13 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:49:55,684 INFO Round 14 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:50:07,44 INFO Round 15 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:50:19,680 INFO Round 16 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:50:31,119 INFO Round 17 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:50:42,164 INFO Round 18 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:50:54,681 INFO Round 19 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:51:14,862 INFO Round 20 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:51:33,906 INFO Round 21 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:51:49,484 INFO Round 22 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:52:05,10 INFO Round 23 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:52:17,37 INFO Round 24 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:52:29,292 INFO Round 25 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:52:41,400 INFO Round 26 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:52:53,575 INFO Round 27 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:53:05,196 INFO Round 28 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:53:17,553 INFO Round 29 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:53:29,719 INFO Round 30 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:53:41,722 INFO Round 31 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:53:53,851 INFO Round 32 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:54:05,704 INFO Round 33 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:54:19,340 INFO Round 34 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:54:32,528 INFO Round 35 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:54:43,436 INFO Round 36 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:54:54,584 INFO Round 37 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:55:05,137 INFO Round 38 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:55:15,866 INFO Round 39 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:55:26,331 INFO Round 40 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:55:37,134 INFO Round 41 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:55:48,340 INFO Round 42 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:56:00,390 INFO Round 43 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:56:12,564 INFO Round 44 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:56:23,599 INFO Round 45 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:56:32,970 INFO Round 46 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:56:42,436 INFO Round 47 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:56:51,557 INFO Round 48 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:00,583 INFO Round 49 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:09,892 INFO Round 50 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:20,87 INFO Round 51 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:30,36 INFO Round 52 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:39,324 INFO Round 53 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:48,938 INFO Round 54 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:57:58,741 INFO Round 55 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:58:08,156 INFO Round 56 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:58:17,472 INFO Round 57 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:58:26,685 INFO Round 58 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:58:36,165 INFO Round 59 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:58:45,628 INFO Round 60 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:58:55,292 INFO Round 61 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:59:04,458 INFO Round 62 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:59:14,146 INFO Round 63 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:59:23,830 INFO Round 64 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:59:35,748 INFO Round 65 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:59:45,201 INFO Round 66 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-17:59:55,112 INFO Round 67 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-18:00:07,78 INFO Round 68 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-18:10:47,898 INFO Round 69 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-18:11:09,930 INFO Round 70 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-18:11:26,987 INFO Round 71 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-18:39:48,35 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-19:47:40,291 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-19:50:35,271 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-19:55:30,952 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-19:58:44,969 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-20:02:48,842 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-20:03:36,86 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-21:31:38,189 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-21:36:33,871 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:10:18,127 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:10:42,377 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:10:57,938 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:11:11,912 INFO Round 4 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:11:25,541 INFO Round 5 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:11:49,573 INFO Round 6 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:12:08,183 INFO Round 7 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:12:35,386 INFO Round 8 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:12:50,863 INFO Round 9 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:13:07,246 INFO Round 10 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:13:26,432 INFO Round 11 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:13:46,195 INFO Round 12 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:14:07,909 INFO Round 13 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:14:26,98 INFO Round 14 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:14:42,418 INFO Round 15 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:14:57,138 INFO Round 16 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:15:20,465 INFO Round 17 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:15:42,379 INFO Round 18 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:16:01,974 INFO Round 19 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:16:19,431 INFO Round 20 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:16:34,569 INFO Round 21 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:16:51,67 INFO Round 22 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:17:08,84 INFO Round 23 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:17:25,266 INFO Round 24 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-08:17:44,23 INFO Round 25 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-09:21:15,143 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-09:52:36,929 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-09:57:10,273 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:02:39,85 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:06:41,970 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:09:56,447 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:33:09,601 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:33:20,702 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:33:55,470 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-10:34:33,29 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:33:42,258 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:34:15,135 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:34:52,110 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:35:25,253 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:45:19,96 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:45:34,529 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:46:05,659 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:47:20,886 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:47:56,718 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:48:12,895 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:48:59,411 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:49:39,543 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
-15:52:31,538 INFO Round 0 Selected client : 0 1  
-15:52:39,706 INFO Round 1 Selected client : 0 1  
-15:52:48,382 INFO Round 2 Selected client : 0 1  
-15:52:55,666 INFO Round 3 Selected client : 0 1  
-15:57:36,68 INFO Round 0 Selected client : 0 1  
-15:57:47,527 INFO Round 1 Selected client : 0 1  
-15:57:55,325 INFO Round 2 Selected client : 0 1  
-15:58:06,330 INFO Round 3 Selected client : 0 1  
-16:01:55,633 INFO Round 0 Selected client : 0 1  
-16:02:02,760 INFO Round 1 Selected client : 0 1  
-16:02:16,389 INFO Round 2 Selected client : 0 1  
-16:02:24,390 INFO Round 3 Selected client : 0 1  
-16:04:27,333 INFO Round 0 Selected client : 0 1  
-16:04:37,90 INFO Round 1 Selected client : 0 1  
-16:04:45,865 INFO Round 2 Selected client : 0 1  
-16:04:54,942 INFO Round 3 Selected client : 0 1  
-16:10:49,567 INFO Round 0 Selected client : 0 1  
-16:10:57,973 INFO Round 1 Selected client : 0 1  
-16:11:05,719 INFO Round 2 Selected client : 0 1  
-16:11:12,907 INFO Round 3 Selected client : 0 1  
-16:13:13,418 INFO Round 0 Selected client : 0 1  
-16:13:21,350 INFO Round 1 Selected client : 0 1  
-16:13:28,923 INFO Round 2 Selected client : 0 1  
-16:13:36,10 INFO Round 3 Selected client : 0 1  
-16:16:49,742 INFO Round 0 Selected client : 0 1  
-16:16:56,564 INFO Round 1 Selected client : 0 1  
-16:17:04,489 INFO Round 2 Selected client : 0 1  
-16:17:11,733 INFO Round 3 Selected client : 0 1  
-16:17:20,965 INFO Round 4 Selected client : 0 1  
-16:17:32,882 INFO Round 5 Selected client : 0 1  
-16:29:35,576 INFO Round 0 Selected client : 0 1  
-16:29:43,627 INFO Round 1 Selected client : 0 1  
-16:29:51,283 INFO Round 2 Selected client : 0 1  
-16:29:58,433 INFO Round 3 Selected client : 0 1  
-16:30:11,584 INFO Round 4 Selected client : 0 1  
-16:30:20,982 INFO Round 5 Selected client : 0 1  
-16:32:24,91 INFO Round 0 Selected client : 0 1  
-16:32:32,375 INFO Round 1 Selected client : 0 1  
-16:32:40,760 INFO Round 2 Selected client : 0 1  
-16:32:47,771 INFO Round 3 Selected client : 0 1  
-16:33:53,935 INFO Round 0 Selected client : 0 1  
-16:34:01,781 INFO Round 1 Selected client : 0 1  
-16:34:09,304 INFO Round 2 Selected client : 0 1  
-16:34:16,697 INFO Round 3 Selected client : 0 1  
-16:34:28,936 INFO Round 4 Selected client : 0 1  
-16:34:36,937 INFO Round 5 Selected client : 0 1  
-16:36:33,971 INFO Round 0 Selected client : 0 1  
-16:36:43,309 INFO Round 1 Selected client : 0 1  
-16:36:51,945 INFO Round 2 Selected client : 0 1  
-16:36:58,983 INFO Round 3 Selected client : 0 1  
-16:37:06,937 INFO Round 4 Selected client : 0 1  
-16:37:13,580 INFO Round 5 Selected client : 0 1  
-16:37:54,200 INFO Round 0 Selected client : 0 1  
-16:38:25,695 INFO Round 1 Selected client : 0 1  
-16:38:51,385 INFO Round 2 Selected client : 0 1  
-16:39:09,724 INFO Round 3 Selected client : 0 1  
-16:39:41,598 INFO Round 4 Selected client : 0 1  
-16:39:59,211 INFO Round 5 Selected client : 0 1  
-16:45:49,335 INFO Round 0 Selected client : 0 1  
-16:46:14,500 INFO Round 1 Selected client : 0 1  
-16:46:33,565 INFO Round 2 Selected client : 0 1  
-16:46:52,69 INFO Round 3 Selected client : 0 1  
-16:47:11,408 INFO Round 4 Selected client : 0 1  
-16:47:32,871 INFO Round 5 Selected client : 0 1  
-16:48:16,328 INFO Round 0 Selected client : 0 1  
-16:48:43,80 INFO Round 1 Selected client : 0 1  
-16:48:58,690 INFO Round 2 Selected client : 0 1  
-16:49:19,679 INFO Round 3 Selected client : 0 1  
-16:50:33,446 INFO Round 4 Selected client : 0 1  
-16:51:17,829 INFO Round 5 Selected client : 0 1  
-17:03:16,417 INFO Round 0 Selected client : 0 1  
-17:04:58,611 INFO Round 0 Selected client : 0 1  
-17:06:09,482 INFO Round 0 Selected client : 0 1  
-17:06:18,424 INFO Round 1 Selected client : 0 1  
-17:06:26,887 INFO Round 2 Selected client : 0 1  
-17:06:34,62 INFO Round 3 Selected client : 0 1  
-17:07:14,52 INFO Round 0 Selected client : 0 1  
-17:07:21,198 INFO Round 1 Selected client : 0 1  
-17:07:33,278 INFO Round 2 Selected client : 0 1  
-17:07:40,467 INFO Round 3 Selected client : 0 1  
-17:07:47,742 INFO Round 4 Selected client : 0 1  
-17:07:55,804 INFO Round 5 Selected client : 0 1  
-17:09:16,222 INFO Round 0 Selected client : 0 1  
-17:09:23,335 INFO Round 1 Selected client : 0 1  
-17:09:30,797 INFO Round 2 Selected client : 0 1  
-17:09:37,956 INFO Round 3 Selected client : 0 1  
-17:09:48,377 INFO Round 4 Selected client : 0 1  
-17:09:55,686 INFO Round 5 Selected client : 0 1  
-17:15:01,28 INFO Round 0 Selected client : 0 1  
-17:15:16,101 INFO Round 1 Selected client : 0 1  
-17:15:26,276 INFO Round 2 Selected client : 0 1  
-17:15:34,181 INFO Round 3 Selected client : 0 1  
-17:15:43,510 INFO Round 4 Selected client : 0 1  
-17:15:51,26 INFO Round 5 Selected client : 0 1  
-17:20:28,285 INFO Round 0 Selected client : 0 1  
-17:20:37,91 INFO Round 1 Selected client : 0 1  
-17:20:44,400 INFO Round 2 Selected client : 0 1  
-17:20:51,98 INFO Round 3 Selected client : 0 1  
-17:20:58,310 INFO Round 4 Selected client : 0 1  
-17:21:06,601 INFO Round 5 Selected client : 0 1  
-17:23:09,438 INFO Round 0 Selected client : 0 1  
-17:23:19,469 INFO Round 1 Selected client : 0 1  
-17:23:27,368 INFO Round 2 Selected client : 0 1  
-17:23:33,951 INFO Round 3 Selected client : 0 1  
-17:23:40,601 INFO Round 4 Selected client : 0 1  
-17:23:47,412 INFO Round 5 Selected client : 0 1  
-17:26:57,93 INFO Round 0 Selected client : 0 1  
-17:27:04,123 INFO Round 1 Selected client : 0 1  
-17:27:12,800 INFO Round 2 Selected client : 0 1  
-17:27:20,689 INFO Round 3 Selected client : 0 1  
-17:27:28,454 INFO Round 0 Selected client : 0 1  
-17:27:34,933 INFO Round 1 Selected client : 0 1  
-17:27:42,964 INFO Round 2 Selected client : 0 1  
-17:27:55,514 INFO Round 3 Selected client : 0 1  
-17:28:03,831 INFO Round 4 Selected client : 0 1  
-17:28:12,215 INFO Round 5 Selected client : 0 1  
-17:30:11,551 INFO Round 0 Selected client : 0 1  
-17:30:19,985 INFO Round 1 Selected client : 0 1  
-17:30:27,417 INFO Round 2 Selected client : 0 1  
-17:30:34,757 INFO Round 3 Selected client : 0 1  
-17:30:41,880 INFO Round 4 Selected client : 0 1  
-17:30:48,981 INFO Round 5 Selected client : 0 1  
-17:36:50,82 INFO Round 0 Selected client : 0 1  
-17:36:56,729 INFO Round 1 Selected client : 0 1  
-17:37:04,579 INFO Round 2 Selected client : 0 1  
-17:37:12,218 INFO Round 3 Selected client : 0 1  
-17:37:20,227 INFO Round 4 Selected client : 0 1  
-17:37:27,60 INFO Round 5 Selected client : 0 1  
-17:38:22,133 INFO Round 0 Selected client : 0 1  
-17:38:29,633 INFO Round 1 Selected client : 0 1  
-17:38:38,808 INFO Round 2 Selected client : 0 1  
-17:38:45,810 INFO Round 3 Selected client : 0 1  
-17:38:52,689 INFO Round 4 Selected client : 0 1  
-17:39:00,372 INFO Round 5 Selected client : 0 1  
-17:41:06,563 INFO Round 0 Selected client : 0 1  
-17:41:13,666 INFO Round 1 Selected client : 0 1  
-17:41:20,510 INFO Round 2 Selected client : 0 1  
-17:41:27,184 INFO Round 3 Selected client : 0 1  
-17:41:33,784 INFO Round 4 Selected client : 0 1  
-17:41:41,62 INFO Round 5 Selected client : 0 1  
-17:42:59,944 INFO Round 0 Selected client : 0 1  
-17:43:08,108 INFO Round 1 Selected client : 0 1  
-17:43:16,294 INFO Round 2 Selected client : 0 1  
-17:43:23,475 INFO Round 3 Selected client : 0 1  
-17:43:30,620 INFO Round 4 Selected client : 0 1  
-17:43:38,561 INFO Round 5 Selected client : 0 1  
-17:44:16,416 INFO Round 0 Selected client : 0 1  
-17:44:23,235 INFO Round 1 Selected client : 0 1  
-17:44:30,229 INFO Round 2 Selected client : 0 1  
-17:44:37,542 INFO Round 3 Selected client : 0 1  
-17:44:44,595 INFO Round 4 Selected client : 0 1  
-17:44:51,953 INFO Round 5 Selected client : 0 1  
-17:44:59,90 INFO Round 6 Selected client : 0 1  
-17:45:06,313 INFO Round 7 Selected client : 0 1  
-17:45:18,165 INFO Round 8 Selected client : 0 1  
-17:45:29,308 INFO Round 9 Selected client : 0 1  
-17:45:40,587 INFO Round 10 Selected client : 0 1  
-17:45:52,705 INFO Round 11 Selected client : 0 1  
-17:46:03,747 INFO Round 12 Selected client : 0 1  
-17:46:15,490 INFO Round 13 Selected client : 0 1  
-17:46:29,910 INFO Round 14 Selected client : 0 1  
-17:46:40,856 INFO Round 15 Selected client : 0 1  
-17:46:50,314 INFO Round 16 Selected client : 0 1  
-17:46:57,992 INFO Round 17 Selected client : 0 1  
-17:47:07,69 INFO Round 18 Selected client : 0 1  
-17:47:19,566 INFO Round 19 Selected client : 0 1  
-13:48:42,815 INFO Round 0 Selected client : 0 1  
-13:55:48,420 INFO Round 1 Selected client : 0 1  
-13:56:02,256 INFO Round 2 Selected client : 0 1  
-13:56:13,255 INFO Round 3 Selected client : 0 1  
-13:59:22,148 INFO Round 4 Selected client : 0 1  
-13:59:42,794 INFO Round 5 Selected client : 0 1  
-14:00:02,703 INFO Round 6 Selected client : 0 1  
-14:00:23,982 INFO Round 7 Selected client : 0 1  
-14:00:56,4 INFO Round 8 Selected client : 0 1  
-14:01:16,715 INFO Round 9 Selected client : 0 1  
-14:06:17,46 INFO Round 0 Selected client : 0 1  
-14:06:25,923 INFO Round 1 Selected client : 0 1  
-14:06:35,332 INFO Round 2 Selected client : 0 1  
-14:06:46,126 INFO Round 3 Selected client : 0 1  
-14:06:55,648 INFO Round 4 Selected client : 0 1  
-14:07:04,469 INFO Round 5 Selected client : 0 1  
-14:07:18,622 INFO Round 6 Selected client : 0 1  
-14:07:29,851 INFO Round 7 Selected client : 0 1  
-14:07:40,539 INFO Round 8 Selected client : 0 1  
-14:07:51,79 INFO Round 9 Selected client : 0 1  
-14:08:03,34 INFO Round 10 Selected client : 0 1  
-14:08:13,821 INFO Round 11 Selected client : 0 1  
-14:08:21,608 INFO Round 12 Selected client : 0 1  
-14:08:30,94 INFO Round 13 Selected client : 0 1  
-14:08:38,644 INFO Round 14 Selected client : 0 1  
-14:08:47,287 INFO Round 15 Selected client : 0 1  
-14:08:56,265 INFO Round 16 Selected client : 0 1  
-14:09:04,213 INFO Round 17 Selected client : 0 1  
-14:09:11,969 INFO Round 18 Selected client : 0 1  
-14:09:19,5 INFO Round 19 Selected client : 0 1  
-14:09:27,578 INFO Round 20 Selected client : 0 1  
-14:09:34,711 INFO Round 21 Selected client : 0 1  
-14:09:41,400 INFO Round 22 Selected client : 0 1  
-14:09:49,236 INFO Round 23 Selected client : 0 1  
-14:09:57,978 INFO Round 24 Selected client : 0 1  
-14:10:05,12 INFO Round 25 Selected client : 0 1  
-14:10:12,576 INFO Round 26 Selected client : 0 1  
-14:10:22,182 INFO Round 27 Selected client : 0 1  
-14:10:30,20 INFO Round 28 Selected client : 0 1  
-14:10:39,547 INFO Round 29 Selected client : 0 1  
-14:10:49,448 INFO Round 30 Selected client : 0 1  
-14:10:57,202 INFO Round 31 Selected client : 0 1  
-14:11:04,749 INFO Round 32 Selected client : 0 1  
-14:11:11,335 INFO Round 33 Selected client : 0 1  
-14:11:18,38 INFO Round 34 Selected client : 0 1  
-14:11:24,699 INFO Round 35 Selected client : 0 1  
-14:11:31,327 INFO Round 36 Selected client : 0 1  
-14:11:38,258 INFO Round 37 Selected client : 0 1  
-14:11:44,673 INFO Round 38 Selected client : 0 1  
-14:11:53,203 INFO Round 39 Selected client : 0 1  
-14:12:04,368 INFO Round 40 Selected client : 0 1  
-14:12:15,316 INFO Round 41 Selected client : 0 1  
-14:12:25,270 INFO Round 42 Selected client : 0 1  
-14:12:33,993 INFO Round 43 Selected client : 0 1  
-14:12:43,378 INFO Round 44 Selected client : 0 1  
-14:12:52,922 INFO Round 45 Selected client : 0 1  
-14:13:01,398 INFO Round 46 Selected client : 0 1  
-14:13:09,735 INFO Round 47 Selected client : 0 1  
-14:13:18,326 INFO Round 48 Selected client : 0 1  
-14:13:27,656 INFO Round 49 Selected client : 0 1  
-14:13:39,21 INFO Round 50 Selected client : 0 1  
-14:13:50,485 INFO Round 51 Selected client : 0 1  
-14:14:01,642 INFO Round 52 Selected client : 0 1  
-14:14:12,904 INFO Round 53 Selected client : 0 1  
-14:14:22,80 INFO Round 54 Selected client : 0 1  
-14:14:30,23 INFO Round 55 Selected client : 0 1  
-14:14:36,840 INFO Round 56 Selected client : 0 1  
-14:14:44,721 INFO Round 57 Selected client : 0 1  
-14:14:51,542 INFO Round 58 Selected client : 0 1  
-14:14:58,539 INFO Round 59 Selected client : 0 1  
-14:15:05,347 INFO Round 60 Selected client : 0 1  
-14:15:12,27 INFO Round 61 Selected client : 0 1  
-14:15:21,291 INFO Round 62 Selected client : 0 1  
-14:15:29,10 INFO Round 63 Selected client : 0 1  
-14:15:36,222 INFO Round 64 Selected client : 0 1  
-14:15:46,485 INFO Round 65 Selected client : 0 1  
-14:15:57,966 INFO Round 66 Selected client : 0 1  
-14:16:08,389 INFO Round 67 Selected client : 0 1  
-14:16:18,477 INFO Round 68 Selected client : 0 1  
-14:16:28,116 INFO Round 69 Selected client : 0 1  
-14:16:36,109 INFO Round 70 Selected client : 0 1  
-14:16:45,771 INFO Round 71 Selected client : 0 1  
-14:17:00,454 INFO Round 72 Selected client : 0 1  
-14:17:15,532 INFO Round 73 Selected client : 0 1  
-14:17:25,106 INFO Round 74 Selected client : 0 1  
-14:17:33,819 INFO Round 0 Selected client : 0 1  
-14:17:40,491 INFO Round 1 Selected client : 0 1  
-14:17:47,997 INFO Round 2 Selected client : 0 1  
-14:17:54,935 INFO Round 3 Selected client : 0 1  
-14:18:01,554 INFO Round 4 Selected client : 0 1  
-14:18:09,268 INFO Round 5 Selected client : 0 1  
-14:18:15,940 INFO Round 6 Selected client : 0 1  
-14:18:23,147 INFO Round 7 Selected client : 0 1  
-14:18:37,432 INFO Round 8 Selected client : 0 1  
-14:18:47,628 INFO Round 0 Selected client : 0 1  
-14:19:06,597 INFO Round 1 Selected client : 0 1  
-14:19:27,177 INFO Round 2 Selected client : 0 1  
-14:19:42,864 INFO Round 3 Selected client : 0 1  
-14:20:04,564 INFO Round 4 Selected client : 0 1  
-14:28:52,853 INFO Round 0 Selected client : 0 1  
-14:29:00,909 INFO Round 1 Selected client : 0 1  
-14:29:09,553 INFO Round 2 Selected client : 0 1  
-14:29:16,825 INFO Round 3 Selected client : 0 1  
-14:29:25,173 INFO Round 4 Selected client : 0 1  
-14:30:22,863 INFO Round 0 Selected client : 0 1  
-14:30:31,86 INFO Round 1 Selected client : 0 1  
-14:30:38,712 INFO Round 2 Selected client : 0 1  
-14:30:46,315 INFO Round 3 Selected client : 0 1  
-14:30:53,398 INFO Round 4 Selected client : 0 1  
-14:31:00,619 INFO Round 5 Selected client : 0 1  
-14:31:07,571 INFO Round 6 Selected client : 0 1  
-14:31:14,750 INFO Round 7 Selected client : 0 1  
-14:33:52,595 INFO Round 0 Selected client : 0 1  
-14:34:02,602 INFO Round 1 Selected client : 0 1  
-14:34:10,370 INFO Round 2 Selected client : 0 1  
-14:34:17,554 INFO Round 3 Selected client : 0 1  
-14:34:24,751 INFO Round 4 Selected client : 0 1  
-14:34:33,226 INFO Round 5 Selected client : 0 1  
-14:34:40,684 INFO Round 6 Selected client : 0 1  
-14:34:50,406 INFO Round 7 Selected client : 0 1  
-14:35:02,493 INFO Round 8 Selected client : 0 1  
-14:35:15,345 INFO Round 9 Selected client : 0 1  
-14:35:27,252 INFO Round 10 Selected client : 0 1  
-14:35:38,263 INFO Round 11 Selected client : 0 1  
-14:35:47,893 INFO Round 12 Selected client : 0 1  
-14:36:00,103 INFO Round 13 Selected client : 0 1  
-14:36:09,606 INFO Round 14 Selected client : 0 1  
-14:36:17,543 INFO Round 0 Selected client : 0 1  
-14:36:24,205 INFO Round 1 Selected client : 0 1  
-14:36:31,366 INFO Round 2 Selected client : 0 1  
-14:36:39,134 INFO Round 3 Selected client : 0 1  
-14:36:46,242 INFO Round 4 Selected client : 0 1  
-14:36:53,11 INFO Round 5 Selected client : 0 1  
-14:37:01,760 INFO Round 6 Selected client : 0 1  
-14:40:24,362 INFO Round 0 Selected client : 0 1  
-14:40:31,138 INFO Round 1 Selected client : 0 1  
-14:40:38,222 INFO Round 2 Selected client : 0 1  
-14:40:45,671 INFO Round 3 Selected client : 0 1  
-14:40:52,952 INFO Round 4 Selected client : 0 1  
-14:42:03,996 INFO Round 0 Selected client : 0 1  
-14:42:11,801 INFO Round 1 Selected client : 0 1  
-14:42:20,104 INFO Round 2 Selected client : 0 1  
-14:42:27,558 INFO Round 3 Selected client : 0 1  
-14:42:34,717 INFO Round 4 Selected client : 0 1  
-14:42:41,847 INFO Round 5 Selected client : 0 1  
-14:42:49,842 INFO Round 6 Selected client : 0 1  
-14:42:59,775 INFO Round 7 Selected client : 0 1  
-14:43:09,925 INFO Round 8 Selected client : 0 1  
-14:43:21,595 INFO Round 9 Selected client : 0 1  
-14:43:32,786 INFO Round 10 Selected client : 0 1  
-14:43:42,346 INFO Round 11 Selected client : 0 1  
-14:43:56,849 INFO Round 12 Selected client : 0 1  
-14:44:10,705 INFO Round 13 Selected client : 0 1  
-14:44:19,658 INFO Round 14 Selected client : 0 1  
-14:44:28,826 INFO Round 15 Selected client : 0 1  
-14:44:37,570 INFO Round 16 Selected client : 0 1  
-14:44:45,447 INFO Round 17 Selected client : 0 1  
-14:44:53,457 INFO Round 18 Selected client : 0 1  
-14:45:03,186 INFO Round 19 Selected client : 0 1  
-14:45:07,785 INFO Round 0 Selected client : 0 1  
-14:45:14,476 INFO Round 1 Selected client : 0 1  
-14:45:21,549 INFO Round 2 Selected client : 0 1  
-14:45:28,299 INFO Round 3 Selected client : 0 1  
-14:45:34,919 INFO Round 4 Selected client : 0 1  
-14:46:06,387 INFO Round 0 Selected client : 0 1  
-14:46:13,690 INFO Round 1 Selected client : 0 1  
-14:46:21,459 INFO Round 2 Selected client : 0 1  
-14:46:28,712 INFO Round 3 Selected client : 0 1  
-14:46:35,924 INFO Round 4 Selected client : 0 1  
-14:46:42,972 INFO Round 5 Selected client : 0 1  
-14:46:52,856 INFO Round 6 Selected client : 0 1  
-14:47:00,257 INFO Round 7 Selected client : 0 1  
-14:47:10,238 INFO Round 8 Selected client : 0 1  
-14:47:21,422 INFO Round 9 Selected client : 0 1  
-14:47:32,345 INFO Round 10 Selected client : 0 1  
-14:47:42,636 INFO Round 11 Selected client : 0 1  
-14:50:01,871 INFO Round 0 Selected client : 0 1  
-14:50:09,7 INFO Round 1 Selected client : 0 1  
-14:50:16,242 INFO Round 2 Selected client : 0 1  
-14:50:22,918 INFO Round 3 Selected client : 0 1  
-14:50:29,626 INFO Round 4 Selected client : 0 1  
-14:50:36,489 INFO Round 5 Selected client : 0 1  
-14:50:46,659 INFO Round 6 Selected client : 0 1  
-14:50:54,485 INFO Round 7 Selected client : 0 1  
-14:51:05,548 INFO Round 8 Selected client : 0 1  
-14:51:19,992 INFO Round 9 Selected client : 0 1  
-14:51:32,444 INFO Round 10 Selected client : 0 1  
-14:51:44,309 INFO Round 11 Selected client : 0 1  
-14:51:56,22 INFO Round 12 Selected client : 0 1  
-14:52:06,547 INFO Round 13 Selected client : 0 1  
-14:52:15,799 INFO Round 14 Selected client : 0 1  
-14:52:23,592 INFO Round 15 Selected client : 0 1  
-14:52:31,235 INFO Round 16 Selected client : 0 1  
-14:52:37,664 INFO Round 17 Selected client : 0 1  
-14:52:44,262 INFO Round 18 Selected client : 0 1  
-14:52:51,390 INFO Round 19 Selected client : 0 1  
-14:52:57,930 INFO Round 20 Selected client : 0 1  
-14:53:04,721 INFO Round 21 Selected client : 0 1  
-14:53:11,779 INFO Round 22 Selected client : 0 1  
+17:42:38,359 INFO Round 0 Selected client : 3 25 19  
+14:36:50,647 INFO Round 0 Selected client : 3 25 19  
+14:45:58,655 INFO Round 0 Selected client : 3 25 19  
+16:15:00,285 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+16:15:32,869 INFO Round 1 Selected client : 0 1 2 3 4 6 7 8 9 11 12 13 14 15 17 18 19 20 21 22 23 24 26 27 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
+16:17:21,353 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+16:18:16,284 INFO Round 1 Selected client : 0 1 2 3 4 6 7 8 9 11 12 13 14 15 17 18 19 20 21 22 23 24 26 27 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
+16:19:34,703 INFO Round 2 Selected client : 0 1 2 3 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 30 32 33 34 35 36 37 38 40 41 42 43 44 45 46 47 48 49  
+16:20:40,880 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+16:21:11,729 INFO Round 1 Selected client : 0 1 2 3 4 6 7 8 9 11 12 13 14 15 17 18 19 20 21 22 23 24 26 27 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
+16:22:03,736 INFO Round 2 Selected client : 0 1 2 3 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 30 32 33 34 35 36 37 38 40 41 42 43 44 45 46 47 48 49  
+16:54:12,871 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+16:54:33,766 INFO Round 1 Selected client : 0 1 2 3 4 6 7 8 9 11 12 13 14 15 17 18 19 20 21 22 23 24 26 27 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  
+16:54:52,145 INFO Round 2 Selected client : 0 1 2 3 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 30 32 33 34 35 36 37 38 40 41 42 43 44 45 46 47 48 49  
+16:55:10,190 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 21 22 23 24 25 26 27 28 29 31 33 34 35 37 38 39 40 41 42 43 44 45 46 47 48 49  
+16:57:47,595 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+16:59:07,380 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+16:59:50,761 INFO Round 0 Selected client : 3 8 13 15 17 19 20 24 25 28 29 32 34 41 43 44 48 49  
+17:01:13,695 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9 10 11 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 35 36 37 38 39 40 41 42 43 44 45 48 49  
+17:01:42,491 INFO Round 0 Selected client : 0 2 3 4 5 8 9 10 11 13 14 15 16 17 18 19 20 21 23 24 25 26 28 29 31 32 35 37 38 40 41 42 43 44 45 48 49  
+17:02:53,422 INFO Round 1 Selected client : 0 1 3 4 5 6 7 9 10 11 12 13 15 19 22 23 24 26 27 28 29 30 32 33 34 36 37 38 39 40 41 42 43 45 48 49  
+17:05:25,108 INFO Round 0 Selected client : 3 8 13 15 17 19 20 24 25 28 29 32 34 41 43 44 48 49  
+17:06:09,89 INFO Round 1 Selected client : 1 3 4 5 6 7 10 13 15 19 20 27 30 37 40 43 46 49  
+17:06:52,871 INFO Round 2 Selected client : 0 7 14 15 16 17 18 22 26 28 30 33 36 37 38 39 48 49  
+17:07:34,431 INFO Round 3 Selected client : 1 3 5 6 7 8 9 10 12 13 17 24 29 33 36 40 41 45  
+17:08:03,801 INFO Round 4 Selected client : 0 1 2 4 5 9 13 16 17 21 24 27 28 31 32 33 36 49  
+17:08:51,313 INFO Round 5 Selected client : 1 2 4 6 10 20 22 23 27 29 32 34 35 38 41 46 47 48  
+17:09:34,586 INFO Round 6 Selected client : 4 7 12 15 17 20 21 31 35 36 38 39 40 42 43 45 47 48  
+12:51:56,679 INFO Round 0 Selected client : 3 25 19  
+13:07:42,602 INFO Round 0 Selected client : 3 25 19  
+13:10:07,239 INFO Round 0 Selected client : 3 25 19  
+13:12:27,370 INFO Round 0 Selected client : 3 25 19  
+13:25:03,771 INFO Round 0 Selected client : 3 25 19  
+18:41:24,87 INFO Round 0 Selected client : 3 25 19  
+19:08:24,232 INFO Round 0 Selected client : 8 1 0  
+19:11:41,789 INFO Round 0 Selected client : 5 6 7  
+19:19:15,698 INFO Round 0 Selected client : 1 3 4  
+19:26:09,299 INFO Round 0 Selected client : 5 6 7  
+19:29:00,940 INFO Round 0 Selected client : 5 6 7  
+19:29:34,411 INFO Round 0 Selected client : 5 6 7  
+19:31:05,939 INFO Round 0 Selected client : 5 6 7  
+19:31:41,157 INFO Round 0 Selected client : 5 6 7  
+19:32:27,784 INFO Round 1 Selected client : 1 2 7  
+20:13:23,942 INFO Round 0 Selected client : 5 6 7  
+20:16:17,101 INFO Round 0 Selected client : 5 6 7  
+20:17:48,582 INFO Round 1 Selected client : 1 2 7  
+20:19:08,358 INFO Round 0 Selected client : 5 6 7  
+20:20:55,844 INFO Round 0 Selected client : 5 6 7  
+20:21:20,306 INFO Round 0 Selected client : 9 4 6  
+20:22:25,182 INFO Round 0 Selected client : 9 4 6  
+20:24:50,444 INFO Round 0 Selected client : 9 4 6  
+20:26:29,137 INFO Round 0 Selected client : 0 9 2  
+20:28:02,613 INFO Round 1 Selected client : 0 1 5  
+20:29:37,649 INFO Round 2 Selected client : 0 4 6  
+20:31:18,645 INFO Round 3 Selected client : 8 9 7  
+20:32:56,542 INFO Round 0 Selected client : 0 9 2  
+20:34:39,960 INFO Round 1 Selected client : 0 1 5  
+20:36:20,950 INFO Round 2 Selected client : 0 4 6  
+20:38:01,933 INFO Round 3 Selected client : 8 9 7  
+20:39:43,59 INFO Round 4 Selected client : 0 9 5  

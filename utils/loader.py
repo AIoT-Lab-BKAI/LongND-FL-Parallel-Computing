@@ -162,6 +162,37 @@ def mnist_extr_noniid(train_dataset, num_users, n_class, num_samples, rate_unbal
             dict_users_train[i] = [int(i) for i in idxi]
     return dict_users_train
 
+def mnist_noniid_client_level(dataset, n_samples):
+    labels = dataset.targets.numpy()
+    idxs = range(60000)
+    # pair = np.vstack((range(60000),np.array(list_label)))
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
+    labels = idxs_labels[1, :]
+    dict_label = {"0" : idxs[:5923], "1" : idxs[5923:12665], "2": idxs[12665:18623], "3" : idxs[18623:24754], "4" : idxs[24754:30596], "5" : idxs[30596:36017], "6" : idxs[36017:41935], "7" : idxs[41935:48200], "8": idxs[48200:54051] ,"9":idxs[54051:]}
+    
+    list_dict = []
+    for i in range(10):
+        list_dict.append(dict_label[str(i)]) 
+    dict_client = {}
+    for i in range(6):
+        a = np.random.choice(list_dict[0], n_samples,replace=False)
+        list_dict[0] = list(set(list_dict[0]) - set(a))
+        b = np.random.choice(list_dict[1], n_samples,replace=False)
+        list_dict[1] = list(set(list_dict[1]) - set(b))
+        dict_client[i] = list(a) + list(b)
+        dict_client[i] = [int(j) for j in dict_client[i]]
+
+    for i in range(6,10,1):
+        a = np.random.choice(list_dict[2 * i -10], n_samples,replace=False)
+        list_dict[2 * i -10] = list(set(list_dict[2 * i -10]) - set(a))
+        b = np.random.choice(list_dict[2 * i -9], n_samples,replace=False)
+        list_dict[2 * i -9] = list(set(list_dict[2 * i -9]) - set(b))
+        dict_client[i] = list(a) + list(b)
+        dict_client[i] = [int(j) for j in dict_client[i]]
+        
+    return dict_client
 
 from torch.utils.data import Dataset
 

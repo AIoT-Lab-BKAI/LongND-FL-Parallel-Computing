@@ -9,7 +9,7 @@ def option():
     parser.add_argument(
         "--eval_every", help="evaluate every ____ rounds;", type=int, default=-1
     )
-    parser.add_argument("--num_clients", type=int, default=50)
+    parser.add_argument("--num_clients", type=int, default=10)
     parser.add_argument(
         "--clients_per_round",
         help="number of clients trained per round;",
@@ -23,7 +23,7 @@ def option():
         "--batch_size",
         help="batch size when clients train on data;",
         type=int,
-        default=2,
+        default=32,
     )
     parser.add_argument(
         "--num_epochs",
@@ -40,7 +40,7 @@ def option():
         default=0.003,
     )
     parser.add_argument("--num_samples_per_client",type=int, default=10)
-    parser.add_argument("--mu", help="constant for prox;", type=float, default=0.1)
+    parser.add_argument("--mu", help="constant for prox;", type=float, default=0)
     parser.add_argument("--seed", help="seed for randomness;", type=int, default=10)
     parser.add_argument(
         "--drop_percent", help="percentage of slow devices", type=float, default=0.0
@@ -48,5 +48,6 @@ def option():
     parser.add_argument("--algorithm", type=str, default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
     parser.add_argument("--log_dir", type=str, default='./')
+    parser.add_argument("--num_samples_per_class", type=int, default = 10)
     args = parser.parse_args()
     return args

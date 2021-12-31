@@ -214,9 +214,13 @@ import json
 
 
 def save_infor(list_sam, path="sample.json"):
-    
     with open(path, "w+") as outfile:
         json.dump(list_sam, outfile)
+
+def log_by_round(sample, path="samples.json"):
+    with open(path, "a+") as outfile:
+        outfile.write(sample)
+        outfile.write("/n")
 
 
 def get_train_time(n_sample, list_abiprocess):

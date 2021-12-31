@@ -16,7 +16,7 @@ from utils.utils import (
     select_client,
     select_drop_client,
 )
-from utils.loader import iid_partition, non_iid_partition, mnist_extr_noniid
+from utils.loader import iid_partition, non_iid_partition, mnist_extr_noniid,mnist_noniid_client_level
 from utils.trainer import train
 import random
 import numpy as np
@@ -42,7 +42,7 @@ from utils.option import option
 from models.models import MNIST_CNN
 from ddpg_agent.ddpg import *
 
-from utils.utils import load_epoch
+from utils.utils import load_epoch, log_by_round
 
 def main():
     """ Parse command line arguments or load defaults """
@@ -79,12 +79,13 @@ def main():
     test_dataset = datasets.MNIST(
         "../data/mnist/", train=False, download=True, transform=transforms_mnist
     )
-
+    # device = torch.device("cuda")
     mnist_cnn = MNIST_CNN()
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
-        list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
+        # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
+        list_idx_sample = mnist_noniid_client_level(train_dataset,args.num_samples_per_class)
         save_dataset_idx(list_idx_sample, args.path_data_idx)
 
     # exit()
@@ -103,7 +104,7 @@ def main():
     ]
     n_params = count_params(mnist_cnn)
     list_trained_client = []
-    list_abiprocess = []
+    
     list_sam = []
 
     # Agent to get next settings for this round
@@ -114,7 +115,8 @@ def main():
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
 
-    list_epochs = [2 for i in range(args.num_clients)]
+    # list_epochs = [2 for i in range(args.num_clients)]
+    list_epochs = [args.num_epochs for i in range(args.num_clients)]
 
     for round in range(args.num_rounds):
         print("Train :------------------------------")
@@ -135,13 +137,13 @@ def main():
         train_local_loss = torch.zeros(len(train_client), 100) # maximum number of epochs for client is 100
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
-        list_abiprocess.append([list_client[i].abiprocess for i in train_clients])
+        list_abiprocess = [list_client[i].abiprocess for i in train_clients]
+        print([list_client[i].eps for i in train_clients])
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * np.array([list_client[i].eps for i in train_clients])
         str_sltc = ""
         for i in train_clients:
             str_sltc += str(i) + " "
         logging.info(f"Round {round} Selected client : {str_sltc} ")
-        list_client[0].eps = 10
         # Huan luyen song song tren cac client
         with mp.Pool(args.num_core) as pool:
             pool.map(
@@ -169,7 +171,7 @@ def main():
         flat_tensor = aggregate(local_model_weight, len(train_clients), dqn_weights)
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
-        acc = test(mnist_cnn, DataLoader(test_dataset, 32, False))
+        acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess
         )
@@ -183,9 +185,12 @@ def main():
             "local_train_time": max_time,
             "delay": delay,
             "accuracy": acc,
+            "test_loss": test_loss
         }
         list_sam.append(sample)
+        log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
+
     save_infor(list_sam, path_to_save_log+"/log.json")
 
 
