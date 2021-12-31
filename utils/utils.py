@@ -219,7 +219,7 @@ def save_infor(list_sam, path="sample.json"):
 
 def log_by_round(sample, path="samples.json"):
     with open(path, "a+") as outfile:
-        outfile.write(sample)
+        outfile.write(str(sample))
         outfile.write("/n")
 
 

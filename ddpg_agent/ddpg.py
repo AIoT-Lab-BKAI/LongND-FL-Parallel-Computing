@@ -21,7 +21,7 @@ device = torch.device("cuda" if use_cuda else "cpu")
 
 
 class DDPG_Agent:
-    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=500, max_frames=12000, batch_size=16):
+    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=50, max_frames=12000, batch_size=16, log_dir='./log/epochs'):
         # super(DDPG_Agent, self).__init__()
         self.lr = 3e-2
         self.num_steps = 20  # number of iterations for each episodes
@@ -76,6 +76,7 @@ class DDPG_Agent:
         self.step = 0
         self.max_steps = max_steps
         self.batch_size = batch_size
+        self.log_dir = log_dir
         for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
             target_param.data.copy_(param.data)
 
@@ -142,13 +143,16 @@ class DDPG_Agent:
         prev_reward = get_reward(local_losses)
         if self.step == self.max_steps - 1 or done:
             self.rewards.append(self.episode_reward)
+            self.logging_per_round()
             state = self.reset_state()
             # self.ou_noise.reset()
             # self.episode_reward = 0
 
         if self.frame_idx >= self.max_frames:
             # maybe stop training?
+            self.logging_per_round()
             state = self.reset_state()
+
         state = torch.FloatTensor(state).unsqueeze(0).to(device) # current state
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
@@ -171,6 +175,7 @@ class DDPG_Agent:
 
         if self.frame_idx % max(1000, self.max_steps + 1) == 0:
             plot(self.frame_idx, self.rewards)
+            # plt.savefig()
 
         return action
 
@@ -180,6 +185,20 @@ class DDPG_Agent:
         self.step = 0
         return np.zeros(self.state_dim)
         # return env.reset()
+
+    def logging_per_round(self):
+        frame_idx, episode, total_reward = self.frame_idx, self.episode_reward, self.episode_reward
+        sample = {
+            "frame_idx": frame_idx,
+            "episode": episode,
+            "total_reward": total_reward,
+        }
+        filename = self.log_dir + '/log_dqn.txt'
+        with open(filename, "a+") as log_f:
+            log_f.write(sample)
+
+
+
 
 
 if __name__ == '__main__':

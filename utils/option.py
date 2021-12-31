@@ -14,7 +14,7 @@ def option():
         "--clients_per_round",
         help="number of clients trained per round;",
         type=int,
-        default=50,
+        default=10,
     )
     # parser.add_argument("--", type=int, default=10)
     parser.add_argument("--num_class_per_client", type=int, default=2)
@@ -48,6 +48,7 @@ def option():
     parser.add_argument("--algorithm", type=str, default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
     parser.add_argument("--log_dir", type=str, default='./')
+    parser.add_argument("--logs_file", type=str, default="logs")
     parser.add_argument("--num_samples_per_class", type=int, default = 10)
     args = parser.parse_args()
     return args

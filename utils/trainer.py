@@ -9,7 +9,8 @@ from utils.utils import flatten_model
 
 def train(args):
     (id, pid, model, client, local_model_weight, train_local_loss,algorithm) = args
-    device = torch.device("cuda")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cuda")
     model = model.to(device)
     local_model = copy.deepcopy(model).to(device)
     optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)

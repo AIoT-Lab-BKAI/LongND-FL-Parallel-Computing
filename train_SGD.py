@@ -52,7 +52,7 @@ def main():
     torch.cuda.manual_seed(args.seed)
     torch.manual_seed(args.seed)
 
-    logname = "round.txt"
+    logname = args.log_dir + "/" + args.logs_file + "_round.txt"
     logging.basicConfig(
         filename=logname,
         filemode="a",
@@ -68,7 +68,7 @@ def main():
         path_to_save_log = args.log_dir
     generate_abiprocess(mu=100, sigma=5, n_client=args.num_clients)
     list_abiprocess_client = read_abiprocesss()
-    assert len(list_abiprocess_client) == args.num_clients, "list abiprocesss k du"
+    assert len(list_abiprocess_client) == args.num_clients, "not enough abi-processes"
 
     transforms_mnist = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
@@ -85,7 +85,7 @@ def main():
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
         # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
-        list_idx_sample = mnist_noniid_client_level(train_dataset,args.num_samples_per_class)
+        list_idx_sample = mnist_noniid_client_level(train_dataset, args.num_samples_per_class)
         save_dataset_idx(list_idx_sample, args.path_data_idx)
 
     # exit()
@@ -122,7 +122,7 @@ def main():
         print("Train :------------------------------")
         # mocking the number of epochs that are assigned for each client.
         # local_num_epochs = [1 for _ in range(0, args.num_clients)]
-        dqn_list_epochs = [2 for _ in range(0, args.num_clients)]
+        dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(
@@ -175,6 +175,8 @@ def main():
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess
         )
+        logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
+        
         sample = {
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
@@ -185,7 +187,8 @@ def main():
             "local_train_time": max_time,
             "delay": delay,
             "accuracy": acc,
-            "test_loss": test_loss
+            "test_loss": test_loss,
+            "assigned_weights": logging_dqn_weights
         }
         list_sam.append(sample)
         log_by_round(sample, path_to_save_log+"/round_log.json")
