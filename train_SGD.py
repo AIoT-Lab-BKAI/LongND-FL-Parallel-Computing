@@ -45,7 +45,7 @@ from ddpg_agent.ddpg import *
 from utils.utils import load_epoch, log_by_round
 import wandb
 
-def main():
+def main(args):
     """ Parse command line arguments or load defaults """
     args = option()
     random.seed(args.seed)
