@@ -230,7 +230,7 @@ class DDPG_Agent:
         }
         filename = self.log_dir + "/log_dqn.txt"
         with open(filename, "a+") as log_f:
-            log_f.write(sample)
+            log_f.write(str(sample))
 
 
 if __name__ == "__main__":
