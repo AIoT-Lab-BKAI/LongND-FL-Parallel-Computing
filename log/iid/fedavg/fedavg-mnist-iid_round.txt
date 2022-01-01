@@ -1,0 +1,6 @@
+15:19:43,235 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9  
+15:20:36,517 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9  
+15:22:49,569 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9  
+15:25:53,860 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9  
+16:42:39,674 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9  
+16:45:15,353 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9  
