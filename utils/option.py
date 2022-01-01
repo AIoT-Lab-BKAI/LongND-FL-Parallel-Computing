@@ -49,6 +49,7 @@ def option():
     parser.add_argument("--num_core", type=int, default=2)
     parser.add_argument("--log_dir", type=str, default='./')
     parser.add_argument("--logs_file", type=str, default="logs")
+    parser.add_argument("--log_file", type=str, default="logs")
     parser.add_argument("--num_samples_per_class", type=int, default = 10)
     args = parser.parse_args()
     return args
