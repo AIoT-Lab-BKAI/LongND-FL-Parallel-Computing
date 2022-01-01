@@ -38,7 +38,6 @@ class DDPG_Agent:
         log_dir="./log/epochs",
     ):
         # super(DDPG_Agent, self).__init__()
-        torch.multiprocessing.set_start_method('spawn')
         self.lr = 3e-2
         self.num_steps = 20  # number of iterations for each episodes
         self.state_dim = state_dim

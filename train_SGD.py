@@ -200,6 +200,8 @@ def main(args):
 
 
 if __name__ == "__main__":
+    torch.multiprocessing.set_start_method('spawn')
+
     # main()
     parse_args = option()
     wandb.init(project="federated-learning-dqn", entity="duwgnt",
