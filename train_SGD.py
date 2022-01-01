@@ -221,7 +221,7 @@ if __name__ == "__main__":
                    "drop_percent": parse_args.drop_percent,
                    "algorithm": parse_args.algorithm,
                    "num_core": parse_args.num_core,
-                   "logs_dir": parse_args.logs_dir,
+                   "log_dir": parse_args.log_dir,
                    "logs_file": parse_args.logs_file,
                    "num_sample_per_class": parse_args.num_samples_per_class
                })
