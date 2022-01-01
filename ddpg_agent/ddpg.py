@@ -235,7 +235,7 @@ class DDPG_Agent:
 
 if __name__ == "__main__":
     max_frames = 12000
-    max_steps = 500
+    max_steps = 16
     frame_idx = 0
     rewards = []
     batch_size = 128
