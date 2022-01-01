@@ -11,11 +11,17 @@ class ReplayBuffer:
     def push(self, state, action, reward, next_state, done):
         if len(self.buffer) < self.capacity:
             self.buffer.append(None)
-        self.buffer[self.position] = (state, action, reward, next_state, done)
+        self.buffer[self.position] = (state.cpu(), action, reward, next_state.cpu(), done)
         self.position = (self.position + 1) % self.capacity
     
     def sample(self, batch_size):
         batch = random.sample(self.buffer, batch_size)
+        # print(batch)
+        # for sample in batch:
+        #     sample = tuple(a.cpu() for a in sample)
+
+        # print(batch)
+        # print('buffer ok')
         state, action, reward, next_state, done = map(np.stack, zip(*batch))
         return state, action, reward, next_state, done
     

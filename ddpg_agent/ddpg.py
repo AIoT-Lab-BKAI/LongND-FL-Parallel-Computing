@@ -14,15 +14,31 @@ from torch.distributions import Normal
 # %matplotlib inline
 # from src.ddpg_agent.policy import NormalizedActions
 from ddpg_agent.policy import NormalizedActions
-use_cuda = torch.cuda.is_available()
-device = torch.device("cuda" if use_cuda else "cpu")
+
+# use_cuda = torch.cuda.is_available()
+# device = torch.device("cuda")
+# device = torch.device("cpu")
 # env = NormalizedActions(gym.make("Pendulum-v1"))
 # env = NormalizedActions(gym.make("Pendulum-v0"))
 
 
 class DDPG_Agent:
-    def __init__(self, state_dim=3, action_dim=1, hidden_dim=256, init_w=3e-3, value_lr=1e-3, policy_lr=1e-4, replay_buffer_size=1000000, max_steps=50, max_frames=12000, batch_size=16, log_dir='./log/epochs'):
+    def __init__(
+        self,
+        state_dim=3,
+        action_dim=1,
+        hidden_dim=256,
+        init_w=3e-3,
+        value_lr=1e-3,
+        policy_lr=1e-4,
+        replay_buffer_size=1000000,
+        max_steps=50,
+        max_frames=12000,
+        batch_size=16,
+        log_dir="./log/epochs",
+    ):
         # super(DDPG_Agent, self).__init__()
+        torch.multiprocessing.set_start_method('spawn')
         self.lr = 3e-2
         self.num_steps = 20  # number of iterations for each episodes
         self.state_dim = state_dim
@@ -51,15 +67,17 @@ class DDPG_Agent:
         # state_dim = state_dim
         # action_dim = action_dim
         self.value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim).to(device)
+            state_dim, action_dim, hidden_dim).to("cuda")
         self.policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim).to(device)
+            state_dim, action_dim, hidden_dim).to("cuda")
         self.target_value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim).to(device)
+            state_dim, action_dim, hidden_dim).to("cuda")
         self.target_policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim).to(device)
+            state_dim, action_dim, hidden_dim).to("cuda")
 
-        self.memory = Memory()  # store all the (s, a, s', r) during the transition process
+        self.memory = (
+            Memory()
+        )  # store all the (s, a, s', r) during the transition process
         # replay buffer used for main training
         self.replay_buffer = ReplayBuffer(replay_buffer_size)
 
@@ -69,7 +87,7 @@ class DDPG_Agent:
         # self.policy_lr = 1e-4
 
         self.value_optimizer = optim.Adam(
-            self.value_net.parameters(),  lr=value_lr)
+            self.value_net.parameters(), lr=value_lr)
         self.policy_optimizer = optim.Adam(
             self.policy_net.parameters(), lr=policy_lr)
         self.value_criterion = nn.MSELoss()
@@ -77,28 +95,34 @@ class DDPG_Agent:
         self.max_steps = max_steps
         self.batch_size = batch_size
         self.log_dir = log_dir
-        for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
+        for target_param, param in zip(
+            self.target_value_net.parameters(), self.value_net.parameters()
+        ):
             target_param.data.copy_(param.data)
 
-        for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
+        for target_param, param in zip(
+            self.target_policy_net.parameters(), self.policy_net.parameters()
+        ):
             target_param.data.copy_(param.data)
 
-    def ddpg_update(self,
-                    gamma=0.99,
-                    min_value=-np.inf,
-                    max_value=np.inf,
-                    soft_tau=1e-2):
+    def ddpg_update(
+        self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=1e-2
+    ):
 
         state, action, reward, next_state, done = self.replay_buffer.sample(
-            self.batch_size)
-
-        state = torch.FloatTensor(state).squeeze().to(device)
-        next_state = torch.FloatTensor(next_state).squeeze().to(device)
-        action = torch.FloatTensor(action).squeeze().to(device)
-        reward = torch.FloatTensor(reward).to(device)
-        done = torch.FloatTensor(np.float32(done)).to(device)
+            self.batch_size
+        )
+        # print('DONE HAHAHAHAHAHA')
+        state = torch.FloatTensor(state).squeeze().to("cuda")
+        next_state = torch.FloatTensor(next_state).squeeze().to("cuda")
+        action = torch.FloatTensor(action).squeeze().to("cuda")
+        reward = torch.FloatTensor(reward).to("cuda")
+        done = torch.FloatTensor(np.float32(done)).to("cuda")
+        # print(f'state: {state.shape}')
+        
 
         policy_loss = self.value_net(state, self.policy_net(state))
+        # print(f'next state: {next_state.shape}')
         # print(policy_loss)
         policy_loss = -policy_loss.mean()
         # print(policy_loss.item())
@@ -110,11 +134,12 @@ class DDPG_Agent:
 
         expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
         expected_value = torch.clamp(expected_value, min_value, max_value)
-
-        value = self.value_net(state, action)
+        # print(f'action: {action.shape}')
+        value = self.value_net(state, action).squeeze()
         # print(f'VALUE: {value.shape}')
         # print(f'E VALUE: {expected_value.detach().shape}')
-        value_loss = self.value_criterion(value, expected_value.unsqueeze(1).detach())
+        value_loss = self.value_criterion(
+            value, expected_value)
         # print(f'value loss: {value_loss.item()}')
 
         self.policy_optimizer.zero_grad()
@@ -125,12 +150,16 @@ class DDPG_Agent:
         value_loss.backward()
         self.value_optimizer.step()
 
-        for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
+        for target_param, param in zip(
+            self.target_value_net.parameters(), self.value_net.parameters()
+        ):
             target_param.data.copy_(
                 target_param.data * (1.0 - soft_tau) + param.data * soft_tau
             )
 
-        for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
+        for target_param, param in zip(
+            self.target_policy_net.parameters(), self.policy_net.parameters()
+        ):
             target_param.data.copy_(
                 target_param.data * (1.0 - soft_tau) + param.data * soft_tau
             )
@@ -138,7 +167,9 @@ class DDPG_Agent:
     def get_action(self, local_losses, local_n_samples, local_num_epochs, done):
         # reach to maximum step for each episode or get the done for this iteration
 
-        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples)
+        state = get_state(
+            losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples
+        )
         # print(state)
         prev_reward = get_reward(local_losses)
         if self.step == self.max_steps - 1 or done:
@@ -153,7 +184,8 @@ class DDPG_Agent:
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(0).to(device) # current state
+        state = torch.FloatTensor(state).unsqueeze(
+            0).to("cuda")  # current state
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
         action = self.policy_net.get_action(state)
@@ -167,7 +199,7 @@ class DDPG_Agent:
             return action
         s, a, r, s_next = self.memory.get_last_record()
         self.replay_buffer.push(s, a, r, s_next, done)
-        if len(self.replay_buffer) > self.batch_size:
+        if len(self.replay_buffer) >= self.batch_size:
             self.ddpg_update()
         self.episode_reward += prev_reward
         self.frame_idx += 1
@@ -187,60 +219,62 @@ class DDPG_Agent:
         # return env.reset()
 
     def logging_per_round(self):
-        frame_idx, episode, total_reward = self.frame_idx, self.episode_reward, self.episode_reward
+        frame_idx, episode, total_reward = (
+            self.frame_idx,
+            self.episode_reward,
+            self.episode_reward,
+        )
         sample = {
             "frame_idx": frame_idx,
             "episode": episode,
             "total_reward": total_reward,
         }
-        filename = self.log_dir + '/log_dqn.txt'
+        filename = self.log_dir + "/log_dqn.txt"
         with open(filename, "a+") as log_f:
             log_f.write(sample)
 
 
+if __name__ == "__main__":
+    max_frames = 12000
+    max_steps = 500
+    frame_idx = 0
+    rewards = []
+    batch_size = 128
+    # Test simulator
+    env = NormalizedActions(gym.make("Pendulum-v0"))
+    state_dim = env.observation_space.shape[0]
+    action_dim = env.action_space.shape[0]
+    hidden_dim = 10
+    agent = DDPG_Agent(
+        state_dim=state_dim, action_dim=action_dim, hidden_dim=hidden_dim
+    )
+    ou_noise = OUNoise(env.action_space)
+    reward, done = None, None
 
+    while frame_idx < max_frames:
+        state = env.reset()
+        ou_noise.reset()
+        # episode_reward = 0
 
+        for step in range(max_steps):
+            # action = policy_net.get_action(state)
+            # action = ou_noise.get_action(action, step)
+            action = agent.get_action(state, reward, done)
+            next_state, reward, done, _ = env.step(action)
 
-if __name__ == '__main__':
-	max_frames = 12000
-	max_steps = 500
-	frame_idx = 0
-	rewards = []
-	batch_size = 128
-# Test simulator
-	env = NormalizedActions(gym.make("Pendulum-v0"))
-	state_dim = env.observation_space.shape[0]
-	action_dim = env.action_space.shape[0]
-	hidden_dim = 10
-	agent = DDPG_Agent(state_dim=state_dim,
-					action_dim=action_dim, hidden_dim=hidden_dim)
-	ou_noise = OUNoise(env.action_space)
-	reward, done = None, None
+            # replay_buffer.push(state, action, reward, next_state, done)
+            # if len(replay_buffer) > batch_size:
+            #     ddpg_update(batch_size)
 
-	while frame_idx < max_frames:
-		state = env.reset()
-		ou_noise.reset()
-		# episode_reward = 0
+            state = next_state
 
-		for step in range(max_steps):
-			# action = policy_net.get_action(state)
-			# action = ou_noise.get_action(action, step)
-			action = agent.get_action(state, reward, done)
-			next_state, reward, done, _ = env.step(action)
+            # episode_reward += reward
+            # frame_idx += 1
 
-			# replay_buffer.push(state, action, reward, next_state, done)
-			# if len(replay_buffer) > batch_size:
-			#     ddpg_update(batch_size)
+            # if frame_idx % max(1000, max_steps + 1) == 0:
+            #     plot(frame_idx, rewards)
 
-			state = next_state
+            # if done:
+            #     break
 
-			# episode_reward += reward
-			# frame_idx += 1
-
-			# if frame_idx % max(1000, max_steps + 1) == 0:
-			#     plot(frame_idx, rewards)
-
-			# if done:
-			#     break
-
-		# rewards.append(episode_reward)
+        # rewards.append(episode_reward)

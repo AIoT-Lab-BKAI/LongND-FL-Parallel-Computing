@@ -43,6 +43,7 @@ from models.models import MNIST_CNN
 from ddpg_agent.ddpg import *
 
 from utils.utils import load_epoch, log_by_round
+import wandb
 
 def main():
     """ Parse command line arguments or load defaults """
@@ -193,10 +194,38 @@ def main():
         list_sam.append(sample)
         log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
+        wandb.log(sample)
 
     save_infor(list_sam, path_to_save_log+"/log.json")
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    parse_args = option()
+    wandb.init(project="federated-learning-dqn", entity="duwgnt",
+               config={
+                   "num_rounds": parse_args.num_rounds,
+                   "eval_every": parse_args.eval_every,
+                   "num_clients": parse_args.num_clients,
+                   "clients_per_round": parse_args.clients_per_round,
+                   "num_class_per_client": parse_args.num_class_per_client,
+                   "rate_balance": parse_args.rate_balance,
+                   "batch_size": parse_args.batch_size,
+                   "num_epochs": parse_args.num_epochs,
+                   "path_data_idx": parse_args.path_data_idx,
+                   "load_data_idx": parse_args.load_data_idx,
+                   "learning_rate": parse_args.learning_rate,
+                   "num_samples_per_class": parse_args.num_samples_per_class,
+                   "mu": parse_args.mu,
+                   "seed": parse_args.seed,
+                   "drop_percent": parse_args.drop_percent,
+                   "algorithm": parse_args.algorithm,
+                   "num_core": parse_args.num_core,
+                   "logs_dir": parse_args.logs_dir,
+                   "logs_file": parse_args.logs_file,
+                   "num_sample_per_class": parse_args.num_samples_per_class
+               })
+    args = wandb.config
+    main(args)
+    wandb.finish()
 
