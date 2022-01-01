@@ -53,7 +53,7 @@ def main():
     torch.cuda.manual_seed(args.seed)
     torch.manual_seed(args.seed)
 
-    logname = args.log_dir + "/" + args.logs_file + "_round.txt"
+    logname = args.log_dir + "/" + args.log_file + "_round.txt"
     logging.basicConfig(
         filename=logname,
         filemode="a",

@@ -1,1 +1,1 @@
-python3 -u train_SGD.py --logs_file='fedavg-mnist-iid' --algorithm='fedavg' --num_clients=10 --clients_per_round=10 --num_rounds=100 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --log_dir='log/iid/fedavg'
+python3 -u train_SGD.py --log_file='fedavg-mnist-iid' --algorithm='fedavg' --num_clients=10 --clients_per_round=10 --num_rounds=100 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --log_dir='log/iid/fedavg'
