@@ -265,6 +265,7 @@ def getDictionaryLosses(losses, num_clients):
     for cli in range(num_clients):
         cli_dict = {}
         cli_dict["local_loss"] = losses[cli]
+        client_dicts[cli] = cli_dict
     return client_dicts
 
 import numpy as np
