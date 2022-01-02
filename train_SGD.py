@@ -182,7 +182,7 @@ def main(args):
             local_n_sample, list_abiprocess
         )
         # logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
-        dictionaryLosses = getDictionaryLosses(train_local_loss[:, round])
+        dictionaryLosses = getDictionaryLosses(train_local_loss[:, round], num_cli)
         sample = {
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
