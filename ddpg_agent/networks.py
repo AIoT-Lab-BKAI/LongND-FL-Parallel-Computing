@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class ValueNetwork(nn.Module):
-    def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-3):
+    def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-1):
         super(ValueNetwork, self).__init__()
         
         self.linear1 = nn.Linear(num_inputs + num_actions, hidden_size)
@@ -28,7 +28,7 @@ class ValueNetwork(nn.Module):
     
 
 class PolicyNetwork(nn.Module):
-    def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-3):
+    def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-1):
         super(PolicyNetwork, self).__init__()
         
         self.linear1 = nn.Linear(num_inputs, hidden_size)

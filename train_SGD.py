@@ -167,7 +167,7 @@ def main(args):
         done = 0
         num_cli = len(train_clients)
         dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
-        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights)
+        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
         # dqn_list_epochs = int(dqn_weights[num_cli*2:]*10)
         # print(f'dqn weight: {dqn_weights.shape}')
         # dqn_list_epochs = [ceil(dqn_weights[0,i]*10) if ceil(dqn_weights[0,i]*10) > 0 else 1 for i in range(num_cli*2, dqn_weights.shape[1])]
