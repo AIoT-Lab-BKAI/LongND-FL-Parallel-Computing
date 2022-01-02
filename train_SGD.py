@@ -203,7 +203,7 @@ def main(args):
             "num_epochs": s_epochs,
             "assigned_priorities": assigned_priorities,
         }
-        recordedSample = getLoggingDictionary(dqn_sample)
+        recordedSample = getLoggingDictionary(dqn_sample, num_cli)
         list_sam.append(sample)
         log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
