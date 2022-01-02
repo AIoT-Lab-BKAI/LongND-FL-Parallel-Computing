@@ -208,7 +208,7 @@ def main(args):
         log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
         # wandb.log(sample)
-        wandb.log({'dqn/dqn_sample': recordedSample, 'dqn/summary': sample})
+        wandb.log({'dqn/dqn_sample': recordedSample, 'summary/summary': sample})
 
     save_infor(list_sam, path_to_save_log+"/log.json")
 
