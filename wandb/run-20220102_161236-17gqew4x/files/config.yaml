@@ -1,0 +1,84 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.9
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.6.9
+    start_time: 1641114756
+    t:
+      1:
+      - 1
+      - 5
+      2:
+      - 1
+      - 5
+      3:
+      - 16
+      4: 3.6.9
+      5: 0.12.9
+      8:
+      - 5
+algorithm:
+  desc: null
+  value: fedavg
+batch_size:
+  desc: null
+  value: 10
+clients_per_round:
+  desc: null
+  value: 10
+drop_percent:
+  desc: null
+  value: 0.0
+eval_every:
+  desc: null
+  value: -1
+learning_rate:
+  desc: null
+  value: 0.01
+load_data_idx:
+  desc: null
+  value: false
+log_dir:
+  desc: null
+  value: log/iid/fedavg
+logs_file:
+  desc: null
+  value: logs
+mu:
+  desc: null
+  value: 0
+num_class_per_client:
+  desc: null
+  value: 2
+num_clients:
+  desc: null
+  value: 10
+num_core:
+  desc: null
+  value: 2
+num_epochs:
+  desc: null
+  value: 5
+num_rounds:
+  desc: null
+  value: 1000
+num_sample_per_class:
+  desc: null
+  value: 10
+num_samples_per_class:
+  desc: null
+  value: 10
+path_data_idx:
+  desc: null
+  value: dataset_idx.json
+rate_balance:
+  desc: null
+  value: 0
+seed:
+  desc: null
+  value: 10

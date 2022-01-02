@@ -1,0 +1,34 @@
+{
+    "os": "Linux-4.15.0-163-generic-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.6.9",
+    "heartbeatAt": "2022-01-02T09:16:18.347941",
+    "startedAt": "2022-01-02T09:16:17.211802",
+    "docker": null,
+    "gpu": "GeForce RTX 2080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 6,
+    "cuda": "10.2.89",
+    "args": [
+        "--log_file=fedavg-mnist-iid",
+        "--algorithm=fedavg",
+        "--num_clients=10",
+        "--clients_per_round=10",
+        "--num_rounds=1000",
+        "--learning_rate=0.01",
+        "--batch_size=10",
+        "--num_epochs=5",
+        "--log_dir=log/iid/fedavg"
+    ],
+    "state": "running",
+    "program": "train_SGD.py",
+    "codePath": "train_SGD.py",
+    "git": {
+        "remote": "https://github.com/AIoT-Lab-BKAI/LongND-FL-Parallel-Computing.git",
+        "commit": "9f5601c77a75c343691f9c776960e2a57ee4ec5a"
+    },
+    "email": "cuongdx.k57@gmail.com",
+    "root": "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing",
+    "host": "aimenext",
+    "username": "aimenext",
+    "executable": "/usr/bin/python3"
+}
