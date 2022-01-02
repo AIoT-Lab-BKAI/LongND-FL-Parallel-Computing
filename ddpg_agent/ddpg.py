@@ -213,7 +213,7 @@ class DDPG_Agent:
             'mean_losses': np.mean(np.asarray(local_losses)),
             'std_losses': np.std(np.asarray(local_losses)),
         }
-        wandb.log({'dqn_inside': sample});
+        wandb.log({'agent/ddpg_agent': sample, 'agent/local_losses': local_losses});
 
         if self.frame_idx % max(1000, self.max_steps + 1) == 0:
             plot(self.frame_idx, self.rewards)

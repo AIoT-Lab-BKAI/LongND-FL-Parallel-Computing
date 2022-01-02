@@ -12,6 +12,8 @@ from torchvision import transforms, datasets
 from modules.Client import Client
 from utils.utils import (
     GenerateLocalEpochs,
+    getDictionaryLosses,
+    getLoggingDictionary,
     save_infor,
     select_client,
     select_drop_client,
@@ -136,7 +138,7 @@ def main(args):
         local_model_weight.share_memory_()
 
         # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
-        train_local_loss = torch.zeros(len(train_client), 100) # maximum number of epochs for client is 100
+        train_local_loss = torch.zeros(len(train_client), 1001) # maximum number of epochs for client is 100
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
@@ -180,14 +182,14 @@ def main(args):
             local_n_sample, list_abiprocess
         )
         # logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
-        
+        dictionaryLosses = getDictionaryLosses(train_local_loss[:, round])
         sample = {
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
             "n_epochs": args.num_epochs,
             "selected_clients": list([int(i) for i in selected_client]),
             "drop_clients": list([int(i) for i in drop_clients]),
-            "local_loss": convert_tensor_to_list(train_local_loss),
+            "local_loss": dictionaryLosses,
             "local_train_time": max_time,
             "delay": delay,
             "accuracy": acc,
@@ -201,11 +203,12 @@ def main(args):
             "num_epochs": s_epochs,
             "assigned_priorities": assigned_priorities,
         }
+        recordedSample = getLoggingDictionary(dqn_sample)
         list_sam.append(sample)
         log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
-        wandb.log(sample)
-        wandb.log({'dqn': dqn_sample})
+        # wandb.log(sample)
+        wandb.log({'dqn/dqn_sample': recordedSample, 'dqn/summary': sample})
 
     save_infor(list_sam, path_to_save_log+"/log.json")
 

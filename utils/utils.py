@@ -250,6 +250,23 @@ def load_dataset_idx(path="data"):
     list_idx =json.load(open(path,'r'))
     return {int(k):v for k,v in list_idx.items()}
 
+def getLoggingDictionary(sample, num_clients):
+    client_dicts = {}
+    for cli in range(num_clients):
+        cli_dict = {}
+        cli_dict["mean"] = sample["means"][cli]
+        cli_dict["std"] = sample["std"][cli]
+        cli_dict["epoch"] = sample["num_epochs"][cli]
+        cli_dict["priority"] = sample["assigned_priorities"][cli]
+        client_dicts[cli] = cli_dict
+    return client_dicts
+def getDictionaryLosses(losses, num_clients):
+    client_dicts = {}
+    for cli in range(num_clients):
+        cli_dict = {}
+        cli_dict["local_loss"] = losses[cli]
+    return client_dicts
+
 import numpy as np
 
 # if __name__ == "__main__":
