@@ -210,8 +210,8 @@ class DDPG_Agent:
             'episode_reward': self.episode_reward,
             'total_reward': self.rewards,
             'local_losses': local_losses,
-            'mean_losses': np.mean(local_losses),
-            'std_losses': np.std(local_losses),
+            'mean_losses': np.mean(np.asarray(local_losses)),
+            'std_losses': np.std(np.asarray(local_losses)),
         }
         wandb.log({'dqn_inside': sample});
 
