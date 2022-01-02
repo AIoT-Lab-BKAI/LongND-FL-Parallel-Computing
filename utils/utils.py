@@ -4,6 +4,7 @@ import numpy as np
 from numpy.core.defchararray import count
 from torch.cuda.memory import reset_accumulated_memory_stats
 import torch
+import torch.nn as nn
 
 
 def GenerateLocalEpochs(percentage, size, max_epochs):
@@ -172,12 +173,23 @@ def communicate(tensors, communication_op):
 
 import torch
 
+def standardize_weights(dqn_weights, n_models):
+    s_func = nn.Softmax(dim=0)
+    means = [dqn_weights[0, cli*3] for cli in range(n_models)]
+    s_means = s_func(means)
+    s_std = [dqn_weights[0, cli*3+1]/10 for cli in range(n_models)]
+    s_epochs = [math.ceil(dqn_weights[0,cli*3+1]*10) if math.ceil(dqn_weights[0,cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
+    assigned_priorities = [np.random.normal(s_means[i], s_std[i]) for i in range(n_models)]
+    return s_means, s_std, s_epochs, assigned_priorities
 
-def aggregate(local_weight, n_models, dqn_weights):
-    weighted_ratio = []
-    for cli in range(0, n_models):
-        weighted_ratio.append(np.random.normal(dqn_weights[0, cli*2], dqn_weights[0, cli*2+1], 1))
-    ratio = torch.Tensor(np.array(weighted_ratio))/n_models
+def aggregate(local_weight, n_models, assigned_priorities):
+    # weighted_ratio = []
+    # _, _, _, assigned_priorities = standardize_weights(dqn_weights, n_models)
+
+    # for cli in range(0, n_models):
+    #     weighted_ratio.append(np.random.normal(dqn_weights[0, cli*2], dqn_weights[0, cli*2+1], 1))
+    ratio = torch.Tensor(np.array(assigned_priorities))
+    # ratio = assigned_prorities
     # ratio = torch.ones(1,n_models)/n_models
     # print(ratio.shape)
     # print(local_weight.shape)

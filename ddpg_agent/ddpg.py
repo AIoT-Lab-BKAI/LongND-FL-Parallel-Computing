@@ -7,9 +7,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from gym import spaces
+import numpy as np
 
 import torch.nn.functional as F
 from torch.distributions import Normal
+import wandb
 
 # %matplotlib inline
 # from src.ddpg_agent.policy import NormalizedActions
@@ -28,11 +30,11 @@ class DDPG_Agent:
         state_dim=3,
         action_dim=1,
         hidden_dim=256,
-        init_w=3e-3,
+        init_w=1e-3,
         value_lr=1e-3,
         policy_lr=1e-4,
         replay_buffer_size=1000000,
-        max_steps=50,
+        max_steps=16,
         max_frames=12000,
         batch_size=16,
         log_dir="./log/epochs",
@@ -171,6 +173,7 @@ class DDPG_Agent:
         )
         # print(state)
         prev_reward = get_reward(local_losses)
+        
         if self.step == self.max_steps - 1 or done:
             self.rewards.append(self.episode_reward)
             self.logging_per_round()
@@ -203,6 +206,14 @@ class DDPG_Agent:
         self.episode_reward += prev_reward
         self.frame_idx += 1
         self.step += 1
+        sample = {
+            'episode_reward': self.episode_reward,
+            'total_reward': self.rewards,
+            'local_losses': local_losses,
+            'mean_losses': np.mean(local_losses),
+            'std_losses': np.std(local_losses),
+        }
+        wandb.log({'dqn_inside': sample});
 
         if self.frame_idx % max(1000, self.max_steps + 1) == 0:
             plot(self.frame_idx, self.rewards)

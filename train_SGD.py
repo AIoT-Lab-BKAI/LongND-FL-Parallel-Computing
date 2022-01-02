@@ -15,6 +15,7 @@ from utils.utils import (
     save_infor,
     select_client,
     select_drop_client,
+    standardize_weights,
 )
 from utils.loader import iid_partition, non_iid_partition, mnist_extr_noniid,mnist_noniid_client_level
 from utils.trainer import train
@@ -114,7 +115,7 @@ def main(args):
     # action_dim = args.num_clients * 2
     action_dim = args.num_clients * 3   # plus action for numbers of epochs for each client
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir)
 
     # list_epochs = [2 for i in range(args.num_clients)]
     list_epochs = [args.num_epochs for i in range(args.num_clients)]
@@ -166,17 +167,19 @@ def main(args):
         done = 0
         num_cli = len(train_clients)
         dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
+        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights)
         # dqn_list_epochs = int(dqn_weights[num_cli*2:]*10)
         # print(f'dqn weight: {dqn_weights.shape}')
-        dqn_list_epochs = [ceil(dqn_weights[0,i]*100) if ceil(dqn_weights[0,i]*100) > 0 else 1 for i in range(num_cli*2, dqn_weights.shape[1])]
-        flat_tensor = aggregate(local_model_weight, len(train_clients), dqn_weights)
+        # dqn_list_epochs = [ceil(dqn_weights[0,i]*10) if ceil(dqn_weights[0,i]*10) > 0 else 1 for i in range(num_cli*2, dqn_weights.shape[1])]
+        dqn_list_epochs = s_epochs
+        flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
         acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess
         )
-        logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
+        # logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
         
         sample = {
             "round": round + 1,
@@ -189,12 +192,20 @@ def main(args):
             "delay": delay,
             "accuracy": acc,
             "test_loss": test_loss,
-            "assigned_weights": logging_dqn_weights
+            # "assigned_weights": logging_dqn_weights
+        }
+
+        dqn_sample = {
+            "means": s_means,
+            "std": s_std,
+            "num_epochs": s_epochs,
+            "assigned_priorities": assigned_priorities,
         }
         list_sam.append(sample)
         log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
         wandb.log(sample)
+        wandb.log({'dqn': dqn_sample})
 
     save_infor(list_sam, path_to_save_log+"/log.json")
 
@@ -204,7 +215,7 @@ if __name__ == "__main__":
 
     # main()
     parse_args = option()
-    wandb.init(project="federated-learning-dqn", entity="duwgnt",
+    wandb.init(project="federated-learning-dqn-ver2", entity="duwgnt",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
