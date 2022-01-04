@@ -220,7 +220,7 @@ if __name__ == "__main__":
 
     # main()
     parse_args = option()
-    wandb.init(project="DUNGNT/federated-learning-dqn", entity="aiotlab",
+    wandb.init(project="dungnt-federated-learning-dqn", entity="aiotlab",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
