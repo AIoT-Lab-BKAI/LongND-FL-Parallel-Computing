@@ -74,8 +74,14 @@ def main():
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
+        if args.iid_data:
+            # print("IID dataset")
+            list_idx_sample = iid_partition(
+                train_dataset, args.num_clients
+            )
+        else:
         # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
-        list_idx_sample = mnist_noniid_client_level(train_dataset,args.num_samples_per_class)
+            list_idx_sample = mnist_noniid_client_level(train_dataset,args.num_samples_per_class)
         save_dataset_idx(list_idx_sample, args.path_data_idx)
 
     # exit()

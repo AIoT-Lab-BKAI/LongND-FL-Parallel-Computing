@@ -48,5 +48,6 @@ def option():
     parser.add_argument("--algorithm", type=str, default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
     parser.add_argument("--num_samples_per_class", type=int, default = 10)
+    parser.add_argument("--iid_data" ,type=bool, default=False)
     args = parser.parse_args()
     return args

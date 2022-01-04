@@ -125,3 +125,6 @@
 20:22:06,233 INFO Round 0 Selected client : 5 6 7  
 20:22:24,672 INFO Round 0 Selected client : 5 6 7  
 20:22:49,527 INFO Round 0 Selected client : 0 9 2  
+16:31:25,586 INFO Round 0 Selected client : 1 2 3  
+16:31:47,105 INFO Round 0 Selected client : 1 2 3  
+16:32:25,167 INFO Round 0 Selected client : 1 2 3  
