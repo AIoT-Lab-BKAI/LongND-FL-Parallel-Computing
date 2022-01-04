@@ -268,7 +268,10 @@ def getDictionaryLosses(losses, num_clients):
         client_dicts[cli] = cli_dict
     return client_dicts
 
-import numpy as np
+def get_mean_losses(local_train_losses, num_cli):
+    return [torch.sum(local_train_losses[i:,])/torch.count_nonzero(local_train_losses[i:,]) for i in range(num_cli)]
+
+# import numpy as np
 
 # if __name__ == "__main__":
 #     a = np.array([1,2,3])

@@ -7,3 +7,17 @@
 17:29:48,373 INFO Round 6 Selected client : 0 1 2 3 4 5 6 7 8 9  
 17:30:03,92 INFO Round 7 Selected client : 0 1 2 3 4 5 6 7 8 9  
 17:30:17,661 INFO Round 8 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:52:04,278 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:52:44,391 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:52:59,196 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:53:09,598 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:53:20,176 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:53:52,96 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:54:03,256 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:54:13,790 INFO Round 2 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:54:24,99 INFO Round 3 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:54:54,289 INFO Round 4 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:55:09,65 INFO Round 5 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:55:22,717 INFO Round 6 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:56:01,483 INFO Round 0 Selected client : 0 1 2 3 4 5 6 7 8 9  
+11:56:12,818 INFO Round 1 Selected client : 0 1 2 3 4 5 6 7 8 9  

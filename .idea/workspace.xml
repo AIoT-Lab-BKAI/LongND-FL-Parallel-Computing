@@ -23,9 +23,215 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af667320-65f4-41db-98e9-da4c8ca4e8df" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataset_idx.json" beforeDir="false" afterPath="$PROJECT_DIR$/dataset_idx.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ddpg_agent/ddpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/ddpg_agent/ddpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/iid/fedavg/fedavg-mnist-iid_round.txt" beforeDir="false" afterPath="$PROJECT_DIR$/log/iid/fedavg/fedavg-mnist-iid_round.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/iid/fedavg/log_dqn.txt" beforeDir="false" afterPath="$PROJECT_DIR$/log/iid/fedavg/log_dqn.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/iid/fedavg/round_log.json" beforeDir="false" afterPath="$PROJECT_DIR$/log/iid/fedavg/round_log.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_SGD.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_SGD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/debug-internal.log" beforeDir="false" afterPath="$PROJECT_DIR$/wandb/debug-internal.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/wandb/debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/latest-run" beforeDir="false" afterPath="$PROJECT_DIR$/wandb/latest-run" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_151936-u0kn8jp1/run-u0kn8jp1.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152046-2s0ej479/run-2s0ej479.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152201-966k5zmp/run-966k5zmp.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152347-2utxikfb/run-2utxikfb.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152425-270nb2gn/run-270nb2gn.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_152530-3j515aib/run-3j515aib.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164230-1gwi6sjn/run-1gwi6sjn.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_164446-ku7dv6b0/run-ku7dv6b0.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_212220-1gbq3h75/run-1gbq3h75.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_213346-fjny6bye/run-fjny6bye.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214837-3nkkmpgv/run-3nkkmpgv.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214900-1x7gcya7/run-1x7gcya7.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_214930-1je98cil/run-1je98cil.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215115-3fmkz5su/run-3fmkz5su.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215154-3i6e4mmk/run-3i6e4mmk.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220101_215449-3ho6tbu8/run-3ho6tbu8.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_160928-1x3ybryf/run-1x3ybryf.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161236-17gqew4x/run-17gqew4x.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161617-1ni9i2nl/run-1ni9i2nl.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_161957-2iv5p3k6/run-2iv5p3k6.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170507-2rfqxick/run-2rfqxick.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_170759-2zumamp9/run-2zumamp9.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_171022-26739d9f/run-26739d9f.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173514-2ocak2ko/run-2ocak2ko.wandb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/files/config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/files/output.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/files/wandb-metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/files/wandb-summary.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/logs/debug-internal.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/logs/debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wandb/run-20220102_173539-1cwd8xwm/run-1cwd8xwm.wandb" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,18 +418,33 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train_SGD.py</url>
-          <line>146</line>
+          <line>150</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ddpg_agent/ddpg.py</url>
-          <line>110</line>
+          <line>158</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ddpg_agent/ddpg.py</url>
-          <line>111</line>
+          <line>159</line>
           <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/train_SGD.py</url>
+          <line>140</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/trainer.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/trainer.py</url>
+          <line>43</line>
+          <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

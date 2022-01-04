@@ -34,9 +34,9 @@ class DDPG_Agent:
         value_lr=1e-3,
         policy_lr=1e-4,
         replay_buffer_size=1000000,
-        max_steps=16,
+        max_steps=4,
         max_frames=12000,
-        batch_size=16,
+        batch_size=2,
         log_dir="./log/epochs",
     ):
         # super(DDPG_Agent, self).__init__()
@@ -67,14 +67,28 @@ class DDPG_Agent:
         # action_dim = env.action_space.shape[0]
         # state_dim = state_dim
         # action_dim = action_dim
+
+        # FOR cuda ONLY
+        # self.value_net = ValueNetwork(
+        #     state_dim, action_dim, hidden_dim).to("cuda")
+        # self.policy_net = PolicyNetwork(
+        #     state_dim, action_dim, hidden_dim).to("cuda")
+        # self.target_value_net = ValueNetwork(
+        #     state_dim, action_dim, hidden_dim).to("cuda")
+        # self.target_policy_net = PolicyNetwork(
+        #     state_dim, action_dim, hidden_dim).to("cuda")
+
+
         self.value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim).to("cuda")
+            state_dim, action_dim, hidden_dim)
         self.policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim).to("cuda")
+            state_dim, action_dim, hidden_dim)
         self.target_value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim).to("cuda")
+            state_dim, action_dim, hidden_dim)
         self.target_policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim).to("cuda")
+            state_dim, action_dim, hidden_dim)
+
+        
 
         self.memory = (
             Memory()
@@ -114,11 +128,20 @@ class DDPG_Agent:
             self.batch_size
         )
         # print('DONE HAHAHAHAHAHA')
-        state = torch.FloatTensor(state).squeeze().to("cuda")
-        next_state = torch.FloatTensor(next_state).squeeze().to("cuda")
-        action = torch.FloatTensor(action).squeeze().to("cuda")
-        reward = torch.FloatTensor(reward).to("cuda")
-        done = torch.FloatTensor(np.float32(done)).to("cuda")
+        # FOR cuda only
+        # state = torch.FloatTensor(state).squeeze().to("cuda")
+        # next_state = torch.FloatTensor(next_state).squeeze().to("cuda")
+        # action = torch.FloatTensor(action).squeeze().to("cuda")
+        # reward = torch.FloatTensor(reward).to("cuda")
+        # done = torch.FloatTensor(np.float32(done)).to("cuda")
+
+
+        # For CPU
+        state = torch.FloatTensor(state).squeeze()
+        next_state = torch.FloatTensor(next_state).squeeze()
+        action = torch.FloatTensor(action).squeeze()
+        reward = torch.FloatTensor(reward)
+        done = torch.FloatTensor(np.float32(done))
         # print(f'state: {state.shape}')
         
 
@@ -186,8 +209,10 @@ class DDPG_Agent:
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(
-            0).to("cuda")  # current state
+        # state = torch.FloatTensor(state).unsqueeze(
+        #     0).to("cuda")  # current state
+        state = torch.FloatTensor(state).unsqueeze(0)
+        
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
         action = self.policy_net.get_action(state)
