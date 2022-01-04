@@ -210,7 +210,7 @@ def main(args):
         log_by_round(sample, path_to_save_log+"/round_log.json")
         load_epoch(list_client, dqn_list_epochs)
         # wandb.log(sample)
-        wandb.log({'dqn/dqn_sample': recordedSample, 'summary/summary': sample})
+        wandb.log({'dqn/dqn_sample': recordedSample, 'summary/summary': sample, "epoch/epc": {'epoch_list': s_epochs}, "priority/prio": {'pri': assigned_priorities}})
 
     save_infor(list_sam, path_to_save_log+"/log.json")
 
@@ -220,7 +220,9 @@ if __name__ == "__main__":
 
     # main()
     parse_args = option()
-    wandb.init(project="dungnt-federated-learning-dqn", entity="aiotlab",
+    wandb.init(project="dungnt-federated-learning-dqn", 
+                entity="aiotlab",
+                name=parse_args.log_file,
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,

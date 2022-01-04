@@ -34,7 +34,7 @@ class DDPG_Agent:
         value_lr=1e-3,
         policy_lr=1e-4,
         replay_buffer_size=1000000,
-        max_steps=16,
+        max_steps=16*500,
         max_frames=12000,
         batch_size=16,
         log_dir="./log/epochs",
@@ -208,12 +208,13 @@ class DDPG_Agent:
         self.step += 1
         sample = {
             'episode_reward': self.episode_reward,
+            'action_reward': prev_reward,
             'total_reward': self.rewards,
             'local_losses': local_losses,
             'mean_losses': np.mean(np.asarray(local_losses)),
             'std_losses': np.std(np.asarray(local_losses)),
         }
-        wandb.log({'agent/ddpg_agent': sample, 'agent/local_losses': local_losses});
+        wandb.log({'agent/ddpg_agent': sample, 'agent/local_losses': local_losses})
 
         if self.frame_idx % max(1000, self.max_steps + 1) == 0:
             plot(self.frame_idx, self.rewards)
