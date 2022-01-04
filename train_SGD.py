@@ -12,6 +12,7 @@ from torchvision import transforms, datasets
 from modules.Client import Client
 from utils.utils import (
     GenerateLocalEpochs,
+    get_mean_losses,
     getDictionaryLosses,
     getLoggingDictionary,
     save_infor,
@@ -138,7 +139,7 @@ def main(args):
         local_model_weight.share_memory_()
 
         # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
-        train_local_loss = torch.zeros(len(train_client), 1001) # maximum number of epochs for client is 100
+        train_local_loss = torch.zeros(len(train_client), 100) # maximum number of epochs for client is 100
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
@@ -168,7 +169,8 @@ def main(args):
         # FedAvg weight local model va cap nhat weight global
         done = 0
         num_cli = len(train_clients)
-        dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
+        mean_local_losses = get_mean_losses(train_local_loss, num_cli)
+        dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
         s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
         # dqn_list_epochs = int(dqn_weights[num_cli*2:]*10)
         # print(f'dqn weight: {dqn_weights.shape}')
@@ -182,14 +184,14 @@ def main(args):
             local_n_sample, list_abiprocess
         )
         # logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
-        dictionaryLosses = getDictionaryLosses(train_local_loss[:, round], num_cli)
+        dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
         sample = {
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
             "n_epochs": args.num_epochs,
             "selected_clients": list([int(i) for i in selected_client]),
             "drop_clients": list([int(i) for i in drop_clients]),
-            "local_loss": dictionaryLosses,
+            "local_train_loss": dictionaryLosses,
             "local_train_time": max_time,
             "delay": delay,
             "accuracy": acc,
@@ -218,7 +220,7 @@ if __name__ == "__main__":
 
     # main()
     parse_args = option()
-    wandb.init(project="federated-learning-dqn-ver2", entity="duwgnt",
+    wandb.init(project="DUNGNT/federated-learning-dqn", entity="aiotlab",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
