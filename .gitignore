@@ -2,3 +2,4 @@
 round.txt
 log.json
 dataset_idx.json
+/checkpoint/**

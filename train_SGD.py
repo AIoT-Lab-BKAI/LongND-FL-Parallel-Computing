@@ -9,7 +9,9 @@ from torchvision import transforms, datasets
 from modules.Client import Client
 from utils.utils import (
     GenerateLocalEpochs,
+    load_model,
     save_infor,
+    save_model,
     select_client,
     select_drop_client,
 )
@@ -63,12 +65,15 @@ def main():
     transforms_mnist = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
     )
-    c
+    train_dataset = datasets.MNIST(
+        "./data/mnist/", train=True, download=True, transform=transforms_mnist
+    )
     test_dataset = datasets.MNIST(
         "../data/mnist/", train=False, download=True, transform=transforms_mnist
     )
     # device = torch.device("cuda")
     mnist_cnn = MNIST_CNN()
+    # load_model(mnist_cnn, args.path_model)
     if args.load_data_idx:
         list_idx_sample = load_dataset_idx(args.path_data_idx)
     else:
@@ -164,6 +169,7 @@ def main():
             "test_loss": test_loss
         }
         list_sam.append(sample)
+    save_model(mnist_cnn, args.path_model)
         # load_epoch(list_client,list_epochs)
     save_infor(list_sam, "log.json")
 

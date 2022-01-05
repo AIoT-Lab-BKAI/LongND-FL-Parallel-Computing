@@ -223,6 +223,17 @@ def load_dataset_idx(path="data"):
     list_idx =json.load(open(path,'r'))
     return {int(k):v for k,v in list_idx.items()}
 
+
+def load_model(model, path):
+    print("Loading model")
+    checkpoints = torch.load(path)
+    model.load_state_dict(checkpoints["model_dict"])
+
+def save_model(model,path):
+    print("Saving model")
+    checkpoints = {"model_dict": model.state_dict()}
+    torch.save(checkpoints, path)
+
 import numpy as np
 
 # if __name__ == "__main__":
