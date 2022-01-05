@@ -63,9 +63,7 @@ def main():
     transforms_mnist = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
     )
-    train_dataset = datasets.MNIST(
-        "./data/mnist/", train=True, download=True, transform=transforms_mnist
-    )
+    c
     test_dataset = datasets.MNIST(
         "../data/mnist/", train=False, download=True, transform=transforms_mnist
     )
