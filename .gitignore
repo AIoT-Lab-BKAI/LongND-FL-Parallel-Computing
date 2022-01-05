@@ -4,5 +4,7 @@ data/
 log/
 wandb/
 models/
+utils/__pycache__/
+modules/__pycache__/
 *json
 *txt
