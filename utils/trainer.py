@@ -51,13 +51,15 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 
 
-def test(model, test_dataloader):
+def test(model, test_dataloader,device):
     print("Test :-------------------------------")
     y_prd = []
     y_grt = []
     cel = nn.CrossEntropyLoss()
     loss = 0.0
     for X, y in tqdm(test_dataloader):
+        X = X.to(device)
+        y = y.to(device)
         output = model(X)
         loss += cel(output, y).item()
         output = output.argmax(-1)

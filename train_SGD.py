@@ -152,7 +152,9 @@ def main():
         flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
-        acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
+        device = torch.device("cuda")
+        mnist_cnn = mnist_cnn.to(device)
+        acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False),device)
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess
         )
