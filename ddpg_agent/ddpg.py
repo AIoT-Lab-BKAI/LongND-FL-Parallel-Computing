@@ -34,7 +34,7 @@ class DDPG_Agent:
         value_lr=1e-3,
         policy_lr=1e-4,
         replay_buffer_size=1000000,
-        max_steps=16*500,
+        max_steps=16*50,
         max_frames=12000,
         batch_size=16,
         log_dir="./log/epochs",
@@ -186,8 +186,7 @@ class DDPG_Agent:
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(
-            0).to("cuda")  # current state
+        state = torch.FloatTensor(state).unsqueeze(0).to("cuda")  # current state
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
         action = self.policy_net.get_action(state)
@@ -199,6 +198,7 @@ class DDPG_Agent:
             self.step += 1
             self.frame_idx += 1
             return action
+
         s, a, r, s_next = self.memory.get_last_record()
         self.replay_buffer.push(s, a, r, s_next, done)
         if len(self.replay_buffer) >= self.batch_size:
