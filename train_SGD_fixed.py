@@ -88,15 +88,17 @@ def main(args):
     test_dataset = datasets.MNIST(
         "../data/mnist/", train=False, download=True, transform=transforms_mnist
     )
-    # device = torch.device("cuda")
     mnist_cnn = MNIST_CNN()
-    if args.load_data_idx:
-        list_idx_sample = load_dataset_idx(args.path_data_idx)
-    else:
+
+    list_idx_sample = load_dataset_idx(args.path_data_idx)
+    # if args.load_data_idx:
+        # list_idx_sample = load_dataset_idx(args.path_data_idx)
+    # else:
         # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
-        list_idx_sample = mnist_noniid_client_level(
-            train_dataset, args.num_samples_per_class)
-        save_dataset_idx(list_idx_sample, args.path_data_idx)
+        # list_idx_sample = mnist_noniid_client_level(
+        #     train_dataset, args.num_samples_per_class)
+        # save_dataset_idx(list_idx_sample, args.path_data_idx)
+        # pass
 
     # exit()
     list_client = [
@@ -159,22 +161,31 @@ def main(args):
             logging.info(f"Round {round} Selected client : {str_sltc} ")
 
         # Huan luyen song song tren cac client
-        with mp.Pool(args.num_core) as pool:
-            pool.map(
-                train,
-                [
-                    (
-                        i,
-                        train_clients[i],
+        # with mp.Pool(args.num_core) as pool:
+        #     pool.map(
+        #         train,
+        #         [
+        #             (
+        #                 i,
+        #                 train_clients[i],
+        #                 copy.deepcopy(mnist_cnn),
+        #                 list_client[train_clients[i]],
+        #                 local_model_weight,
+        #                 train_local_loss,
+        #                 args.algorithm,
+        #             )
+        #             for i in range(len(train_clients))
+        #         ],
+        #     )
+
+        for i in range(len(train_client)):
+            train([i, train_clients[i],
                         copy.deepcopy(mnist_cnn),
                         list_client[train_clients[i]],
                         local_model_weight,
                         train_local_loss,
-                        args.algorithm,
-                    )
-                    for i in range(len(train_clients))
-                ],
-            )
+                        args.algorithm])
+
         # FedAvg weight local model va cap nhat weight global
         done = 0
         num_cli = len(train_clients)

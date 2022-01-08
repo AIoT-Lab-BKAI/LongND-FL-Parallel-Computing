@@ -32,7 +32,6 @@ def option():
         default=1,
     )
     
-    parser.add_argument("--load_data_idx", type=bool, default=False)
     parser.add_argument(
         "--learning_rate",
         help="learning rate for inner solver;",
@@ -53,6 +52,7 @@ def option():
     parser.add_argument("--log_file", type=str, default="logs")
     parser.add_argument("--num_samples_per_class", type=int, default=10)
 
+    parser.add_argument("--load_data_idx", type=bool, default=False)
     parser.add_argument("--path_data_idx", type=str,
                         default="dataset_idx.json")
     parser.add_argument("--local_save_mode", type=bool, default=False)
