@@ -39,6 +39,7 @@ from utils.utils import (
     get_train_time,
     count_params,
     aggregate,
+    aggregate_benchmark,
     unflatten_model,
     flatten_model,
 )
@@ -173,8 +174,8 @@ def main(args):
                    args.algorithm])
 
         # FedAvg weight local model va cap nhat weight global
-        # FedAvg weight local model va cap nhat weight global
-        flat_tensor = aggregate(local_model_weight, len(train_clients))
+        flat_tensor = aggregate_benchmark(
+            local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
         acc, test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
