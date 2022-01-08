@@ -1,1 +1,0 @@
-{'frame_idx': 15, 'episode': -0.07988433525315486, 'total_reward': -0.07988433525315486}{'frame_idx': 30, 'episode': 0.0, 'total_reward': 0.0}{'frame_idx': 45, 'episode': 0.0, 'total_reward': 0.0}{'frame_idx': 60, 'episode': 0.0, 'total_reward': 0.0}{'frame_idx': 75, 'episode': 0.0, 'total_reward': 0.0}

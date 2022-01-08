@@ -16,9 +16,9 @@ def option():
         type=int,
         default=10,
     )
-    # parser.add_argument("--", type=int, default=10)
     parser.add_argument("--num_class_per_client", type=int, default=2)
-    parser.add_argument("--rate_balance", type=int, default=0, help="0 is unbalance")
+    parser.add_argument("--rate_balance", type=int,
+                        default=0, help="0 is unbalance")
     parser.add_argument(
         "--batch_size",
         help="batch size when clients train on data;",
@@ -31,7 +31,7 @@ def option():
         type=int,
         default=1,
     )
-    parser.add_argument("--path_data_idx", type=str, default="dataset_idx.json")
+    
     parser.add_argument("--load_data_idx", type=bool, default=False)
     parser.add_argument(
         "--learning_rate",
@@ -39,17 +39,27 @@ def option():
         type=float,
         default=0.003,
     )
-    parser.add_argument("--num_samples_per_client",type=int, default=10)
-    parser.add_argument("--mu", help="constant for prox;", type=float, default=0)
-    parser.add_argument("--seed", help="seed for randomness;", type=int, default=10)
+    parser.add_argument("--num_samples_per_client", type=int, default=10)
+    parser.add_argument("--mu", help="constant for prox;",
+                        type=float, default=0)
+    parser.add_argument(
+        "--seed", help="seed for randomness;", type=int, default=10)
     parser.add_argument(
         "--drop_percent", help="percentage of slow devices", type=float, default=0.0
     )
     parser.add_argument("--algorithm", type=str, default="fedprox")
     parser.add_argument("--num_core", type=int, default=2)
     parser.add_argument("--log_dir", type=str, default='./')
-    parser.add_argument("--logs_file", type=str, default="logs")
     parser.add_argument("--log_file", type=str, default="logs")
-    parser.add_argument("--num_samples_per_class", type=int, default = 10)
+    parser.add_argument("--num_samples_per_class", type=int, default=10)
+
+    parser.add_argument("--path_data_idx", type=str,
+                        default="dataset_idx.json")
+    parser.add_argument("--local_save_mode", type=bool, default=False)
+    parser.add_argument("--run_name", type=str, default="")
+    parser.add_argument("--group_name", type=str, default="")
+    
+    
+
     args = parser.parse_args()
     return args
