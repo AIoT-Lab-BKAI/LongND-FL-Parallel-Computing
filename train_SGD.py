@@ -159,22 +159,29 @@ def main(args):
             logging.info(f"Round {round} Selected client : {str_sltc} ")
 
         # Huan luyen song song tren cac client
-        with mp.Pool(args.num_core) as pool:
-            pool.map(
-                train,
-                [
-                    (
-                        i,
-                        train_clients[i],
+        # with mp.Pool(args.num_core) as pool:
+        #     pool.map(
+        #         train,
+        #         [
+        #             (
+        #                 i,
+        #                 train_clients[i],
+        #                 copy.deepcopy(mnist_cnn),
+        #                 list_client[train_clients[i]],
+        #                 local_model_weight,
+        #                 train_local_loss,
+        #                 args.algorithm,
+        #             )
+        #             for i in range(len(train_clients))
+        #         ],
+        #     )
+        for i in range(len(train_client)):
+            train([i, train_clients[i],
                         copy.deepcopy(mnist_cnn),
                         list_client[train_clients[i]],
                         local_model_weight,
                         train_local_loss,
-                        args.algorithm,
-                    )
-                    for i in range(len(train_clients))
-                ],
-            )
+                        args.algorithm])
         # FedAvg weight local model va cap nhat weight global
         done = 0
         num_cli = len(train_clients)
