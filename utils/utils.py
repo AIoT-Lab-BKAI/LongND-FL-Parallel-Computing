@@ -1,3 +1,11 @@
+import json
+import functools
+import torch.distributed as dist
+import sys
+import math
+import logging
+import collections
+import copy
 from random import random
 from collections import OrderedDict
 import numpy as np
@@ -15,7 +23,7 @@ def GenerateLocalEpochs(percentage, size, max_epochs):
     percentage: percentage of clients to have fewer than E epochs
     size:       total size of the list
     max_epochs: maximum value for local epochs
-  
+
   Returns:
     List of size epochs for each Client Update
 
@@ -39,10 +47,6 @@ def GenerateLocalEpochs(percentage, size, max_epochs):
         np.random.shuffle(epoch_list)
 
         return epoch_list
-
-
-import copy
-import torch
 
 
 def weight_avg(list_model_state):
@@ -76,17 +80,6 @@ def select_drop_client(list_cl_per_round, drop_percent):
 
 def count_params(model):
     return sum(p.numel() for p in model.parameters())
-
-
-import collections
-import logging
-import math
-import sys
-import copy
-
-import torch
-import torch.distributed as dist
-import functools
 
 
 def flatten_tensors(tensors):
@@ -141,7 +134,7 @@ def unflatten_model(flat, model):
     output = []
     for tensor in model.parameters():
         n = tensor.numel()
-        output.append(flat[count : count + n].view_as(tensor))
+        output.append(flat[count: count + n].view_as(tensor))
         count += n
     output = tuple(output)
     temp = OrderedDict()
@@ -150,10 +143,12 @@ def unflatten_model(flat, model):
     # retrun temp
     return temp
 
-def load_epoch(list_client,list_epochs):
+
+def load_epoch(list_client, list_epochs):
     n_client = len(list_client)
     for i in range(n_client):
         list_client[i].eps = list_epochs[i]
+
 
 def communicate(tensors, communication_op):
     """
@@ -171,20 +166,20 @@ def communicate(tensors, communication_op):
         t.set_(f)
 
 
-import torch
-
 def standardize_weights(dqn_weights, n_models, decay_factor=0.98, step=1):
     s_func = nn.Softmax(dim=0)
     means = [dqn_weights[0, cli*3] for cli in range(n_models)]
     s_means = s_func(torch.FloatTensor(means))
 
+    s_std = [np.clip(dqn_weights[0, cli*3+1]/100, 0.001,
+                     s_means[cli] * 0.1) for cli in range(n_models)]
 
-    s_std = [np.clip(dqn_weights[0, cli*3+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)]
-
-
-    s_epochs = [math.ceil(dqn_weights[0,cli*3+1]*10) if math.ceil(dqn_weights[0,cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
-    assigned_priorities = [np.random.normal(s_means[i], s_std[i]) for i in range(n_models)]
+    s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(
+        dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
+    assigned_priorities = [np.random.normal(
+        s_means[i], s_std[i]) for i in range(n_models)]
     return s_means, s_std, s_epochs, assigned_priorities
+
 
 def aggregate(local_weight, n_models, assigned_priorities):
     # weighted_ratio = []
@@ -226,12 +221,10 @@ def convert_tensor_to_list(train_local_loss):
     return result
 
 
-import json
-
-
 def save_infor(list_sam, path="sample.json"):
     with open(path, "w+") as outfile:
         json.dump(list_sam, outfile)
+
 
 def log_by_round(sample, path="samples.json"):
     with open(path, "a+") as outfile:
@@ -246,13 +239,16 @@ def get_train_time(n_sample, list_abiprocess):
     delay = max_time - min_time
     return train_time, delay, max_time, min_time
 
-def save_dataset_idx(list_idx_sample,path="dataset_idx.json"):
+
+def save_dataset_idx(list_idx_sample, path="dataset_idx.json"):
     with open(path, "w+") as outfile:
         json.dump(list_idx_sample, outfile)
 
+
 def load_dataset_idx(path="data"):
-    list_idx =json.load(open(path,'r'))
-    return {int(k):v for k,v in list_idx.items()}
+    list_idx = json.load(open(path, 'r'))
+    return {int(k): v for k, v in list_idx.items()}
+
 
 def getLoggingDictionary(sample, num_clients):
     client_dicts = {}
@@ -264,6 +260,8 @@ def getLoggingDictionary(sample, num_clients):
         cli_dict["priority"] = sample["assigned_priorities"][cli]
         client_dicts[cli] = cli_dict
     return client_dicts
+
+
 def getDictionaryLosses(losses, num_clients):
     client_dicts = {}
     for cli in range(num_clients):
@@ -271,9 +269,10 @@ def getDictionaryLosses(losses, num_clients):
         cli_dict["local_loss"] = losses[cli]
         client_dicts[cli] = cli_dict
     return client_dicts
-    
+
+
 def get_mean_losses(local_train_losses, num_cli):
-    return [torch.sum(local_train_losses[i:,])/torch.count_nonzero(local_train_losses[i:,]) for i in range(num_cli)]
+    return [torch.sum(local_train_losses[i:, ])/torch.count_nonzero(local_train_losses[i:, ]) for i in range(num_cli)]
 # import numpy as np
 
 # if __name__ == "__main__":

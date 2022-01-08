@@ -51,17 +51,24 @@ def train(args):
 
 def test(model, test_dataloader):
     print("Test :-------------------------------")
+    device = torch.device("cuda")
+    model = model.to(device)
     y_prd = []
     y_grt = []
     cel = nn.CrossEntropyLoss()
     loss = 0.0
     for X, y in tqdm(test_dataloader):
+        X = X.to(device)
+        y = y.to(device)
+
         output = model(X)
         loss += cel(output, y).item()
         output = output.argmax(-1)
-        y_prd.append(output)
-        y_grt.append(y)
+        y_prd.append(output.cpu())
+        y_grt.append(y.cpu())
     loss = loss/len(test_dataloader)
+
     y_ = np.concatenate([i.numpy() for i in y_prd])
     y_gt = np.concatenate([i.numpy() for i in y_grt])
+
     return accuracy_score(y_, y_gt), loss
