@@ -1,0 +1,219 @@
+
+log/iid/fedavg
+Train :------------------------------
+[5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 151.52it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 311.24it/s]
+100%|█████████████████████████████████████████████| 2/2 [00:00<00:00, 64.06it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 318.52it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 314.39it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 319.12it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 315.72it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 314.90it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 316.79it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 279.98it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 305.63it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 310.24it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 313.46it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 314.30it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 317.76it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 310.32it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 308.37it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 296.12it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 282.02it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 284.13it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 292.88it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 282.91it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 323.26it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 316.22it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 313.83it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 321.39it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 332.80it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 318.10it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 297.37it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 309.90it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 307.57it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 296.05it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 305.73it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 299.80it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 317.79it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 312.98it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 313.60it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 304.59it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 304.56it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 278.77it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 317.08it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 325.27it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 333.65it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 347.35it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 326.32it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 332.74it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 340.31it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 336.07it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 344.77it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 332.45it/s]
+  1%|▎                                          | 2/313 [00:00<01:25,  3.62it/s]
+Client : 2 Number sample : 20 Epoch : 0   Ep loss : 2.3091453313827515
+Client : 2 Number sample : 20 Epoch : 1   Ep loss : 1.931973934173584
+Client : 0 Number sample : 20 Epoch : 0   Ep loss : 2.2957711219787598
+Client : 2 Number sample : 20 Epoch : 2   Ep loss : 1.5902864336967468
+Client : 0 Number sample : 20 Epoch : 1   Ep loss : 1.927088737487793
+Client : 2 Number sample : 20 Epoch : 3   Ep loss : 1.2558144330978394
+Client : 0 Number sample : 20 Epoch : 2   Ep loss : 1.5367200374603271
+Client : 2 Number sample : 20 Epoch : 4   Ep loss : 1.0547195971012115
+Client : 0 Number sample : 20 Epoch : 3   Ep loss : 1.1448800265789032
+Client : 0 Number sample : 20 Epoch : 4   Ep loss : 0.8761947751045227
+Client : 3 Number sample : 20 Epoch : 0   Ep loss : 2.2993319034576416
+Client : 3 Number sample : 20 Epoch : 1   Ep loss : 1.9149880409240723
+Client : 1 Number sample : 20 Epoch : 0   Ep loss : 2.284112334251404
+Client : 3 Number sample : 20 Epoch : 2   Ep loss : 1.5914877653121948
+Client : 1 Number sample : 20 Epoch : 1   Ep loss : 1.904698133468628
+Client : 3 Number sample : 20 Epoch : 3   Ep loss : 1.2379857897758484
+Client : 1 Number sample : 20 Epoch : 2   Ep loss : 1.5471009612083435
+Client : 3 Number sample : 20 Epoch : 4   Ep loss : 0.982556015253067
+Client : 1 Number sample : 20 Epoch : 3   Ep loss : 1.162139505147934
+Client : 1 Number sample : 20 Epoch : 4   Ep loss : 0.8884789049625397
+Client : 4 Number sample : 20 Epoch : 0   Ep loss : 2.301778554916382
+Client : 6 Number sample : 20 Epoch : 0   Ep loss : 2.2952240705490112
+Client : 4 Number sample : 20 Epoch : 1   Ep loss : 1.9174129962921143
+Client : 6 Number sample : 20 Epoch : 1   Ep loss : 1.8715600371360779
+Client : 4 Number sample : 20 Epoch : 2   Ep loss : 1.5172464847564697
+Client : 6 Number sample : 20 Epoch : 2   Ep loss : 1.5150907635688782
+Client : 4 Number sample : 20 Epoch : 3   Ep loss : 1.1620087027549744
+Client : 6 Number sample : 20 Epoch : 3   Ep loss : 1.2854918241500854
+Client : 4 Number sample : 20 Epoch : 4   Ep loss : 0.8650719523429871
+Client : 6 Number sample : 20 Epoch : 4   Ep loss : 1.2320404648780823
+Client : 5 Number sample : 20 Epoch : 0   Ep loss : 2.262630820274353
+Client : 7 Number sample : 20 Epoch : 0   Ep loss : 2.4381608963012695
+Client : 5 Number sample : 20 Epoch : 1   Ep loss : 1.9343704581260681
+Client : 7 Number sample : 20 Epoch : 1   Ep loss : 2.038829803466797
+Client : 5 Number sample : 20 Epoch : 2   Ep loss : 1.577604591846466
+Client : 7 Number sample : 20 Epoch : 2   Ep loss : 1.6735864877700806
+Client : 5 Number sample : 20 Epoch : 3   Ep loss : 1.1986921727657318
+Client : 7 Number sample : 20 Epoch : 3   Ep loss : 1.3995620608329773
+Client : 5 Number sample : 20 Epoch : 4   Ep loss : 0.9107683300971985
+Client : 7 Number sample : 20 Epoch : 4   Ep loss : 1.2123988270759583
+Client : 8 Number sample : 20 Epoch : 0   Ep loss : 2.3826764822006226
+Client : 8 Number sample : 20 Epoch : 1   Ep loss : 2.002742886543274
+Client : 8 Number sample : 20 Epoch : 2   Ep loss : 1.6505614519119263
+Client : 8 Number sample : 20 Epoch : 3   Ep loss : 1.3475953936576843
+Client : 8 Number sample : 20 Epoch : 4   Ep loss : 1.1546347737312317
+Client : 9 Number sample : 20 Epoch : 0   Ep loss : 2.3538498878479004
+Client : 9 Number sample : 20 Epoch : 1   Ep loss : 1.9354103803634644
+Client : 9 Number sample : 20 Epoch : 2   Ep loss : 1.566665530204773
+Client : 9 Number sample : 20 Epoch : 3   Ep loss : 1.3323609828948975
+Client : 9 Number sample : 20 Epoch : 4   Ep loss : 1.224014937877655
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100%|█████████████████████████████████████████| 313/313 [00:49<00:00,  5.41it/s]
+Train :------------------------------
+[10, 1, 1, 3, 1, 1, 1, 1, 9, 1]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 144.54it/s]
+100%|█████████████████████████████████████████████| 2/2 [00:00<00:00, 66.99it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 295.21it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 302.75it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 305.24it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 304.30it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 307.56it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 314.53it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 303.22it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 155.68it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 303.82it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 309.03it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 306.32it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 310.31it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 314.97it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 307.05it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 307.61it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 322.35it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 316.69it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 312.96it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 314.99it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 326.32it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 331.54it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 337.43it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 339.45it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 338.03it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 353.09it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 311.09it/s]
+100%|████████████████████████████████████████████| 2/2 [00:00<00:00, 337.28it/s]
+Traceback (most recent call last):
+  File "train_SGD.py", line 242, in <module>
+    main(args)
+  File "train_SGD.py", line 169, in main
+    dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
+  File "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing/ddpg_agent/ddpg.py", line 213, in get_action
+    'mean_losses': np.mean(local_losses),
+  File "<__array_function__ internals>", line 6, in mean
+  File "/usr/local/lib/python3.6/dist-packages/numpy/core/fromnumeric.py", line 3370, in mean
+    return mean(axis=axis, dtype=dtype, out=out, **kwargs)
+TypeError: mean() received an invalid combination of arguments - got (out=NoneType, axis=NoneType, dtype=NoneType, ), but expected one of:
+ * (*, torch.dtype dtype)
+ * (tuple of ints dim, bool keepdim, *, torch.dtype dtype)
+ * (tuple of names dim, bool keepdim, *, torch.dtype dtype)
+Traceback (most recent call last):
+  File "train_SGD.py", line 242, in <module>
+    main(args)
+  File "train_SGD.py", line 169, in main
+    dqn_weights = agent.get_action(train_local_loss[:,round], local_n_sample, dqn_list_epochs, done)
+  File "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing/ddpg_agent/ddpg.py", line 213, in get_action
+    'mean_losses': np.mean(local_losses),
+  File "<__array_function__ internals>", line 6, in mean
+  File "/usr/local/lib/python3.6/dist-packages/numpy/core/fromnumeric.py", line 3370, in mean
+    return mean(axis=axis, dtype=dtype, out=out, **kwargs)
+TypeError: mean() received an invalid combination of arguments - got (out=NoneType, axis=NoneType, dtype=NoneType, ), but expected one of:
+ * (*, torch.dtype dtype)
+ * (tuple of ints dim, bool keepdim, *, torch.dtype dtype)
+ * (tuple of names dim, bool keepdim, *, torch.dtype dtype)
+Client : 2 Number sample : 20 Epoch : 0   Ep loss : 1.3336127400398254
+Client : 0 Number sample : 20 Epoch : 0   Ep loss : 1.191198706626892
+Client : 0 Number sample : 20 Epoch : 1   Ep loss : 0.7899125218391418
+Client : 3 Number sample : 20 Epoch : 0   Ep loss : 1.3469807505607605
+Client : 0 Number sample : 20 Epoch : 2   Ep loss : 0.48166051506996155
+Client : 3 Number sample : 20 Epoch : 1   Ep loss : 0.966776430606842
+Client : 0 Number sample : 20 Epoch : 3   Ep loss : 0.2500607743859291
+Client : 3 Number sample : 20 Epoch : 2   Ep loss : 0.6520419716835022
+Client : 0 Number sample : 20 Epoch : 4   Ep loss : 0.13867007941007614
+Client : 0 Number sample : 20 Epoch : 5   Ep loss : 0.11466661840677261
+Client : 4 Number sample : 20 Epoch : 0   Ep loss : 1.205806404352188
+Client : 0 Number sample : 20 Epoch : 6   Ep loss : 0.0658827181905508
+Client : 0 Number sample : 20 Epoch : 7   Ep loss : 0.06403962150216103
+Client : 5 Number sample : 20 Epoch : 0   Ep loss : 1.2378120124340057
+Client : 0 Number sample : 20 Epoch : 8   Ep loss : 0.04630575515329838
+Client : 0 Number sample : 20 Epoch : 9   Ep loss : 0.04288122523576021
+Client : 6 Number sample : 20 Epoch : 0   Ep loss : 3.1642597913742065
+Client : 1 Number sample : 20 Epoch : 0   Ep loss : 1.203042447566986
+Client : 7 Number sample : 20 Epoch : 0   Ep loss : 3.1787235736846924
+Client : 8 Number sample : 20 Epoch : 0   Ep loss : 3.0317039489746094
+Client : 8 Number sample : 20 Epoch : 1   Ep loss : 1.6090871691703796
+Client : 8 Number sample : 20 Epoch : 2   Ep loss : 1.2793211936950684
+Client : 8 Number sample : 20 Epoch : 3   Ep loss : 1.142777144908905
+Client : 8 Number sample : 20 Epoch : 4   Ep loss : 0.8913930356502533
+Client : 8 Number sample : 20 Epoch : 5   Ep loss : 0.6837932467460632
+Client : 8 Number sample : 20 Epoch : 6   Ep loss : 0.5191776156425476
+Client : 8 Number sample : 20 Epoch : 7   Ep loss : 0.4184759557247162
+Client : 8 Number sample : 20 Epoch : 8   Ep loss : 0.2778393477201462
+Client : 9 Number sample : 20 Epoch : 0   Ep loss : 2.8772822618484497

@@ -1,4 +1,9 @@
-python==3.8.12
+torch
 torchvision
 tqdm
 sklearn
+gym
+IPython
+numpy
+matplotlib
+wandb

@@ -1,0 +1,38 @@
+
+./
+Traceback (most recent call last):
+  File "train_SGD.py", line 231, in <module>
+    main(args)
+  File "train_SGD.py", line 117, in main
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
+  File "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing/ddpg_agent/ddpg.py", line 69, in __init__
+    state_dim, action_dim, hidden_dim).to("cuda")
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 899, in to
+    return self._apply(convert)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 570, in _apply
+    module._apply(fn)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 593, in _apply
+    param_applied = fn(param)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 897, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/cuda/__init__.py", line 214, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available
+Traceback (most recent call last):
+  File "train_SGD.py", line 231, in <module>
+    main(args)
+  File "train_SGD.py", line 117, in main
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim)
+  File "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing/ddpg_agent/ddpg.py", line 69, in __init__
+    state_dim, action_dim, hidden_dim).to("cuda")
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 899, in to
+    return self._apply(convert)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 570, in _apply
+    module._apply(fn)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 593, in _apply
+    param_applied = fn(param)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/nn/modules/module.py", line 897, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/cuda/__init__.py", line 214, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

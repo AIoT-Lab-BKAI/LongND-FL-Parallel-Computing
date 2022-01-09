@@ -1,5 +1,9 @@
-**/__pycache__/
-round.txt
-log.json
-dataset_idx.json
-/checkpoint/**
+__pycache__/
+.idea/
+data/
+log/
+wandb/
+models/
+utils/__pycache__/
+modules/__pycache__/
+*json

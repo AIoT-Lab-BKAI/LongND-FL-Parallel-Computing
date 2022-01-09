@@ -1,3 +1,5 @@
+import numpy as np
+from sklearn.metrics import accuracy_score
 import copy
 import logging
 import torch
@@ -8,7 +10,8 @@ from utils.utils import flatten_model
 
 
 def train(args):
-    (id, pid, model, client, local_model_weight, train_local_loss,algorithm) = args
+    (id, pid, model, client, local_model_weight, train_local_loss, algorithm) = args
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     device = torch.device("cuda")
     model = model.to(device)
     local_model = copy.deepcopy(model).to(device)
@@ -18,7 +21,7 @@ def train(args):
     local_model.train()
 
     for i in range(client.eps):
-        
+        breakpoint()
         ep_loss = 0
         train_dataloader = client.train_dataloader
         train_loss = 0.0
@@ -27,7 +30,7 @@ def train(args):
             y = y.to(device)
             optimizer.zero_grad()
             output = local_model(X)
-            
+
             if algorithm == "fedprox":
                 proximal_term = 0.0
                 # breakpoint()
@@ -47,12 +50,10 @@ def train(args):
     local_model_weight[id] = flatten_model(local_model)
 
 
-from sklearn.metrics import accuracy_score
-import numpy as np
-
-# torch.multiprocessing.set_start_method('spawn')
-def test(model, test_dataloader,device):
+def test(model, test_dataloader):
     print("Test :-------------------------------")
+    device = torch.device("cuda")
+    model = model.to(device)
     y_prd = []
     y_grt = []
     cel = nn.CrossEntropyLoss()
@@ -63,10 +64,11 @@ def test(model, test_dataloader,device):
         output = model(X)
         loss += cel(output, y).item()
         output = output.argmax(-1)
-        y_prd.append(output)
-        y_grt.append(y)
+        y_prd.append(output.cpu())
+        y_grt.append(y.cpu())
     loss = loss/len(test_dataloader)
-    y_ = np.concatenate([i.detach().cpu().numpy() for i in y_prd])
-    y_gt = np.concatenate([i.detach().cpu().numpy() for i in y_grt])
-    return accuracy_score(y_, y_gt), loss
 
+    y_ = np.concatenate([i.numpy() for i in y_prd])
+    y_gt = np.concatenate([i.numpy() for i in y_grt])
+
+    return accuracy_score(y_, y_gt), loss

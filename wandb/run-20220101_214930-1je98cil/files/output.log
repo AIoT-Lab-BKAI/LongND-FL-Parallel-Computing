@@ -1,0 +1,137 @@
+
+./
+Train :------------------------------
+[5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+  0%|                                                   | 0/196 [00:00<?, ?it/s]
+Client : 0 Number sample : 1960 Epoch : 0   Ep loss : 0.09072022166382877
+Client : 0 Number sample : 1960 Epoch : 1   Ep loss : 0.06571060494930787
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 237.50it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 188.52it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 188.31it/s]
+ 18%|███████▎                                 | 35/196 [00:00<00:00, 165.65it/s]
+Client : 0 Number sample : 1960 Epoch : 2   Ep loss : 0.014970838472102198
+Client : 2 Number sample : 1960 Epoch : 1   Ep loss : 0.06995610880180814
+Client : 0 Number sample : 1960 Epoch : 3   Ep loss : 0.006786189449851973
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 219.08it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 200.08it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 319.16it/s]
+ 25%|██████████▎                              | 49/196 [00:00<00:00, 244.69it/s]
+Client : 0 Number sample : 1960 Epoch : 4   Ep loss : 0.005514923705105707
+Client : 2 Number sample : 1960 Epoch : 3   Ep loss : 0.00826862848382415
+Client : 1 Number sample : 1960 Epoch : 0   Ep loss : 0.09604024660639342
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 238.13it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 179.93it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 222.06it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 223.45it/s]
+ 96%|██████████████████████████████████████▌ | 189/196 [00:00<00:00, 192.81it/s]
+Client : 1 Number sample : 1960 Epoch : 1   Ep loss : 0.06744829200954196
+Client : 3 Number sample : 1960 Epoch : 0   Ep loss : 0.0922762164345655
+Client : 1 Number sample : 1960 Epoch : 2   Ep loss : 0.024677399133108745
+Client : 3 Number sample : 1960 Epoch : 1   Ep loss : 0.06958835482257608
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 218.10it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 262.55it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 219.72it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 198.91it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 284.52it/s]
+ 66%|██████████████████████████▎             | 129/196 [00:00<00:00, 242.38it/s]
+Client : 3 Number sample : 1960 Epoch : 2   Ep loss : 0.028507370340200712
+Client : 1 Number sample : 1960 Epoch : 4   Ep loss : 0.0060291599767742345
+Client : 3 Number sample : 1960 Epoch : 3   Ep loss : 0.009129256529358455
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 262.29it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 199.96it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 222.93it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 163.81it/s]
+ 21%|████████▌                                | 41/196 [00:00<00:00, 194.58it/s]
+Client : 3 Number sample : 1960 Epoch : 4   Ep loss : 0.005627225663495349
+Client : 4 Number sample : 1960 Epoch : 1   Ep loss : 0.07423326104513503
+Client : 6 Number sample : 1960 Epoch : 0   Ep loss : 0.09897900038792001
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 179.12it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 197.19it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 169.01it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 175.82it/s]
+ 10%|███▉                                     | 19/196 [00:00<00:00, 188.91it/s]
+Client : 6 Number sample : 1960 Epoch : 1   Ep loss : 0.09469880903263253
+Client : 4 Number sample : 1960 Epoch : 3   Ep loss : 0.009219934160961313
+Client : 4 Number sample : 1960 Epoch : 4   Ep loss : 0.0073042480504246134
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 204.07it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 185.08it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 249.65it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 264.09it/s]
+ 96%|██████████████████████████████████████▌ | 189/196 [00:01<00:00, 179.14it/s]
+Client : 5 Number sample : 1960 Epoch : 0   Ep loss : 0.09064835754172088
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 183.67it/s]
+100%|████████████████████████████████████████| 196/196 [00:00<00:00, 247.20it/s]
+100%|████████████████████████████████████████| 196/196 [00:01<00:00, 170.62it/s]
+ 99%|███████████████████████████████████████▌| 194/196 [00:01<00:00, 173.00it/s]
+Process SpawnPoolWorker-3:
+Process SpawnPoolWorker-2:
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.6/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 119, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 44, in mapstar
+    return list(map(*args))
+  File "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing/utils/trainer.py", line 42, in train
+    optimizer.step()
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+    return func(*args, **kwargs)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/optim/sgd.py", line 116, in step
+    params_with_grad = []
+Traceback (most recent call last):
+KeyboardInterrupt
+  File "/usr/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.6/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 119, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 44, in mapstar
+    return list(map(*args))
+  File "/home/aimenext/workspace/dungnt/LongND-FL-Parallel-Computing/utils/trainer.py", line 42, in train
+    optimizer.step()
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+    return func(*args, **kwargs)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/optim/sgd.py", line 126, in step
+    if p.grad is not None:
+  File "/home/aimenext/.local/lib/python3.6/site-packages/torch/_tensor.py", line 1009, in grad
+    if has_torch_function_unary(self):
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "train_SGD.py", line 231, in <module>
+    main(args)
+  File "train_SGD.py", line 162, in main
+    for i in range(len(train_clients))
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 266, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 638, in get
+    self.wait(timeout)
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 635, in wait
+    self._event.wait(timeout)
+  File "/usr/lib/python3.6/threading.py", line 551, in wait
+    signaled = self._cond.wait(timeout)
+  File "/usr/lib/python3.6/threading.py", line 295, in wait
+    waiter.acquire()
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "train_SGD.py", line 231, in <module>
+    main(args)
+  File "train_SGD.py", line 162, in main
+    for i in range(len(train_clients))
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 266, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 638, in get
+    self.wait(timeout)
+  File "/usr/lib/python3.6/multiprocessing/pool.py", line 635, in wait
+    self._event.wait(timeout)
+  File "/usr/lib/python3.6/threading.py", line 551, in wait
+    signaled = self._cond.wait(timeout)
+  File "/usr/lib/python3.6/threading.py", line 295, in wait
+    waiter.acquire()
+KeyboardInterrupt
