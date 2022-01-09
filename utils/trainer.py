@@ -21,7 +21,7 @@ def train(args):
     local_model.train()
 
     for i in range(client.eps):
-
+        # breakpoint()
         ep_loss = 0
         train_dataloader = client.train_dataloader
         train_loss = 0.0
@@ -60,7 +60,6 @@ def test(model, test_dataloader):
     for X, y in tqdm(test_dataloader):
         X = X.to(device)
         y = y.to(device)
-
         output = model(X)
         loss += cel(output, y).item()
         output = output.argmax(-1)
