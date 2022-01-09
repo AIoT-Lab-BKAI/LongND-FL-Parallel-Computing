@@ -232,7 +232,7 @@ if __name__ == "__main__":
                })
 
     args = wandb.config
-    # wandb.define_metric("test_acc", summary="max")
+    wandb.define_metric("test_acc", summary="max")
 
     main(args)
-    # wandb.finish()
+    wandb.finish()
