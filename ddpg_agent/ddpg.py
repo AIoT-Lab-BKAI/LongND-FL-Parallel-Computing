@@ -226,6 +226,8 @@ class DDPG_Agent:
         self.ou_noise.reset()
         self.episode_reward = 0
         self.step = 0
+        self.memory.reset()
+        self.replay_buffer.reset()
         return np.zeros(self.state_dim)
         # return env.reset()
 
