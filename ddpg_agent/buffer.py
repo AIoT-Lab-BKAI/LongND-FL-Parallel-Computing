@@ -23,6 +23,7 @@ class ReplayBuffer:
         return len(self.buffer)
 
     def reset(self):
+        self.position = 0
         self.buffer.clear()
 
 

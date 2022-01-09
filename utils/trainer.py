@@ -21,7 +21,7 @@ def train(args):
     local_model.train()
 
     for i in range(client.eps):
-        breakpoint()
+        # breakpoint()
         ep_loss = 0
         train_dataloader = client.train_dataloader
         train_loss = 0.0
@@ -32,11 +32,10 @@ def train(args):
             output = local_model(X)
 
             if algorithm == "fedprox":
-                proximal_term = 0.0
-                # breakpoint()
-                for w, w_t in zip(local_model.parameters(), model.parameters()):
-                    proximal_term += (w-w_t).norm(1)
-                loss = criterion(output, y) + (proximal_term**2) * client.mu/2
+                proximal_term = torch.tensor(0., device=device)
+                for w, w_t in zip(model.parameters(), local_model.parameters()):
+                    proximal_term += torch.pow(torch.norm(w - w_t), 2)
+                loss = criterion(output, y) + proximal_term * client.mu / 2
             else:
                 loss = criterion(output, y)
             loss.backward()

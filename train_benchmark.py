@@ -120,6 +120,9 @@ def main(args):
     list_abiprocess = []
     list_sam = []
 
+    # TODO: Khởi tạo multi-process
+    pool = mp.Pool(args.num_core)
+
     for round in range(args.num_rounds):
         print("Train :------------------------------")
         # Ngau nhien lua chon client de train
@@ -148,30 +151,21 @@ def main(args):
             logging.info(f"Round {round} Selected client : {str_sltc} ")
 
         # Huan luyen song song tren cac client
-        # with mp.Pool(args.num_core) as pool:
-        #     pool.map(
-        #         train,
-        #         [
-        #             (
-        #                 i,
-        #                 train_clients[i],
-        #                 copy.deepcopy(mnist_cnn),
-        #                 list_client[train_clients[i]],
-        #                 local_model_weight,
-        #                 train_local_loss,
-        #                 args.algorithm,
-        #             )
-        #             for i in range(len(train_clients))
-        #         ],
-        #     )
-
-        for i in range(len(train_client)):
-            train([i, train_clients[i],
-                   copy.deepcopy(mnist_cnn),
-                   list_client[train_clients[i]],
-                   local_model_weight,
-                   train_local_loss,
-                   args.algorithm])
+        pool.map(
+            train,
+            [
+                (
+                    i,
+                    train_clients[i],
+                    copy.deepcopy(mnist_cnn),
+                    list_client[train_clients[i]],
+                    local_model_weight,
+                    train_local_loss,
+                    args.algorithm,
+                )
+                for i in range(len(train_clients))
+            ],
+        )
 
         # FedAvg weight local model va cap nhat weight global
         flat_tensor = aggregate_benchmark(
@@ -203,11 +197,17 @@ def main(args):
     if args.local_save_mode:
         save_infor(list_sam, path_to_save_log+"/log.json")
 
+    del pool
 
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
-    config={
+
+    wandb.init(project="dungnt-federated-learning-dqn",
+               entity="aiotlab",
+               name=parse_args.run_name,
+               group=parse_args.group_name,
+               config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
                    "num_clients": parse_args.num_clients,
@@ -229,37 +229,9 @@ if __name__ == "__main__":
                    "log_file": parse_args.log_file,
                    "num_sample_per_class": parse_args.num_samples_per_class,
                    "local_save_mode": parse_args.local_save_mode
-               }
+               })
 
-    # wandb.init(project="dungnt-federated-learning-dqn",
-    #            entity="aiotlab",
-    #            name=parse_args.run_name,
-    #            group=parse_args.group_name,
-    #            config={
-    #                "num_rounds": parse_args.num_rounds,
-    #                "eval_every": parse_args.eval_every,
-    #                "num_clients": parse_args.num_clients,
-    #                "clients_per_round": parse_args.clients_per_round,
-    #                "num_class_per_client": parse_args.num_class_per_client,
-    #                "rate_balance": parse_args.rate_balance,
-    #                "batch_size": parse_args.batch_size,
-    #                "num_epochs": parse_args.num_epochs,
-    #                "path_data_idx": parse_args.path_data_idx,
-    #                "load_data_idx": parse_args.load_data_idx,
-    #                "learning_rate": parse_args.learning_rate,
-    #                "num_samples_per_class": parse_args.num_samples_per_class,
-    #                "mu": parse_args.mu,
-    #                "seed": parse_args.seed,
-    #                "drop_percent": parse_args.drop_percent,
-    #                "algorithm": parse_args.algorithm,
-    #                "num_core": parse_args.num_core,
-    #                "log_dir": parse_args.log_dir,
-    #                "log_file": parse_args.log_file,
-    #                "num_sample_per_class": parse_args.num_samples_per_class,
-    #                "local_save_mode": parse_args.local_save_mode
-    #            })
-
-    args = config
+    args = wandb.config
     # wandb.define_metric("test_acc", summary="max")
 
     main(args)
