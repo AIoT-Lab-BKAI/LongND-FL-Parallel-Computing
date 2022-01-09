@@ -120,6 +120,9 @@ def main(args):
     list_abiprocess = []
     list_sam = []
 
+    # TODO: Khởi tạo multi-process
+    pool = mp.Pool(args.num_core)
+
     for round in range(args.num_rounds):
         print("Train :------------------------------")
         # Ngau nhien lua chon client de train
@@ -148,30 +151,21 @@ def main(args):
             logging.info(f"Round {round} Selected client : {str_sltc} ")
 
         # Huan luyen song song tren cac client
-        # with mp.Pool(args.num_core) as pool:
-        #     pool.map(
-        #         train,
-        #         [
-        #             (
-        #                 i,
-        #                 train_clients[i],
-        #                 copy.deepcopy(mnist_cnn),
-        #                 list_client[train_clients[i]],
-        #                 local_model_weight,
-        #                 train_local_loss,
-        #                 args.algorithm,
-        #             )
-        #             for i in range(len(train_clients))
-        #         ],
-        #     )
-
-        for i in range(len(train_client)):
-            train([i, train_clients[i],
-                   copy.deepcopy(mnist_cnn),
-                   list_client[train_clients[i]],
-                   local_model_weight,
-                   train_local_loss,
-                   args.algorithm])
+        pool.map(
+            train,
+            [
+                (
+                    i,
+                    train_clients[i],
+                    copy.deepcopy(mnist_cnn),
+                    list_client[train_clients[i]],
+                    local_model_weight,
+                    train_local_loss,
+                    args.algorithm,
+                )
+                for i in range(len(train_clients))
+            ],
+        )
 
         # FedAvg weight local model va cap nhat weight global
         flat_tensor = aggregate_benchmark(
@@ -203,6 +197,7 @@ def main(args):
     if args.local_save_mode:
         save_infor(list_sam, path_to_save_log+"/log.json")
 
+    del pool
 
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
