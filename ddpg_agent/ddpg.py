@@ -120,7 +120,6 @@ class DDPG_Agent:
         reward = torch.FloatTensor(reward).to("cuda")
         done = torch.FloatTensor(np.float32(done)).to("cuda")
         # print(f'state: {state.shape}')
-        
 
         policy_loss = self.value_net(state, self.policy_net(state))
         # print(f'next state: {next_state.shape}')
@@ -173,7 +172,7 @@ class DDPG_Agent:
         )
         # print(state)
         prev_reward = get_reward(local_losses)
-        
+
         if self.step == self.max_steps - 1 or done:
             self.rewards.append(self.episode_reward)
             self.logging_per_round()
@@ -186,7 +185,8 @@ class DDPG_Agent:
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(0).to("cuda")  # current state
+        state = torch.FloatTensor(state).unsqueeze(
+            0).to("cuda")  # current state
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
         action = self.policy_net.get_action(state)
@@ -201,20 +201,16 @@ class DDPG_Agent:
 
         s, a, r, s_next = self.memory.get_last_record()
         self.replay_buffer.push(s, a, r, s_next, done)
+
         if len(self.replay_buffer) >= self.batch_size:
             self.ddpg_update()
+
         self.episode_reward += prev_reward
         self.frame_idx += 1
         self.step += 1
-        sample = {
-            'episode_reward': self.episode_reward,
-            'action_reward': prev_reward,
-            'total_reward': self.rewards,
-            'local_losses': local_losses,
-            'mean_losses': np.mean(np.asarray(local_losses)),
-            'std_losses': np.std(np.asarray(local_losses)),
-        }
-        wandb.log({'agent/ddpg_agent': sample, 'agent/local_losses': local_losses})
+
+        # wandb.log({'agent/ddpg_agent': sample,
+        #           'agent/local_losses': local_losses})
 
         if self.frame_idx % max(1000, self.max_steps + 1) == 0:
             plot(self.frame_idx, self.rewards)
