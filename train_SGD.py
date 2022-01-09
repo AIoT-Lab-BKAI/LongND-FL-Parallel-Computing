@@ -152,25 +152,27 @@ def main():
         flat_tensor = aggregate(local_model_weight, len(train_clients))
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
         # Test
-        device = torch.device("cuda")
-        mnist_cnn = mnist_cnn.to(device)
-        acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False),device)
-        train_time, delay, max_time, min_time = get_train_time(
-            local_n_sample, list_abiprocess
-        )
-        sample = {
-            "round": round + 1,
-            "clients_per_round": args.clients_per_round,
-            "n_epochs": args.num_epochs,
-            "selected_clients": list([int(i) for i in selected_client]),
-            "drop_clients": list([int(i) for i in drop_clients]),
-            "local_loss": convert_tensor_to_list(train_local_loss),
-            "local_train_time": max_time,
-            "delay": delay,
-            "accuracy": acc,
-            "test_loss": test_loss
-        }
-        list_sam.append(sample)
+        with torch.multiprocessing.set_start_method("spawn",force=True):
+            device = torch.device("cuda")
+            mnist_cnn = mnist_cnn.to(device)
+            acc,test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False),device)
+            train_time, delay, max_time, min_time = get_train_time(
+                local_n_sample, list_abiprocess
+            )
+            sample = {
+                "round": round + 1,
+                "clients_per_round": args.clients_per_round,
+                "n_epochs": args.num_epochs,
+                "selected_clients": list([int(i) for i in selected_client]),
+                "drop_clients": list([int(i) for i in drop_clients]),
+                "local_loss": convert_tensor_to_list(train_local_loss),
+                "local_train_time": max_time,
+                "delay": delay,
+                "accuracy": acc,
+                "test_loss": test_loss
+            }
+            list_sam.append(sample)
+            mnist_cnn = mnist_cnn.to(torch.device("cpu"))
     save_model(mnist_cnn, args.path_model)
         # load_epoch(list_client,list_epochs)
     save_infor(list_sam, "log.json")

@@ -4,7 +4,7 @@ import argparse
 def option():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--num_rounds", help="number of rounds to simulate;", type=int, default=1
+        "--num_rounds", help="number of rounds to simulate;", type=int, default=3
     )
     parser.add_argument(
         "--eval_every", help="evaluate every ____ rounds;", type=int, default=-1

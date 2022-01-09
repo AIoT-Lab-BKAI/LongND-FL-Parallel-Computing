@@ -50,7 +50,7 @@ def train(args):
 from sklearn.metrics import accuracy_score
 import numpy as np
 
-
+# torch.multiprocessing.set_start_method('spawn')
 def test(model, test_dataloader,device):
     print("Test :-------------------------------")
     y_prd = []
@@ -66,7 +66,7 @@ def test(model, test_dataloader,device):
         y_prd.append(output)
         y_grt.append(y)
     loss = loss/len(test_dataloader)
-    y_ = np.concatenate([i.numpy() for i in y_prd])
-    y_gt = np.concatenate([i.numpy() for i in y_grt])
+    y_ = np.concatenate([i.detach().cpu().numpy() for i in y_prd])
+    y_gt = np.concatenate([i.detach().cpu().numpy() for i in y_grt])
     return accuracy_score(y_, y_gt), loss
 
