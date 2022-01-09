@@ -47,7 +47,7 @@ def option():
         "--drop_percent", help="percentage of slow devices", type=float, default=0.0
     )
     parser.add_argument("--algorithm", type=str, default="fedprox")
-    parser.add_argument("--num_core", type=int, default=2)
+    parser.add_argument("--num_core", type=int, default=9)
     parser.add_argument("--log_dir", type=str, default='./')
     parser.add_argument("--log_file", type=str, default="logs")
     parser.add_argument("--num_samples_per_class", type=int, default=10)

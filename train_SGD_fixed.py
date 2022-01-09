@@ -129,6 +129,9 @@ def main(args):
     agent = DDPG_Agent(state_dim=state_dim,
                        action_dim=action_dim, log_dir=args.log_dir)
 
+    # TODO: Khởi tạo multi-process
+    pool = mp.Pool(args.num_core)
+    
     for round in range(args.num_rounds):
         print("Train :------------------------------")
         # mocking the number of epochs that are assigned for each client.
@@ -162,21 +165,21 @@ def main(args):
 
         # Huan luyen song song tren cac client
         # with mp.Pool(args.num_core) as pool:
-        #     pool.map(
-        #         train,
-        #         [
-        #             (
-        #                 i,
-        #                 train_clients[i],
-        #                 copy.deepcopy(mnist_cnn),
-        #                 list_client[train_clients[i]],
-        #                 local_model_weight,
-        #                 train_local_loss,
-        #                 args.algorithm,
-        #             )
-        #             for i in range(len(train_clients))
-        #         ],
-        #     )
+        pool.map(
+            train,
+            [
+                (
+                    i,
+                    train_clients[i],
+                    copy.deepcopy(mnist_cnn),
+                    list_client[train_clients[i]],
+                    local_model_weight,
+                    train_local_loss,
+                    args.algorithm,
+                )
+                for i in range(len(train_clients))
+            ],
+        )
 
         for i in range(len(train_client)):
             train([i, train_clients[i],
@@ -244,7 +247,8 @@ def main(args):
 
     if args.local_save_mode:
         save_infor(list_sam, path_to_save_log+"/log.json")
-
+    
+    del pool
 
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
