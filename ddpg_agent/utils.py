@@ -3,6 +3,7 @@ from IPython.display import clear_output
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
+import os
 
 
 def plot(frame_idx, rewards):
@@ -13,6 +14,8 @@ def plot(frame_idx, rewards):
     plt.subplot(131)
     plt.title('frame %s. reward: %s' % (frame_idx, rewards[-1]))
     plt.plot(rewards)
+    if not os.path.exists('./log/images/'):
+        os.makedirs('./log/images/')
     plt.savefig('./log/images/'+date_time)
     plt.show()
 

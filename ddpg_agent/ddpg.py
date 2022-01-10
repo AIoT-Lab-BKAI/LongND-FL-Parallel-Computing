@@ -212,8 +212,8 @@ class DDPG_Agent:
         # wandb.log({'agent/ddpg_agent': sample,
         #           'agent/local_losses': local_losses})
 
-        if self.frame_idx % max(1000, self.max_steps + 1) == 0:
-            plot(self.frame_idx, self.rewards)
+        # if self.frame_idx % max(1000, self.max_steps + 1) == 0:
+        #     plot(self.frame_idx, self.rewards)
             # plt.savefig()
 
         return action

@@ -16,7 +16,6 @@ from utils.utils import (
     getDictionaryLosses,
     getLoggingDictionary,
     save_infor,
-    save_model,
     select_client,
     select_drop_client,
     standardize_weights,
