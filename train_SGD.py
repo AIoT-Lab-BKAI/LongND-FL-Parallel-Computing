@@ -225,8 +225,7 @@ def main(args):
 
         load_epoch(list_client, dqn_list_epochs)
 
-        wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample,
-                  'summary/summary': sample})
+        wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': sample})
 
     if args.local_save_mode:
         save_infor(list_sam, path_to_save_log+"/log.json")
