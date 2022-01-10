@@ -41,6 +41,8 @@ def train(args):
             loss.backward()
             optimizer.step()
             train_loss += loss.item()
+
+            
         ep_loss += train_loss / len(train_dataloader)
         print(
             f"Client : {pid} Number sample : {client.n_samples} Epoch : {i}   Ep loss : {train_loss/len(train_dataloader)}"

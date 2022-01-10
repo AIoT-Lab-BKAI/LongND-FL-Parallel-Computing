@@ -20,9 +20,8 @@ class Client(object):
         algorithm="fedprox",
     ):
         super().__init__()
-        self.train_dataloader = DataLoader(
-            CustomDataset(dataset, list_idx_sample[idx]), batch_size=batch_size
-        )
+        self.train_dataloader = DataLoader(CustomDataset(dataset, list_idx_sample[idx]), batch_size=batch_size)
+        
         self.algorithm = algorithm
         self.lr = lr
         self.eps = epochs

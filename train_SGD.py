@@ -124,8 +124,7 @@ def main(args):
     # plus action for numbers of epochs for each client
     action_dim = args.num_clients * 3
 
-    agent = DDPG_Agent(state_dim=state_dim,
-                       action_dim=action_dim, log_dir=args.log_dir)
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir)
 
     for round in range(args.num_rounds):
         print("Train :------------------------------")
@@ -178,11 +177,12 @@ def main(args):
         # FedAvg weight local model va cap nhat weight global
         done = 0
         num_cli = len(train_clients)
+
         mean_local_losses = get_mean_losses(train_local_loss, num_cli)
-        dqn_weights = agent.get_action(
-            mean_local_losses, local_n_sample, dqn_list_epochs, done)
-        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(
-            dqn_weights, num_cli)
+
+        dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
+
+        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
         # Update Epochs
         dqn_list_epochs = s_epochs
@@ -194,13 +194,10 @@ def main(args):
         # Test on test set
         acc, test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
         
-        train_time, delay, max_time, min_time = get_train_time(
-            local_n_sample, list_abiprocess
-        )
+        train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
         # logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
 
-        dictionaryLosses = getDictionaryLosses(np.asarray(
-            mean_local_losses).reshape((num_cli)), num_cli)
+        dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
 
         sample = {
             "round": round + 1,
