@@ -195,6 +195,9 @@ def aggregate(local_weight, n_models, assigned_priorities):
     # return torch.squeeze(ratio @ local_weight.t())
     return torch.squeeze(ratio.t() @ local_weight)
 
+def aggregate_benchmark(local_weight, n_models):
+    ratio = torch.ones(1,n_models)/n_models
+    return torch.squeeze(ratio @ local_weight)
 
 def generate_abiprocess(mu, sigma, n_client):
     s = np.random.normal(mu, sigma, n_client)
