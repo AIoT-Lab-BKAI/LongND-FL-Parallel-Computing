@@ -47,7 +47,6 @@ def train(args):
 
 
 def test(model, test_dataloader):
-    print("Test :-------------------------------")
     model = model.cuda()
     y_prd = []
     y_grt = []

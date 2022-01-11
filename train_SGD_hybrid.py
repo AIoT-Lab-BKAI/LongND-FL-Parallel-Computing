@@ -128,7 +128,6 @@ def main(args):
     pool = mp.Pool(args.num_core)
 
     for round in tqdm(range(args.num_rounds)):
-        print("Train :------------------------------")
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
         # Ngau nhien lua chon client de train
@@ -148,12 +147,14 @@ def main(args):
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
-        print([list_client[i].eps for i in train_clients])
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
             np.array([list_client[i].eps for i in train_clients])
         str_sltc = ""
         for i in train_clients:
             str_sltc += str(i) + " "
+
+        print("ROUND: ", round)
+        print([list_client[i].eps for i in train_clients])
 
         if args.local_save_mode:
             logging.info(f"Round {round} Selected client : {str_sltc} ")
@@ -181,7 +182,6 @@ def main(args):
         mean_local_losses = get_mean_losses(train_local_loss, num_cli)
 
         # Agent get action
-        print("Agent get action :------------------------------")
         dqn_weights = agent.get_action(
             mean_local_losses, local_n_sample, dqn_list_epochs, done)
 
@@ -246,7 +246,7 @@ if __name__ == "__main__":
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
-               mode="disabled",
+               #    mode="disabled",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,

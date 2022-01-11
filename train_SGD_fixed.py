@@ -126,7 +126,6 @@ def main(args):
     pool = mp.Pool(args.num_core)
 
     for round in tqdm(range(args.num_rounds)):
-        print("Train :------------------------------")
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
         # Ngau nhien lua chon client de train
@@ -239,7 +238,7 @@ if __name__ == "__main__":
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
-               mode="disabled",
+               #    mode="disabled",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
