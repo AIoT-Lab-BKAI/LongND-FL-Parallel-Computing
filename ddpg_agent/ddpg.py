@@ -34,7 +34,7 @@ class DDPG_Agent:
         value_lr=1e-3,
         policy_lr=1e-4,
         replay_buffer_size=1000000,
-        max_steps=16*50,
+        max_steps=16*10,
         max_frames=12000,
         batch_size=16,
         log_dir="./log/epochs",
@@ -179,7 +179,7 @@ class DDPG_Agent:
         s, a, r, s_next = self.memory.get_last_record()
         self.replay_buffer.push(s, a, r, s_next, done)
 
-        if len(self.replay_buffer) >= self.batch_size:
+        if len(self.replay_buffer) >= self.batch_size and self.step % 2 == 0:
             self.ddpg_update()
 
         self.episode_reward += prev_reward
