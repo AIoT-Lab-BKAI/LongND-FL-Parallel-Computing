@@ -51,12 +51,12 @@ class DDPG_Agent(nn.Module):
         self.ou_noise = OUNoise(new_action_space)
 
         self.value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).cuda()
         self.policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim)
-        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).cuda()
+        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda()
         self.target_policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).cuda()
 
         # store all the (s, a, s', r) during the transition process
         self.memory = (Memory())
@@ -89,11 +89,11 @@ class DDPG_Agent(nn.Module):
         state, action, reward, next_state, done = self.replay_buffer.sample(
             self.batch_size)
 
-        state = torch.FloatTensor(state).squeeze()
-        next_state = torch.FloatTensor(next_state).squeeze()
-        action = torch.FloatTensor(action).squeeze()
-        reward = torch.FloatTensor(reward)
-        done = torch.FloatTensor(np.float32(done))
+        state = torch.FloatTensor(state).squeeze().cuda()
+        next_state = torch.FloatTensor(next_state).squeeze().cuda()
+        action = torch.FloatTensor(action).squeeze().cuda()
+        reward = torch.FloatTensor(reward).cuda()
+        done = torch.FloatTensor(np.float32(done)).cuda()
 
         policy_loss = self.value_net(state, self.policy_net(state))
         policy_loss = -policy_loss.mean()
@@ -139,8 +139,7 @@ class DDPG_Agent(nn.Module):
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(
-            0).cuda()  # current state
+        state = torch.FloatTensor(state).unsqueeze(0).cuda()  # current state
 
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
