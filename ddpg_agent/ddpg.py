@@ -12,18 +12,7 @@ import torch.nn.functional as F
 from torch.distributions import Normal
 from ddpg_agent.policy import NormalizedActions
 
-<<<<<<< HEAD
-class DDPG_Agent:
-=======
-# use_cuda = torch.cuda.is_available()
-# device = torch.device("cuda")
-# device = torch.device("cpu")
-# env = NormalizedActions(gym.make("Pendulum-v1"))
-# env = NormalizedActions(gym.make("Pendulum-v0"))
-
-
 class DDPG_Agent(nn.Module):
->>>>>>> a845b0aace04dbfc1b9eb4e5c06f6e1696783b2c
     def __init__(
         self,
         state_dim=3,

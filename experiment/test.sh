@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=1 python3 -u train_SGD_hybrid.py --num_clients=10 --clients_per_round=10 --num_rounds=10 --learning_rate=0.01 --batch_size=128 --num_epochs=1 --path_data_idx="dataset_idx/MNIST-quantitative_non-iid.txt" --run_name="FedRL-Hybrid-FedAVG-Non-IID-01" --group_name="MNIST"
+python3 -u train_SGD_fixed.py --num_clients=10 --clients_per_round=10 --num_rounds=10 --learning_rate=0.01 --batch_size=128 --num_epochs=1 --path_data_idx="dataset_idx/MNIST-quantitative_non-iid.txt" --run_name="FedRL-Hybrid-FedAVG-Non-IID-01" --group_name="MNIST"
