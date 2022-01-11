@@ -8,21 +8,9 @@ import torch.nn as nn
 import torch.optim as optim
 from gym import spaces
 import numpy as np
-
 import torch.nn.functional as F
 from torch.distributions import Normal
-import wandb
-
-# %matplotlib inline
-# from src.ddpg_agent.policy import NormalizedActions
 from ddpg_agent.policy import NormalizedActions
-
-# use_cuda = torch.cuda.is_available()
-# device = torch.device("cuda")
-# device = torch.device("cpu")
-# env = NormalizedActions(gym.make("Pendulum-v1"))
-# env = NormalizedActions(gym.make("Pendulum-v0"))
-
 
 class DDPG_Agent:
     def __init__(
