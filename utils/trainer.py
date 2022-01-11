@@ -41,10 +41,10 @@ def train(args):
             loss.backward()
             optimizer.step()
             train_loss += loss.item()
+
+            
         ep_loss += train_loss / len(train_dataloader)
-        print(
-            f"Client : {pid} Number sample : {client.n_samples} Epoch : {i}   Ep loss : {train_loss/len(train_dataloader)}"
-        )
+        print(f"Client : {pid} Number sample : {client.n_samples} Epoch : {i}   Ep loss : {train_loss/len(train_dataloader)}")
         train_local_loss[id, i] = ep_loss
     local_model_weight[id] = flatten_model(local_model)
 

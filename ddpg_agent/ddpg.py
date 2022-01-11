@@ -96,51 +96,37 @@ class DDPG_Agent:
         self.max_steps = max_steps
         self.batch_size = batch_size
         self.log_dir = log_dir
-        for target_param, param in zip(
-            self.target_value_net.parameters(), self.value_net.parameters()
-        ):
+
+        for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
             target_param.data.copy_(param.data)
 
-        for target_param, param in zip(
-            self.target_policy_net.parameters(), self.policy_net.parameters()
-        ):
+        for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
             target_param.data.copy_(param.data)
 
-    def ddpg_update(
-        self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=1e-2
-    ):
 
-        state, action, reward, next_state, done = self.replay_buffer.sample(
-            self.batch_size
-        )
-        # print('DONE HAHAHAHAHAHA')
+
+    def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=1e-2):
+
+        state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
+
         state = torch.FloatTensor(state).squeeze().to("cuda")
         next_state = torch.FloatTensor(next_state).squeeze().to("cuda")
         action = torch.FloatTensor(action).squeeze().to("cuda")
         reward = torch.FloatTensor(reward).to("cuda")
         done = torch.FloatTensor(np.float32(done)).to("cuda")
-        # print(f'state: {state.shape}')
 
         policy_loss = self.value_net(state, self.policy_net(state))
-        # print(f'next state: {next_state.shape}')
-        # print(policy_loss)
         policy_loss = -policy_loss.mean()
-        # print(policy_loss.item())
         next_action = self.target_policy_net(next_state)
         target_value = self.target_value_net(next_state, next_action.detach())
-        # print(f'DONE DONE DONE: {done.shape}')
-        # print(f'Reward: {reward.shape}')
-        # print(f'target_value: {target_value.shape}')
+
 
         expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
         expected_value = torch.clamp(expected_value, min_value, max_value)
-        # print(f'action: {action.shape}')
+
         value = self.value_net(state, action).squeeze()
-        # print(f'VALUE: {value.shape}')
-        # print(f'E VALUE: {expected_value.detach().shape}')
-        value_loss = self.value_criterion(
-            value, expected_value)
-        # print(f'value loss: {value_loss.item()}')
+
+        value_loss = self.value_criterion(value, expected_value)
 
         self.policy_optimizer.zero_grad()
         policy_loss.backward()
@@ -150,26 +136,19 @@ class DDPG_Agent:
         value_loss.backward()
         self.value_optimizer.step()
 
-        for target_param, param in zip(
-            self.target_value_net.parameters(), self.value_net.parameters()
-        ):
-            target_param.data.copy_(
-                target_param.data * (1.0 - soft_tau) + param.data * soft_tau
-            )
 
-        for target_param, param in zip(
-            self.target_policy_net.parameters(), self.policy_net.parameters()
-        ):
-            target_param.data.copy_(
-                target_param.data * (1.0 - soft_tau) + param.data * soft_tau
-            )
+        for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
+            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+
+
+        for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
+            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+
 
     def get_action(self, local_losses, local_n_samples, local_num_epochs, done):
         # reach to maximum step for each episode or get the done for this iteration
 
-        state = get_state(
-            losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples
-        )
+        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples)
         # print(state)
         prev_reward = get_reward(local_losses)
 
@@ -177,16 +156,14 @@ class DDPG_Agent:
             self.rewards.append(self.episode_reward)
             self.logging_per_round()
             state = self.reset_state()
-            # self.ou_noise.reset()
-            # self.episode_reward = 0
 
         if self.frame_idx >= self.max_frames:
             # maybe stop training?
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(
-            0).to("cuda")  # current state
+        state = torch.FloatTensor(state).unsqueeze(0).to("cuda")  # current state
+
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
         action = self.policy_net.get_action(state)
