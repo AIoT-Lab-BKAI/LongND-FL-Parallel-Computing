@@ -10,6 +10,7 @@ from numpy.lib.npyio import save
 from torchvision.datasets import mnist
 from torchvision import transforms, datasets
 from modules.Client import Client
+from tqdm import tqdm
 from utils.utils import (
     GenerateLocalEpochs,
     get_mean_losses,
@@ -79,6 +80,7 @@ def main(args):
     assert len(
         list_abiprocess_client) == args.num_clients, "not enough abi-processes"
 
+    # START: LOAD DATASET
     transforms_mnist = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
     )
@@ -88,18 +90,12 @@ def main(args):
     test_dataset = datasets.MNIST(
         "./data/mnist/", train=False, download=True, transform=transforms_mnist
     )
-    # device = torch.device("cuda")
-    mnist_cnn = MNIST_CNN()
     list_idx_sample = load_dataset_idx(args.path_data_idx)
-    # if args.load_data_idx:
-    #     list_idx_sample = load_dataset_idx(args.path_data_idx)
-    # else:
-    #     # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
-    #     list_idx_sample = mnist_noniid_client_level(
-    #         train_dataset, args.num_samples_per_class)
-    #     save_dataset_idx(list_idx_sample, args.path_data_idx)
+    # END: LOAD DATASET
 
-    # exit()
+    # INIT MODEL AND CLIENT
+    mnist_cnn = MNIST_CNN()
+
     list_client = [
         Client(
             idx=idx,
@@ -114,8 +110,8 @@ def main(args):
         for idx in range(args.num_clients)
     ]
     n_params = count_params(mnist_cnn)
-    list_trained_client = []
 
+    list_trained_client = []
     list_sam = []
 
     # Agent to get next settings for this round
@@ -125,12 +121,13 @@ def main(args):
     # plus action for numbers of epochs for each client
     action_dim = args.num_clients * 3
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir)
-    
+    agent = DDPG_Agent(state_dim=state_dim,
+                       action_dim=action_dim, log_dir=args.log_dir).cuda()
+
     # TODO: Khởi tạo multi-process
     pool = mp.Pool(args.num_core)
 
-    for round in range(args.num_rounds):
+    for round in tqdm(range(args.num_rounds)):
         print("Train :------------------------------")
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
@@ -162,7 +159,6 @@ def main(args):
             logging.info(f"Round {round} Selected client : {str_sltc} ")
 
         # Huan luyen song song tren cac client
-        # with mp.Pool(args.num_core) as pool:
         pool.map(
             train,
             [
@@ -178,23 +174,19 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
-        
-        for i in range(len(train_client)):
-            train([i, train_clients[i],
-                        copy.deepcopy(mnist_cnn),
-                        list_client[train_clients[i]],
-                        local_model_weight,
-                        train_local_loss,
-                        args.algorithm])
         # FedAvg weight local model va cap nhat weight global
         done = 0
         num_cli = len(train_clients)
 
         mean_local_losses = get_mean_losses(train_local_loss, num_cli)
 
-        dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
+        # Agent get action
+        print("Agent get action :------------------------------")
+        dqn_weights = agent.get_action(
+            mean_local_losses, local_n_sample, dqn_list_epochs, done)
 
-        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
+        s_means, s_std, s_epochs, assigned_priorities = standardize_weights(
+            dqn_weights, num_cli)
 
         # Update Epochs
         dqn_list_epochs = s_epochs
@@ -205,23 +197,22 @@ def main(args):
 
         # Test on test set
         acc, test_loss = test(mnist_cnn, DataLoader(test_dataset, 32, False))
-        
-        train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
+
+        train_time, delay, max_time, min_time = get_train_time(
+            local_n_sample, list_abiprocess)
         # logging_dqn_weights = get_info_from_dqn_weights(dqn_weights, len(train_clients), dqn_list_epochs)
 
-        dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
+        dictionaryLosses = getDictionaryLosses(np.asarray(
+            mean_local_losses).reshape((num_cli)), num_cli)
 
         sample = {
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
             "n_epochs": args.num_epochs,
-            "selected_clients": list([int(i) for i in selected_client]),
-            "drop_clients": list([int(i) for i in drop_clients]),
             "local_train_loss": dictionaryLosses,
             "local_train_time": max_time,
             "delay": delay,
             "test_loss": test_loss,
-            # "assigned_weights": logging_dqn_weights
         }
 
         dqn_sample = {
@@ -230,6 +221,7 @@ def main(args):
             "num_epochs": s_epochs,
             "assigned_priorities": assigned_priorities,
         }
+
         recordedSample = getLoggingDictionary(dqn_sample, num_cli)
         list_sam.append(sample)
         if args.local_save_mode:
@@ -237,12 +229,14 @@ def main(args):
 
         load_epoch(list_client, dqn_list_epochs)
 
-        wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': sample})
+        wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample,
+                  'summary/summary': sample})
 
     if args.local_save_mode:
         save_infor(list_sam, path_to_save_log+"/log.json")
 
     del pool
+
 
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
@@ -252,6 +246,7 @@ if __name__ == "__main__":
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
+               mode="disabled",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
