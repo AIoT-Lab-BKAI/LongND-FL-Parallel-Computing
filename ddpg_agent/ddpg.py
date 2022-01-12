@@ -50,13 +50,10 @@ class DDPG_Agent(nn.Module):
         new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
         self.ou_noise = OUNoise(new_action_space)
 
-        self.value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim).cuda()
-        self.policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim).cuda()
+        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda()
+        self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda()
         self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda()
-        self.target_policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim).cuda()
+        self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda()
 
         # store all the (s, a, s', r) during the transition process
         self.memory = (Memory())
@@ -68,10 +65,8 @@ class DDPG_Agent(nn.Module):
         # self.value_lr  = 1e-3
         # self.policy_lr = 1e-4
 
-        self.value_optimizer = optim.Adam(
-            self.value_net.parameters(), lr=value_lr)
-        self.policy_optimizer = optim.Adam(
-            self.policy_net.parameters(), lr=policy_lr)
+        self.value_optimizer = optim.Adam(self.value_net.parameters(), lr=value_lr)
+        self.policy_optimizer = optim.Adam(self.policy_net.parameters(), lr=policy_lr)
         self.value_criterion = nn.MSELoss()
         self.step = 0
         self.max_steps = max_steps
@@ -86,8 +81,7 @@ class DDPG_Agent(nn.Module):
 
     def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=1e-2):
 
-        state, action, reward, next_state, done = self.replay_buffer.sample(
-            self.batch_size)
+        state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
 
         state = torch.FloatTensor(state).squeeze().cuda()
         next_state = torch.FloatTensor(next_state).squeeze().cuda()
@@ -116,17 +110,14 @@ class DDPG_Agent(nn.Module):
         self.value_optimizer.step()
 
         for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
-            target_param.data.copy_(
-                target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
 
         for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
-            target_param.data.copy_(
-                target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
 
     def get_action(self, local_losses, local_n_samples, local_num_epochs, done):
         # reach to maximum step for each episode or get the done for this iteration
-        state = get_state(losses=local_losses,
-                          epochs=local_num_epochs, num_samples=local_n_samples)
+        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples)
         prev_reward = get_reward(local_losses)
 
         if self.step == self.max_steps - 1 or done:
@@ -156,7 +147,7 @@ class DDPG_Agent(nn.Module):
         s, a, r, s_next = self.memory.get_last_record()
         self.replay_buffer.push(s, a, r, s_next, done)
 
-        if len(self.replay_buffer) >= self.batch_size and self.step % 2 == 0:
+        if len(self.replay_buffer) >= self.batch_size:
             self.ddpg_update()
 
         self.episode_reward += prev_reward
