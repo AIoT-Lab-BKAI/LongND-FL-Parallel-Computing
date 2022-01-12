@@ -79,35 +79,37 @@ class DDPG_Agent(nn.Module):
         for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
             target_param.data.copy_(param.data)
 
-    def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=1e-2):
+    def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=2e-2):
 
-        state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
+        for i in range(int(len(self.replay_buffer)/self.batch_size)):
+            state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
 
-        state = torch.FloatTensor(state).squeeze().cuda()
-        next_state = torch.FloatTensor(next_state).squeeze().cuda()
-        action = torch.FloatTensor(action).squeeze().cuda()
-        reward = torch.FloatTensor(reward).cuda()
-        done = torch.FloatTensor(np.float32(done)).cuda()
+            state = torch.FloatTensor(state).squeeze().cuda()
+            next_state = torch.FloatTensor(next_state).squeeze().cuda()
+            action = torch.FloatTensor(action).squeeze().cuda()
+            reward = torch.FloatTensor(reward).cuda()
+            done = torch.FloatTensor(np.float32(done)).cuda()
 
-        policy_loss = self.value_net(state, self.policy_net(state))
-        policy_loss = -policy_loss.mean()
-        next_action = self.target_policy_net(next_state)
-        target_value = self.target_value_net(next_state, next_action.detach())
+            policy_loss = self.value_net(state, self.policy_net(state))
+            policy_loss = -policy_loss.mean()
+            next_action = self.target_policy_net(next_state)
+            target_value = self.target_value_net(next_state, next_action.detach())
 
-        expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
-        expected_value = torch.clamp(expected_value, min_value, max_value)
+            expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
+            expected_value = torch.clamp(expected_value, min_value, max_value)
 
-        value = self.value_net(state, action).squeeze()
+            value = self.value_net(state, action).squeeze()
 
-        value_loss = self.value_criterion(value, expected_value)
+            value_loss = self.value_criterion(value, expected_value)
 
-        self.policy_optimizer.zero_grad()
-        policy_loss.backward()
-        self.policy_optimizer.step()
+            self.policy_optimizer.zero_grad()
+            policy_loss.backward()
+            self.policy_optimizer.step()
 
-        self.value_optimizer.zero_grad()
-        value_loss.backward()
-        self.value_optimizer.step()
+            self.value_optimizer.zero_grad()
+            value_loss.backward()
+            self.value_optimizer.step()
+
 
         for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
             target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
