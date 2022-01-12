@@ -33,7 +33,7 @@ def option():
     )
     parser.add_argument("--mu", help="constant for prox;",
                         type=float, default=0.01)
-    parser.add_argument("--algorithm", type=str, default="fedprox")
+    parser.add_argument("--algorithm", type=str, default="")
     parser.add_argument(
         "--seed", help="seed for randomness;", type=int, default=10)
     parser.add_argument(

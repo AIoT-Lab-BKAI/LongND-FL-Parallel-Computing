@@ -191,7 +191,7 @@ def main(args):
                 train_clients), assigned_priorities)
 
             # Update epochs
-            if args.train_mode == "hybrid":
+            if args.train_mode == "RL-Hybrid":
                 dqn_list_epochs = s_epochs
                 load_epoch(list_client, dqn_list_epochs)
 
