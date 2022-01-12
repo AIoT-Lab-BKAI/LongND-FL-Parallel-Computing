@@ -182,17 +182,7 @@ def standardize_weights(dqn_weights, n_models, decay_factor=0.98, step=1):
 
 
 def aggregate(local_weight, n_models, assigned_priorities):
-    # weighted_ratio = []
-    # _, _, _, assigned_priorities = standardize_weights(dqn_weights, n_models)
-
-    # for cli in range(0, n_models):
-    #     weighted_ratio.append(np.random.normal(dqn_weights[0, cli*2], dqn_weights[0, cli*2+1], 1))
     ratio = torch.Tensor(np.array(assigned_priorities))
-    # ratio = assigned_prorities
-    # ratio = torch.ones(1,n_models)/n_models
-    # print(ratio.shape)
-    # print(local_weight.shape)
-    # return torch.squeeze(ratio @ local_weight.t())
     return torch.squeeze(ratio.t() @ local_weight)
 
 def aggregate_benchmark(local_weight, n_models):
@@ -276,9 +266,3 @@ def getDictionaryLosses(losses, num_clients):
 
 def get_mean_losses(local_train_losses, num_cli):
     return [torch.sum(local_train_losses[i:, ])/torch.count_nonzero(local_train_losses[i:, ]) for i in range(num_cli)]
-# import numpy as np
-
-# if __name__ == "__main__":
-#     a = np.array([1,2,3])
-#     b = np.array([2,3,4])
-#     print(a/b)

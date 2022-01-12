@@ -181,8 +181,6 @@ def main(args):
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
             "n_epochs": args.num_epochs,
-            "selected_clients": list([int(i) for i in selected_client]),
-            "drop_clients": list([int(i) for i in drop_clients]),
             "local_train_time": max_time,
             "delay": delay,
             "test_loss": test_loss
