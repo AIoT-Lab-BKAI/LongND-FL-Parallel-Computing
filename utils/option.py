@@ -31,7 +31,6 @@ def option():
         type=int,
         default=1,
     )
-    
     parser.add_argument(
         "--learning_rate",
         help="learning rate for inner solver;",
@@ -58,8 +57,6 @@ def option():
     parser.add_argument("--local_save_mode", type=bool, default=False)
     parser.add_argument("--run_name", type=str, default="")
     parser.add_argument("--group_name", type=str, default="")
-    
-    
 
     args = parser.parse_args()
     return args

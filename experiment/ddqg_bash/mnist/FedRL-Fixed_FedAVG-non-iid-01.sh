@@ -4,7 +4,7 @@
 #$-j y
 #$-cwd
 source /etc/profile.d/modules.sh
-module load gcc/9.3.0 python/3.8/3.8.7 cuda/11.0/11.0.3 cudnn/8.0/8.0.5
+module load gcc/9.3.0 python/3.8/3.8.7 cuda/11.1/11.1.1 cudnn/8.0/8.0.5
 source /home/acc13085dy/federated-learning/FLenv/bin/activate
 
 cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/

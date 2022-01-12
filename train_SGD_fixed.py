@@ -10,6 +10,7 @@ from numpy.lib.npyio import save
 from torchvision.datasets import mnist
 from torchvision import transforms, datasets
 from modules.Client import Client
+from tqdm import tqdm
 from utils.utils import (
     GenerateLocalEpochs,
     get_mean_losses,
@@ -86,19 +87,11 @@ def main(args):
         "./data/mnist/", train=True, download=True, transform=transforms_mnist
     )
     test_dataset = datasets.MNIST(
-        "../data/mnist/", train=False, download=True, transform=transforms_mnist
+        "./data/mnist/", train=False, download=True, transform=transforms_mnist
     )
     mnist_cnn = MNIST_CNN()
 
     list_idx_sample = load_dataset_idx(args.path_data_idx)
-    # if args.load_data_idx:
-        # list_idx_sample = load_dataset_idx(args.path_data_idx)
-    # else:
-        # list_idx_sample = mnist_extr_noniid(train_dataset, args.num_clients,args.num_class_per_client,args.num_samples_per_client,args.rate_balance)
-        # list_idx_sample = mnist_noniid_client_level(
-        #     train_dataset, args.num_samples_per_class)
-        # save_dataset_idx(list_idx_sample, args.path_data_idx)
-        # pass
 
     # exit()
     list_client = [
@@ -127,13 +120,12 @@ def main(args):
     action_dim = args.num_clients * 3
 
     agent = DDPG_Agent(state_dim=state_dim,
-                       action_dim=action_dim, log_dir=args.log_dir)
+                       action_dim=action_dim, log_dir=args.log_dir).cuda()
 
     # TODO: Khởi tạo multi-process
     pool = mp.Pool(args.num_core)
-    
-    for round in range(args.num_rounds):
-        print("Train :------------------------------")
+
+    for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
         # Ngau nhien lua chon client de train
@@ -153,7 +145,7 @@ def main(args):
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
-        print([list_client[i].eps for i in train_clients])
+
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
             np.array([list_client[i].eps for i in train_clients])
         str_sltc = ""
@@ -164,7 +156,6 @@ def main(args):
             logging.info(f"Round {round} Selected client : {str_sltc} ")
 
         # Huan luyen song song tren cac client
-        # with mp.Pool(args.num_core) as pool:
         pool.map(
             train,
             [
@@ -181,14 +172,6 @@ def main(args):
             ],
         )
 
-        for i in range(len(train_client)):
-            train([i, train_clients[i],
-                        copy.deepcopy(mnist_cnn),
-                        list_client[train_clients[i]],
-                        local_model_weight,
-                        train_local_loss,
-                        args.algorithm])
-
         # FedAvg weight local model va cap nhat weight global
         done = 0
         num_cli = len(train_clients)
@@ -200,7 +183,6 @@ def main(args):
 
         # Update Epochs
         # dqn_list_epochs = s_epochs
-
         flat_tensor = aggregate(local_model_weight, len(
             train_clients), assigned_priorities)
         mnist_cnn.load_state_dict(unflatten_model(flat_tensor, mnist_cnn))
@@ -220,13 +202,10 @@ def main(args):
             "round": round + 1,
             "clients_per_round": args.clients_per_round,
             "n_epochs": args.num_epochs,
-            "selected_clients": list([int(i) for i in selected_client]),
-            "drop_clients": list([int(i) for i in drop_clients]),
             "local_train_loss": dictionaryLosses,
             "local_train_time": max_time,
             "delay": delay,
             "test_loss": test_loss,
-            # "assigned_weights": logging_dqn_weights
         }
 
         dqn_sample = {
@@ -247,8 +226,9 @@ def main(args):
 
     if args.local_save_mode:
         save_infor(list_sam, path_to_save_log+"/log.json")
-    
+
     del pool
+
 
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
@@ -258,6 +238,7 @@ if __name__ == "__main__":
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
+               #    mode="disabled",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "eval_every": parse_args.eval_every,
