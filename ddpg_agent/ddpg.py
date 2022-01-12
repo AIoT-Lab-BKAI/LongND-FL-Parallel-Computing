@@ -50,10 +50,10 @@ class DDPG_Agent(nn.Module):
         new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
         self.ou_noise = OUNoise(new_action_space)
 
-        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda()
-        self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda()
-        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda()
-        self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda()
+        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+        self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+        self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
         # store all the (s, a, s', r) during the transition process
         self.memory = (Memory())
@@ -79,16 +79,17 @@ class DDPG_Agent(nn.Module):
         for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
             target_param.data.copy_(param.data)
 
+
     def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=2e-2):
 
         for i in range(int(len(self.replay_buffer)/self.batch_size)):
             state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
 
-            state = torch.FloatTensor(state).squeeze().cuda()
-            next_state = torch.FloatTensor(next_state).squeeze().cuda()
-            action = torch.FloatTensor(action).squeeze().cuda()
-            reward = torch.FloatTensor(reward).cuda()
-            done = torch.FloatTensor(np.float32(done)).cuda()
+            state = torch.DoubleTensor(state).squeeze().cuda()
+            next_state = torch.DoubleTensor(next_state).squeeze().cuda()
+            action = torch.DoubleTensor(action).squeeze().cuda()
+            reward = torch.DoubleTensor(reward).cuda()
+            done = torch.DoubleTensor(np.float32(done)).cuda()
 
             policy_loss = self.value_net(state, self.policy_net(state))
             policy_loss = -policy_loss.mean()
@@ -117,6 +118,8 @@ class DDPG_Agent(nn.Module):
         for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
             target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
 
+
+
     def get_action(self, local_losses, local_n_samples, local_num_epochs, done):
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples)
@@ -132,10 +135,11 @@ class DDPG_Agent(nn.Module):
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.FloatTensor(state).unsqueeze(0).cuda()  # current state
+        state = torch.DoubleTensor(state).unsqueeze(0).cuda()  # current state
 
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
+
         action = self.policy_net.get_action(state)
         action = self.ou_noise.get_action(action, self.step)
         self.memory.act(state, action)
@@ -155,10 +159,6 @@ class DDPG_Agent(nn.Module):
         self.episode_reward += prev_reward
         self.frame_idx += 1
         self.step += 1
-
-        # if self.frame_idx % max(1000, self.max_steps + 1) == 0:
-        #     plot(self.frame_idx, self.rewards)
-        # plt.savefig()
 
         return action
 
