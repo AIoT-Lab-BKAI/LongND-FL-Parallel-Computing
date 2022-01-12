@@ -41,7 +41,7 @@ def option():
     )
     parser.add_argument("--num_core", type=int, default=9)
     parser.add_argument("--log_dir", type=str, default='./')
-    parser.add_argument("--dataset_name", type=str, default="")
+    parser.add_argument("--dataset_name", type=str, default="mnist")
     parser.add_argument("--path_data_idx", type=str,
                         default="dataset_idx.json")
     parser.add_argument("--run_name", type=str, default="")
