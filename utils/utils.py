@@ -171,13 +171,11 @@ def standardize_weights(dqn_weights, n_models, decay_factor=0.98, step=1):
     means = [dqn_weights[0, cli*3] for cli in range(n_models)]
     s_means = s_func(torch.FloatTensor(means))
 
-    s_std = [np.clip(dqn_weights[0, cli*3+1]/100, 0.001,
-                     s_means[cli] * 0.1) for cli in range(n_models)]
+    s_std = [np.clip(dqn_weights[0, cli*3+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)]
 
-    s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(
-        dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
-    assigned_priorities = [np.random.normal(
-        s_means[i], s_std[i]) for i in range(n_models)]
+    s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
+    assigned_priorities = [np.random.normal(s_means[i], s_std[i]) for i in range(n_models)]
+    
     return s_means, s_std, s_epochs, assigned_priorities
 
 
