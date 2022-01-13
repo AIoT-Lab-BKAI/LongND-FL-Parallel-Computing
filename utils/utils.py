@@ -183,9 +183,43 @@ def aggregate(local_weight, n_models, assigned_priorities):
     ratio = torch.Tensor(np.array(assigned_priorities))
     return torch.squeeze(ratio.t() @ local_weight)
 
+
 def aggregate_benchmark(local_weight, n_models):
     ratio = torch.ones(1,n_models)/n_models
     return torch.squeeze(ratio @ local_weight)
+
+
+def aggregate_benchmark(local_weight, global_weight, train_clients, smooth_angle, round):
+    """
+    :param local_weights the weights of model after SGD updates
+    :param global_weight the weight of the global model
+    :param train_clients the list contain all clients trained in this round
+    """
+
+    model_difference = local_weight.to('cpu') - global_weight.to('cpu')
+
+    F_i = - model_difference / 0.01
+
+    D_i = [len(client.train_dataloader) for client in train_clients]
+    D_i = torch.FloatTensor(D_i / np.sum(D_i))
+
+    F = D_i.T @ F_i
+
+    corel = F.unsqueeze(0) @ F_i.T
+
+    instantaneous_angle = torch.squeeze(torch.arccos(corel/(torch.norm(F_i) * torch.norm(F))))
+
+    if (smooth_angle is None):
+        smooth_angle = instantaneous_angle
+    else:
+        smooth_angle = (round - 1)/round * smooth_angle + 1/round * instantaneous_angle
+
+    impact_factor = torch.squeeze(5 * (1 - torch.exp( - torch.exp(- 5 * (smooth_angle - torch.ones_like(smooth_angle))))))
+
+    normalized_impact_factor = torch.exp(impact_factor)/torch.sum(torch.exp(impact_factor))
+
+    return torch.squeeze(normalized_impact_factor.T @ local_weight), smooth_angle
+
 
 def generate_abiprocess(mu, sigma, n_client):
     s = np.random.normal(mu, sigma, n_client)
