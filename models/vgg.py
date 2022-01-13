@@ -60,8 +60,15 @@ def make_layers(cfg, batch_norm=False):
             else:
                 layers += [conv2d, nn.ReLU(inplace=True)]
             in_channels = v
+    layers += [nn.Flatten(1,-1)]
+    layers += [nn.Dropout(),
+            nn.Linear(512, 512),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(512, 512),
+            nn.ReLU(True),
+            nn.Linear(512, 100),]
     return nn.Sequential(*layers)
-
 
 cfg = {
     "A": [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
@@ -114,7 +121,7 @@ cfg = {
 
 def vgg11():
     """VGG 11-layer model (configuration "A")"""
-    return VGG(make_layers(cfg["A"]))
+    return make_layers(cfg["A"])
 
 
 def vgg11_bn():

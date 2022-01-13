@@ -67,12 +67,14 @@ def load_dataset(dataset_name, path_data_idx):
 
     return train_dataset, test_dataset, list_idx_sample
 
-
+from models.vgg import vgg11
 def init_model(dataset_name):
     if dataset_name == "mnist":
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
-        model = CNNCifar()
+        # model = CNNCifar()
+        model = vgg11()
+        print(model)
     else:
         warnings.warn("Model not supported")
     return model
@@ -235,7 +237,7 @@ if __name__ == "__main__":
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
-            #    mode="disabled",
+               #    mode="disabled",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "num_clients": parse_args.num_clients,
