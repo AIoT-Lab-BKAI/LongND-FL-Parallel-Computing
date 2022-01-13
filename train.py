@@ -36,7 +36,7 @@ import copy
 from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
-from models.models import MNIST_CNN, CNNCifarRestnet50
+from models.models import MNIST_CNN, CNNCifar
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
@@ -56,26 +56,15 @@ def load_dataset(dataset_name, path_data_idx):
         list_idx_sample = load_dataset_idx(path_data_idx)
 
     elif dataset_name == "cifar100":
-        train_transform = transforms.Compose([
-                transforms.RandomResizedCrop(224),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ])
-
-        test_train_transform = transforms.Compose([
-                transforms.Resize(256),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ])
+        apply_transform = transforms.Compose(
+            [transforms.ToTensor(),
+             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
         train_dataset = datasets.CIFAR10("./data/cifar/", train=True, download=True,
-                                         transform=train_transform)
+                                         transform=apply_transform)
 
         test_dataset = datasets.CIFAR10("./data/cifar/", train=False, download=True,
-                                        transform=test_train_transform)
-                                        
+                                        transform=apply_transform)
         list_idx_sample = load_dataset_idx(path_data_idx)
 
     else:
@@ -89,7 +78,7 @@ def init_model(dataset_name):
     if dataset_name == "mnist":
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
-        model = CNNCifarRestnet50(pretrained=False, trainable=True, num_classes=100)
+        model = CNNCifar()
     else:
         warnings.warn("Model not supported")
     return model
