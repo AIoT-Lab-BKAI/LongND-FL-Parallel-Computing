@@ -55,6 +55,7 @@ class MNIST_2NN(nn.Module):
         out = self.fc3(x)
         return out
 
+
 class CNNCifar(nn.Module):
     def __init__(self):
         super(CNNCifar, self).__init__()
