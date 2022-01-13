@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=3 python3 -u train.py --train_mode="RL-Hybrid" --dataset_name="cifar100" --num_clients=10 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --num_epochs=1 --path_data_idx="dataset_idx/cifar/pareto/CIFAR-noniid-fedavg_pareto_2.json" --run_name="FedRL-Hybrid-Pareto-Non-IID-02" --group_name="CIFAR-Pareto" --num_core=2
