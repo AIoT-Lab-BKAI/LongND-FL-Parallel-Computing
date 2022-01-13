@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch
+import torchvision
 import torch.nn.functional as F
 
 
@@ -74,3 +75,16 @@ class CNNCifar(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return F.log_softmax(x, dim=1)
+    
+class CNNCifarRestnet50(nn.Module):
+    def __init__(self, pretrained=False, trainable=True, num_classes=100):
+        super(CNNCifarRestnet50, self).__init__()
+        model_conv = torchvision.models.resnet50(pretrained=pretrained)
+        for param in model_conv.parameters():
+            param.requires_grad = trainable
+        model_conv.fc = nn.Linear(model_conv.fc.in_features, num_classes)
+    
+    def forward(self, x):
+        x = self.model_conv(x)
+        return F.log_softmax(x, dim=1)
+
