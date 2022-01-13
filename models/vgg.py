@@ -67,7 +67,7 @@ def make_layers(cfg, batch_norm=False):
             nn.Dropout(),
             nn.Linear(512, 512),
             nn.ReLU(True),
-            nn.Linear(512, 10),]
+            nn.Linear(512, 100),]
     return nn.Sequential(*layers)
 
 cfg = {
