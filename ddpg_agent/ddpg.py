@@ -67,13 +67,13 @@ class DDPG_Agent(nn.Module):
 
 
         self.value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).double()
         self.policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).double()
         self.target_value_net = ValueNetwork(
-            state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).double()
         self.target_policy_net = PolicyNetwork(
-            state_dim, action_dim, hidden_dim)
+            state_dim, action_dim, hidden_dim).double()
 
         
 
