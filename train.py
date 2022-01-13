@@ -78,8 +78,8 @@ def init_model(dataset_name):
     if dataset_name == "mnist":
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
-        model = CNNCifar()
-        # model = vgg11()
+        # model = CNNCifar()
+        model = vgg11()
         print(model)
     else:
         warnings.warn("Model not supported")
