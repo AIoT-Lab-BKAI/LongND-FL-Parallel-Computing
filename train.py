@@ -250,7 +250,7 @@ if __name__ == "__main__":
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
-               mode="disabled",
+               #    mode="disabled",
                config={
                    "num_rounds": parse_args.num_rounds,
                    "num_clients": parse_args.num_clients,
