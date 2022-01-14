@@ -191,7 +191,7 @@ def main(args):
 
         train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
 
-        if args.train_mode == "benchmark":
+        if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
@@ -203,8 +203,7 @@ def main(args):
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
-            dictionaryLosses = getDictionaryLosses(np.asarray(
-                mean_local_losses).reshape((num_cli)), num_cli)
+            dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
@@ -221,8 +220,7 @@ def main(args):
                 "assigned_priorities": assigned_priorities,
             }
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
-            wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample,
-                       'summary/summary': logging})
+            wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
     del pool
 
