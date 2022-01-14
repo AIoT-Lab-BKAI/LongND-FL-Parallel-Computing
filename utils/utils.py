@@ -140,7 +140,6 @@ def unflatten_model(flat, model):
     temp = OrderedDict()
     for i, j in enumerate(model.state_dict().keys()):
         temp[j] = output[i]
-    # retrun temp
     return temp
 
 

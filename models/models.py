@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch
+import torchvision
 import torch.nn.functional as F
 
 
@@ -55,6 +56,7 @@ class MNIST_2NN(nn.Module):
         out = self.fc3(x)
         return out
 
+
 class CNNCifar(nn.Module):
     def __init__(self):
         super(CNNCifar, self).__init__()
@@ -73,3 +75,4 @@ class CNNCifar(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return F.log_softmax(x, dim=1)
+
