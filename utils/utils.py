@@ -13,6 +13,7 @@ from numpy.core.defchararray import count
 from torch.cuda.memory import reset_accumulated_memory_stats
 import torch
 import torch.nn as nn
+import wandb
 
 
 def GenerateLocalEpochs(percentage, size, max_epochs):
@@ -212,8 +213,14 @@ def aggregate_benchmark(local_weight, global_weight, train_clients, smooth_angle
         smooth_angle = instantaneous_angle
     else:
         smooth_angle = (round - 1)/round * smooth_angle + 1/round * instantaneous_angle
+    
+    with open("smooth_angle.txt", "a+") as file:
+        file.write(smooth_angle.data + "\n")
 
     impact_factor = torch.squeeze(5 * (1 - torch.exp( - torch.exp(- 5 * (smooth_angle - torch.ones_like(smooth_angle))))))
+
+    with open("impact_factor.txt", "a+") as file:
+        file.write(impact_factor.data + "\n")
 
     normalized_impact_factor = torch.exp(impact_factor)/torch.sum(torch.exp(impact_factor))
 
