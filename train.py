@@ -11,6 +11,7 @@ from torchvision import transforms, datasets
 from modules.Client import Client
 from tqdm import tqdm
 from utils.utils import (
+    aggregate_benchmark_fedadp,
     flatten_model,
     get_mean_losses,
     getDictionaryLosses,
@@ -170,7 +171,8 @@ def main(args):
             flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
         
         elif args.train_mode == "fedadp":
-            flat_tensor, smooth_angle = aggregate_benchmark(local_model_weight, flatten_model(client_model), list_client, smooth_angle, round)
+            flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
+                local_model_weight, flatten_model(client_model), list_client, smooth_angle, round)
 
         else:
             done = 0

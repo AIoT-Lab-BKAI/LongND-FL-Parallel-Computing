@@ -188,7 +188,7 @@ def aggregate_benchmark(local_weight, n_models):
     return torch.squeeze(ratio @ local_weight)
 
 
-def aggregate_benchmark(local_weight, global_weight, train_clients, smooth_angle, round):
+def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smooth_angle, round):
     """
     :param local_weights the weights of model after SGD updates
     :param global_weight the weight of the global model
