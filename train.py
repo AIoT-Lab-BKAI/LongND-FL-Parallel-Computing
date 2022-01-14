@@ -116,9 +116,12 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.num_clients * 3  # each agent {L, e, n}
+    # state_dim = args.num_clients * 3  # each agent {L, e, n}
+    state_dim = args.clients_per_round * 3
     # plus action for numbers of epochs for each client
-    action_dim = args.num_clients * 3
+    # action_dim = args.num_clients * 3
+    action_dim = args.clients_per_round * 3
+
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
 
     # Multi-process training
