@@ -124,8 +124,8 @@ def vgg11():
     return make_layers(cfg["A"])
 
 def cifar_vgg19():
-    """VGG 19-layer model (configuration 'E') with batch normalization"""
-    return make_layers(cfg["E"], batch_norm=True)
+    """VGG 19-layer model (configuration 'E')"""
+    return make_layers(cfg["E"])
 
 def vgg11_bn():
     """VGG 11-layer model (configuration "A") with batch normalization"""

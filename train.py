@@ -39,7 +39,7 @@ from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
-from models.vgg import vgg11, cifar_vgg19
+from models.vgg import vgg11
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
@@ -74,8 +74,7 @@ def init_model(dataset_name):
     if dataset_name == "mnist":
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
-        # model = CNNCifar()
-        model = cifar_vgg19()
+        model = vgg11()
         print(model)
     else:
         warnings.warn("Model not supported")
