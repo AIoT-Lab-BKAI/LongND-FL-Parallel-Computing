@@ -10,4 +10,4 @@
 # cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/
 # cd $SGE_LOCALDIR/$JOB_ID
 
-python3 -u train.py --train_mode="benchmark" --dataset_name="mnist" --num_clients=100 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --path_data_idx="dataset_idx/mnist/equal/MNIST-noniid-fedavg_equal_1.json" --run_name="FedAVG-Equal-Non-IID-01" --group_name="MNIST-FedAvg-Equal"
+python3 -u train.py --train_mode="RL-fixed" --dataset_name="mnist" --num_clients=100 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --path_data_idx="dataset_idx/mnist/100client/equal/MNIST-noniid-fedavg_equal_100.json" --run_name="FedRL-drop-Equal-Non-IID-01" --group_name="MNIST-FedAvg-Equal-Drop-Clients"
