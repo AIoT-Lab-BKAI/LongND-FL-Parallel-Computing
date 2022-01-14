@@ -178,6 +178,14 @@ def standardize_weights(dqn_weights, n_models, decay_factor=0.98, step=1):
     return s_means, s_std, s_epochs, assigned_priorities
 
 
+def standardize_weights_test(next_epoch, impact_factor, noise):
+    s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
+    s_std = torch.clamp(noise/100, min=0.001, max=s_means/10)
+    s_epochs = torch.floor(next_epoch * 9) + 1
+    assigned_priorities = torch.normal(s_means, s_std)
+    return s_means.numpy(), s_std.numpy(), s_epochs.numpy(), assigned_priorities.numpy()
+
+
 def aggregate(local_weight, n_models, assigned_priorities):
     ratio = torch.Tensor(np.array(assigned_priorities))
     return torch.squeeze(ratio.t() @ local_weight)
