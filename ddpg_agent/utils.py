@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
 import os
+from sklearn.decomposition import PCA
+pca_state = PCA(n_components=100)
 
 
 def plot(frame_idx, rewards):

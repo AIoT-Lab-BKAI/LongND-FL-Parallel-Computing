@@ -163,11 +163,11 @@ class DDPG_Agent(nn.Module):
         return action
 
     def reset_state(self):
-        self.ou_noise.reset()
+        # self.ou_noise.reset()
         self.episode_reward = 0
         self.step = 0
-        self.memory.reset()
-        self.replay_buffer.reset()
+        # self.memory.reset()
+        # self.replay_buffer.reset()
         return np.zeros(self.state_dim)
 
     def logging_per_round(self):
