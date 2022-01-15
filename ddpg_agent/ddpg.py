@@ -22,7 +22,7 @@ class DDPG_Agent(nn.Module):
         value_lr=1e-3,
         policy_lr=1e-4,
         replay_buffer_size=1000000,
-        max_steps=16*10,
+        max_steps=16*50,
         max_frames=12000,
         batch_size=16,
         log_dir="./log/epochs",
