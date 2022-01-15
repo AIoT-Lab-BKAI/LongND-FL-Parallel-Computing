@@ -75,8 +75,8 @@ def select_drop_client(list_cl_per_round, drop_percent):
     if drop_percent == 0.0:
         n_drop = 0
     drop_client = np.random.choice(list_cl_per_round, n_drop)
-    train_clinet = list(set(list_cl_per_round) - set(drop_client))
-    return drop_client, train_clinet
+    train_client = list(set(list_cl_per_round) - set(drop_client))
+    return drop_client, train_client
 
 
 def count_params(model):
@@ -166,17 +166,35 @@ def communicate(tensors, communication_op):
         t.set_(f)
 
 
-def standardize_weights(dqn_weights, n_models, decay_factor=0.98, step=1):
-    s_func = nn.Softmax(dim=0)
-    means = [dqn_weights[0, cli*3] for cli in range(n_models)]
-    s_means = s_func(torch.FloatTensor(means))
+def standardize_weights(dqn_weights, n_models):
+    next_epoch = dqn_weights[0:n_models]
+    impact_factor = dqn_weights[n_models:2*n_models]
+    noise = dqn_weights[2*n_models:3*n_models]
 
-    s_std = [np.clip(dqn_weights[0, cli*3+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)]
+    s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
+    s_std = torch.clamp(noise/100, min=torch.ones_like(s_means) * 0.001, max=s_means/10)
+    s_epochs = torch.floor(next_epoch * 9).int() + 1
+    assigned_priorities = torch.normal(s_means, s_std)
+    return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
 
-    s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
-    assigned_priorities = [np.random.normal(s_means[i], s_std[i]) for i in range(n_models)]
+    # s_func = nn.Softmax(dim=0)
+    # means = [dqn_weights[0, cli*3] for cli in range(n_models)]
+    # s_means = s_func(torch.FloatTensor(means))
+
+    # s_std = [np.clip(dqn_weights[0, cli*3+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)]
+
+    # s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
+    # assigned_priorities = [np.random.normal(s_means[i], s_std[i]) for i in range(n_models)]
     
-    return s_means, s_std, s_epochs, assigned_priorities
+    # return s_means, s_std, s_epochs, assigned_priorities
+
+
+def standardize_weights_test(next_epoch, impact_factor, noise):
+    s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
+    s_std = torch.clamp(noise/100, min=0.001, max=s_means/10)
+    s_epochs = torch.floor(next_epoch * 9) + 1
+    assigned_priorities = torch.normal(s_means, s_std)
+    return s_means.numpy(), s_std.numpy(), s_epochs.numpy(), assigned_priorities.numpy()
 
 
 def aggregate(local_weight, n_models, assigned_priorities):
