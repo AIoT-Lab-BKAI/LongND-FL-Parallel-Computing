@@ -80,7 +80,7 @@ class PolicyNetwork(nn.Module):
         impact = self.activation(impact)
 
         noise = F.relu(self.linear3n(x))
-        noise - self.activation(noise)
+        noise = self.activation(noise)
 
         return torch.cat([epochs, impact, noise])
 
