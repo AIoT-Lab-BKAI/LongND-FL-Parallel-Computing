@@ -115,9 +115,10 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.num_clients * 3  # each agent {L, e, n}
+    state_dim = args.num_clients * 3  # each agent {L, e, n} = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.num_clients
+    action_dim = args.num_clients # = 10
+
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
 
     # Multi-process training
@@ -177,8 +178,9 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
-
             dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
+
+            # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
@@ -258,7 +260,6 @@ if __name__ == "__main__":
 
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
-    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
-          args.train_mode, args.dataset_name))
+    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name, args.train_mode, args.dataset_name))
     main(args)
     wandb.finish()

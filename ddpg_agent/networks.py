@@ -7,6 +7,11 @@ class ValueNetwork(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-1):
         super(ValueNetwork, self).__init__()
 
+        self.num_inputs = num_inputs
+        self.num_actions = num_actions
+
+        print("Here init linear1 input dim: ", num_inputs + num_actions)
+        
         self.linear1 = nn.Linear(num_inputs + num_actions, hidden_size)
         self.linear2 = nn.Linear(hidden_size, hidden_size)
         self.linear3 = nn.Linear(hidden_size, 1)
@@ -15,12 +20,14 @@ class ValueNetwork(nn.Module):
         self.linear3.bias.data.uniform_(-init_w, init_w)
         # self.device = device
 
-    def forward(self, state, action):
-        print("State", state.shape)
-        print("Action", action.shape)
+    def forward(self, state, action, batch_size):
+        state = state.reshape([batch_size, self.num_inputs])
+        action = state.reshape([batch_size, self.num_actions])
+
+        # print("State", state.shape)
+        # print("Action", action.shape)
         x = torch.cat([state, action], dim=1)
-        print("X", x.shape)
-        exit(0)
+        # print("X", x.shape)
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
         x = self.linear3(x)
@@ -73,14 +80,15 @@ class PolicyNetwork(nn.Module):
 
     def get_action(self, state):
         action = self.forward(state)
-        return action.detach().cpu().numpy()
+        action = torch.flatten(action)
+        return action.detach().cpu()
 
 
 if __name__ == '__main__':
-    model = ValueNetwork(10, 10 * 3, 256)
+    model = ValueNetwork(10 * 3, 10 * 3, 256)
 
-    state = torch.ones(size=[8, 30]).reshape([8,3,10])
-    action = torch.ones(size=[24, 30]).reshape([8,3,30])
+    state = torch.ones(size=[8, 30]).reshape([8,30])
+    action = torch.ones(size=[24, 10]).reshape([8,30])
 
-    value = model(state, action)
+    value = model(state, action, 8)
     print(value.shape)

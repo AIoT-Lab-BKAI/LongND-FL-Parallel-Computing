@@ -47,10 +47,13 @@ class DDPG_Agent(nn.Module):
         self.max_frames = max_frames  # number of episodes
         self.episode_reward = 0
 
-        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
+        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim * 3,))
         self.ou_noise = OUNoise(new_action_space)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double()
+        print("Init State dim", state_dim)
+        print("Init Action dim", action_dim)
+
+        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double() # 30 + 30 = 60 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
         self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double()
@@ -92,15 +95,15 @@ class DDPG_Agent(nn.Module):
             reward = torch.DoubleTensor(reward).cuda()
             done = torch.DoubleTensor(np.float32(done)).cuda()
 
-            policy_loss = self.value_net(state, self.policy_net(state))
+            policy_loss = self.value_net(state, self.policy_net(state), self.batch_size)
             policy_loss = -policy_loss.mean()
             next_action = self.target_policy_net(next_state)
-            target_value = self.target_value_net(next_state, next_action.detach())
+            target_value = self.target_value_net(next_state, next_action.detach(), self.batch_size)
 
             expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
             expected_value = torch.clamp(expected_value, min_value, max_value)
 
-            value = self.value_net(state, action).squeeze()
+            value = self.value_net(state, action, self.batch_size).squeeze()
 
             value_loss = self.value_criterion(value, expected_value)
 
