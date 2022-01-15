@@ -24,7 +24,7 @@ class DDPG_Agent(nn.Module):
         replay_buffer_size=1000000,
         max_steps=16*50,
         max_frames=12000,
-        batch_size=8,
+        batch_size=4,
         log_dir="./log/epochs",
     ):
         super(DDPG_Agent, self).__init__()
@@ -53,10 +53,10 @@ class DDPG_Agent(nn.Module):
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double() # 30 + 30 = 60 as input
+        self.value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).cuda().double() # 30 + 30 = 60 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
-        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).cuda().double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
         # store all the (s, a, s', r) during the transition process
@@ -124,9 +124,9 @@ class DDPG_Agent(nn.Module):
 
 
 
-    def get_action(self, local_losses, local_n_samples, local_num_epochs, done):
+    def get_action(self, local_losses, local_n_samples, local_num_epochs, done, clients_id=None):
         # reach to maximum step for each episode or get the done for this iteration
-        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples)
+        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
         prev_reward = get_reward(local_losses)
 
         if self.step == self.max_steps - 1 or done:

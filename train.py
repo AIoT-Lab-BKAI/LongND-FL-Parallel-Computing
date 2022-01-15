@@ -115,19 +115,19 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.num_clients * 3  # each agent {L, e, n} = 30
+    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.num_clients # = 10
+    action_dim = args.clients_per_round # = 10
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
-    smooth_angle = None
+    smooth_angle = None         # Use for fedadp
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
-        dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
+        dqn_list_epochs = [args.num_epochs for _ in range(args.clients_per_round)]
 
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
@@ -178,7 +178,7 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
+            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients)
 
             # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)

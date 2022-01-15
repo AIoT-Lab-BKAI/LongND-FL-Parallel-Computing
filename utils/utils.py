@@ -74,8 +74,8 @@ def select_drop_client(list_cl_per_round, drop_percent):
     if drop_percent == 0.0:
         n_drop = 0
     drop_client = np.random.choice(list_cl_per_round, n_drop)
-    train_clinet = list(set(list_cl_per_round) - set(drop_client))
-    return drop_client, train_clinet
+    train_client = list(set(list_cl_per_round) - set(drop_client))
+    return drop_client, train_client
 
 
 def count_params(model):

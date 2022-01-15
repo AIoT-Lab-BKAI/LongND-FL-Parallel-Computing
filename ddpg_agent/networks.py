@@ -10,7 +10,7 @@ class ValueNetwork(nn.Module):
         self.num_inputs = num_inputs
         self.num_actions = num_actions
 
-        print("Here init linear1 input dim: ", num_inputs + num_actions)
+        # print("Here init linear1 input dim: ", num_inputs + num_actions)
         
         self.linear1 = nn.Linear(num_inputs + num_actions, hidden_size)
         self.linear2 = nn.Linear(hidden_size, hidden_size)
@@ -27,7 +27,6 @@ class ValueNetwork(nn.Module):
         # print("State", state.shape)
         # print("Action", action.shape)
         x = torch.cat([state, action], dim=1)
-        # print("X", x.shape)
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
         x = self.linear3(x)
@@ -85,9 +84,9 @@ class PolicyNetwork(nn.Module):
 
 
 if __name__ == '__main__':
-    model = ValueNetwork(10 * 3, 10 * 3, 256)
+    model = ValueNetwork(10 * 3, 10 * 4, 256)
 
-    state = torch.ones(size=[8, 30]).reshape([8,30])
+    state = torch.ones(size=[8, 40]).reshape([8,40])
     action = torch.ones(size=[24, 10]).reshape([8,30])
 
     value = model(state, action, 8)
