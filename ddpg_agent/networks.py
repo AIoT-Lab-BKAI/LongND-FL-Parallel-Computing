@@ -16,7 +16,11 @@ class ValueNetwork(nn.Module):
         # self.device = device
 
     def forward(self, state, action):
-        x = torch.cat([state, action], -1)
+        print("State", state.shape)
+        print("Action", action.shape)
+        x = torch.cat([state, action], dim=1)
+        print("X", x.shape)
+        exit(0)
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
         x = self.linear3(x)
@@ -73,8 +77,10 @@ class PolicyNetwork(nn.Module):
 
 
 if __name__ == '__main__':
-    model = PolicyNetwork(6, 6, 32)
-    state = torch.tensor(
-        [[100000.0,   -100000.0, -100000.0,   -100000.0,   100000.0,  100000.0]])
-    action = model.get_action(state)
-    print(action)
+    model = ValueNetwork(10, 10 * 3, 256)
+
+    state = torch.ones(size=[8, 30]).reshape([8,3,10])
+    action = torch.ones(size=[24, 30]).reshape([8,3,30])
+
+    value = model(state, action)
+    print(value.shape)
