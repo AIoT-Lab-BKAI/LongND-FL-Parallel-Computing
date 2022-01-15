@@ -62,7 +62,16 @@ def load_dataset(dataset_name, path_data_idx):
         test_dataset = datasets.CIFAR10("./data/cifar/", train=False, download=True,transform=apply_transform)
 
         list_idx_sample = load_dataset_idx(path_data_idx)
+    elif dataset_name == "fashionmnist":
+        transforms_mnist = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+        )
+        train_dataset = datasets.FashionMNIST("./data/cifar/", train=True, download=True,
+                                         transform=transforms_mnist)
 
+        test_dataset = datasets.FashionMNIST("./data/cifar/", train=False, download=True,
+                                        transform=transforms_mnist)
+        list_idx_sample = load_dataset_idx(path_data_idx)
     else:
         warnings.warn("Dataset not supported")
         exit()
@@ -74,8 +83,10 @@ def init_model(dataset_name):
     if dataset_name == "mnist":
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
-        model = vgg11()
+        model = vgg11(100)
         print(model)
+    elif dataset_name == "fashionmnist":
+        model = vgg11(10)
     else:
         warnings.warn("Model not supported")
     return model
@@ -198,7 +209,7 @@ def main(args):
         if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
                 "round": round + 1,
-                "clients_per_round": args.clients_per_round,
+                "clients_per_round": args.clients_per_round,    
                 "n_epochs": args.num_epochs,
                 "local_train_time": max_time,
                 "delay": delay,

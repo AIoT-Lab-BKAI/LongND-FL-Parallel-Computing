@@ -47,7 +47,7 @@ class VGG(nn.Module):
         return x
 
 
-def make_layers(cfg, batch_norm=False):
+def make_layers(cfg,output_dim, batch_norm=False):
     layers = []
     in_channels = 3
     for v in cfg:
@@ -67,7 +67,7 @@ def make_layers(cfg, batch_norm=False):
             nn.Dropout(),
             nn.Linear(512, 512),
             nn.ReLU(True),
-            nn.Linear(512, 100),]
+            nn.Linear(512, output_dim),]
     return nn.Sequential(*layers)
 
 cfg = {
@@ -119,9 +119,9 @@ cfg = {
 }
 
 
-def vgg11():
+def vgg11(output_dim):
     """VGG 11-layer model (configuration "A")"""
-    return make_layers(cfg["A"])
+    return make_layers(cfg["A"],output_dim)
 
 def cifar_vgg19():
     """VGG 19-layer model (configuration 'E')"""
