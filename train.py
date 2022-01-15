@@ -209,7 +209,7 @@ def main(args):
         if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
                 "round": round + 1,
-                "clients_per_round": args.clients_per_round,
+                "clients_per_round": args.clients_per_round,    
                 "n_epochs": args.num_epochs,
                 "local_train_time": max_time,
                 "delay": delay,
