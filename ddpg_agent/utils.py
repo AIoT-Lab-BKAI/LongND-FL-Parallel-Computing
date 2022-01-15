@@ -29,8 +29,9 @@ def get_state(losses, epochs, num_samples, clients_id):
     return retval
 
 def get_reward(losses):
+    beta = 0.45
     losses = np.asarray(losses)
-    return -np.mean(losses) - np.std(losses)
+    return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):
     client_dicts = {}

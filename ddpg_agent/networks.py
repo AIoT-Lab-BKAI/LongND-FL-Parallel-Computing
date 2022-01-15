@@ -2,6 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+def freeze_layer(layer):
+    for param in layer.parameters():
+        param.requires_grad = False
 
 class ValueNetwork(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-1):
@@ -42,6 +45,10 @@ class PolicyNetwork(nn.Module):
 
         self.linear3e = nn.Linear(hidden_size, hidden_size)
         self.linear4e = nn.Linear(hidden_size, num_actions)
+
+        # Free learning epochs
+        freeze_layer(self.linear3e)
+        freeze_layer(self.linear4e)
 
         self.linear3i = nn.Linear(hidden_size, hidden_size)
         self.linear4i = nn.Linear(hidden_size, num_actions)
