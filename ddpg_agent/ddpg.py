@@ -25,6 +25,7 @@ class DDPG_Agent(nn.Module):
         max_steps=16*50,
         max_frames=12000,
         batch_size=4,
+        beta = 0.45,
         log_dir="./log/epochs",
     ):
         super(DDPG_Agent, self).__init__()
@@ -46,6 +47,7 @@ class DDPG_Agent(nn.Module):
         self.frame_idx = 0
         self.max_frames = max_frames  # number of episodes
         self.episode_reward = 0
+        self.beta = beta # coefficient for mean and std losses inside reward func
 
         new_action_space = spaces.Box(low=0, high=1, shape=(action_dim * 3,))
         self.ou_noise = OUNoise(new_action_space)
@@ -127,7 +129,7 @@ class DDPG_Agent(nn.Module):
     def get_action(self, local_losses, local_n_samples, local_num_epochs, done, clients_id=None):
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
-        prev_reward = get_reward(local_losses)
+        prev_reward = get_reward(local_losses, beta=self.beta)
 
         if self.step == self.max_steps - 1 or done:
             self.rewards.append(self.episode_reward)
