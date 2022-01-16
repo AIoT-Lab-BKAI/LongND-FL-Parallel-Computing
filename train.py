@@ -130,7 +130,7 @@ def main(args):
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round # = 10
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
@@ -267,6 +267,7 @@ if __name__ == "__main__":
                    "log_dir": parse_args.log_dir,
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
+                   "beta": parse_args.beta,
                })
 
     args = wandb.config
