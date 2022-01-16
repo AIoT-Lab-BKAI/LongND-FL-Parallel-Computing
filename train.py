@@ -44,12 +44,15 @@ from ddpg_agent.ddpg import *
 import wandb
 import warnings
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = "cuda" if torch.cuda.is_available() else "cpu"
+
 
 def load_dataset(dataset_name, path_data_idx):
     if dataset_name == "mnist":
         transforms_mnist = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-        train_dataset = datasets.MNIST("./data/mnist/", train=True, download=True, transform=transforms_mnist)
-        test_dataset = datasets.MNIST("../data/mnist/", train=False, download=True, transform=transforms_mnist)
+        train_dataset = datasets.MNIST("data/mnist/", train=True, download=True, transform=transforms_mnist)
+        test_dataset = datasets.MNIST("data/mnist/", train=False, download=True, transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
 
     elif dataset_name == "cifar100":
@@ -96,8 +99,10 @@ def main(args):
     """ Parse command line arguments or load defaults """
     random.seed(args.seed)
     np.random.seed(args.seed)
-    torch.cuda.manual_seed(args.seed)
-    torch.manual_seed(args.seed)
+    if device == torch.device("cuda"):
+        torch.cuda.manual_seed(args.seed)
+    else:
+        torch.manual_seed(args.seed)
 
     generate_abiprocess(mu=100, sigma=5, n_client=args.num_clients)
     list_abiprocess_client = read_abiprocesss()
@@ -130,7 +135,7 @@ def main(args):
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round # = 10
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).to(device)
 
     # Multi-process training
     pool = mp.Pool(args.num_core)

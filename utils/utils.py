@@ -10,7 +10,7 @@ from random import random
 from collections import OrderedDict
 import numpy as np
 from numpy.core.defchararray import count
-from torch.cuda.memory import reset_accumulated_memory_stats
+# from torch.cuda.memory import reset_accumulated_memory_stats
 import torch
 import torch.nn as nn
 import wandb

@@ -25,7 +25,7 @@ class DDPG_Agent(nn.Module):
         max_steps=16*50,
         max_frames=12000,
         batch_size=4,
-        beta = 0.45,
+        beta=0.45,
         log_dir="./log/epochs",
     ):
         super(DDPG_Agent, self).__init__()
@@ -48,6 +48,7 @@ class DDPG_Agent(nn.Module):
         self.max_frames = max_frames  # number of episodes
         self.episode_reward = 0
         self.beta = beta # coefficient for mean and std losses inside reward func
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         new_action_space = spaces.Box(low=0, high=1, shape=(action_dim * 3,))
         self.ou_noise = OUNoise(new_action_space)
@@ -55,14 +56,14 @@ class DDPG_Agent(nn.Module):
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).cuda().double() # 30 + 30 = 60 as input
-        self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+        self.value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
+        self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
-        self.target_value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).cuda().double()
-        self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).to(self.device).double()
+        self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
         # store all the (s, a, s', r) during the transition process
-        self.memory = (Memory())
+        self.memory = Memory()
         # replay buffer used for main training
         self.replay_buffer = ReplayBuffer(replay_buffer_size)
 
@@ -91,11 +92,18 @@ class DDPG_Agent(nn.Module):
         for i in range(int(len(self.replay_buffer)/self.batch_size)):
             state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
 
-            state = torch.DoubleTensor(state).squeeze().cuda()
-            next_state = torch.DoubleTensor(next_state).squeeze().cuda()
-            action = torch.DoubleTensor(action).squeeze().cuda()
-            reward = torch.DoubleTensor(reward).cuda()
-            done = torch.DoubleTensor(np.float32(done)).cuda()
+            # state = torch.DoubleTensor(state).squeeze().cuda()
+            # next_state = torch.DoubleTensor(next_state).squeeze().cuda()
+            # action = torch.DoubleTensor(action).squeeze().cuda()
+            # reward = torch.DoubleTensor(reward).cuda()
+            # done = torch.DoubleTensor(np.float32(done)).cuda()
+
+            state = torch.DoubleTensor(state).squeeze().to(self.device)
+            next_state = torch.DoubleTensor(
+                next_state).squeeze().to(self.device)
+            action = torch.DoubleTensor(action).squeeze().to(self.device)
+            reward = torch.DoubleTensor(reward).to(self.device)
+            done = torch.DoubleTensor(np.float32(done)).to(self.device)
 
             policy_loss = self.value_net(state, self.policy_net(state), self.batch_size)
             policy_loss = -policy_loss.mean()
@@ -141,8 +149,8 @@ class DDPG_Agent(nn.Module):
             self.logging_per_round()
             state = self.reset_state()
 
-        state = torch.DoubleTensor(state).unsqueeze(0).cuda()  # current state
-
+        # state = torch.DoubleTensor(state).unsqueeze(0).cuda()  # current state
+        state = torch.DoubleTensor(state).unsqueeze(0).to(self.device)  # current state
         if prev_reward is not None:
             self.memory.update(r=prev_reward)
 

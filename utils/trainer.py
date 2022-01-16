@@ -10,9 +10,12 @@ from utils.utils import flatten_model
 
 
 def train(args):
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     (id, pid, model, client, local_model_weight, train_local_loss, algorithm) = args
-    model = model.cuda()
-    local_model = copy.deepcopy(model).cuda()
+    # model = model.cuda()
+    model = model.to(device)
+    # local_model = copy.deepcopy(model).cuda()
+    local_model = copy.deepcopy(model).to(device)
     optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)
     criterion = nn.CrossEntropyLoss()
     t = time.time()
@@ -23,13 +26,13 @@ def train(args):
         train_dataloader = client.train_dataloader
         train_loss = 0.0
         for X, y in train_dataloader:
-            X = X.cuda()
-            y = y.cuda()
+            X = X.to(device)
+            y = y.to(device)
             optimizer.zero_grad()
             output = local_model(X)
 
             if algorithm == "FedProx":
-                proximal_term = torch.tensor(0.).cuda()
+                proximal_term = torch.tensor(0.).to(device)
                 for w, w_t in zip(model.parameters(), local_model.parameters()):
                     proximal_term += torch.pow(torch.norm(w - w_t), 2)
                 loss = criterion(output, y) + proximal_term * client.mu / 2
@@ -47,14 +50,15 @@ def train(args):
 
 
 def test(model, test_dataloader):
-    model = model.cuda()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = model.to(device)
     y_prd = []
     y_grt = []
     cel = nn.CrossEntropyLoss()
     loss = 0.0
     for X, y in test_dataloader:
-        X = X.cuda()
-        y = y.cuda()
+        X = X.to(device)
+        y = y.to(device)
         output = model(X)
         loss += cel(output, y).item()
         output = output.argmax(-1)
