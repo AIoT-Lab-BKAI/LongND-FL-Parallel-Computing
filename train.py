@@ -246,7 +246,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-ideas",
+    wandb.init(project="federated-learning-dqn",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
