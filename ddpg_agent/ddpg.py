@@ -50,16 +50,16 @@ class DDPG_Agent(nn.Module):
         self.beta = beta # coefficient for mean and std losses inside reward func
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim * 3,))
+        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
         self.ou_noise = OUNoise(new_action_space)
 
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
+        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
-        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(self.device).double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
         # store all the (s, a, s', r) during the transition process
