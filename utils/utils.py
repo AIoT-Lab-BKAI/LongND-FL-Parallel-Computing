@@ -175,7 +175,8 @@ def standardize_weights(dqn_weights, n_models):
     # s_std = torch.clamp(noise/100, min=torch.ones_like(s_means) * 0.001, max=s_means/10)
     s_std = torch.max(torch.min(noise/100, s_means/10), torch.ones_like(s_means) * 0.001)
     s_epochs = torch.floor(next_epoch * 9).int() + 1
-    assigned_priorities = torch.normal(s_means, s_std)
+    # assigned_priorities = torch.normal(s_means, s_std)
+    assigned_priorities = s_means
     return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
 
     # s_func = nn.Softmax(dim=0)

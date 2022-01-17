@@ -3,7 +3,7 @@ import gym
 
 
 class OUNoise(object):
-    def __init__(self, action_space, mu=0.0, theta=0.15, max_sigma=0.3, min_sigma=0.3, decay_period=100000):
+    def __init__(self, action_space, mu=0.0, theta=0.1, max_sigma=0.1, min_sigma=0.1, decay_period=100000):
         self.mu           = mu
         self.theta        = theta
         self.sigma        = max_sigma
@@ -20,7 +20,7 @@ class OUNoise(object):
         
     def evolve_state(self):
         x  = self.state
-        dx = self.theta * (self.mu - x) + self.sigma * np.random.randn(self.action_dim)
+        dx = self.theta * (self.mu - x) + self.sigma * np.random.randn(self.action_dim) * 0.1
         self.state = x + dx
         return self.state
     
