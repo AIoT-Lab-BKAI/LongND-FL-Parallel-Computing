@@ -20,6 +20,7 @@ def option():
     parser.add_argument("--run_name", type=str, default="")
     parser.add_argument("--group_name", type=str, default="")
     parser.add_argument("--train_mode", type=str, default="")
+    parser.add_argument("--beta", type=float, default=0.45)
 
     args = parser.parse_args()
     return args

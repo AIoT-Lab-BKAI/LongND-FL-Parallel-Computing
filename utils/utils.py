@@ -13,6 +13,7 @@ from numpy.core.defchararray import count
 from torch.cuda.memory import reset_accumulated_memory_stats
 import torch
 import torch.nn as nn
+import wandb
 
 
 def GenerateLocalEpochs(percentage, size, max_epochs):
@@ -171,7 +172,8 @@ def standardize_weights(dqn_weights, n_models):
     noise = dqn_weights[2*n_models:3*n_models]
 
     s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
-    s_std = torch.clamp(noise/100, min=torch.ones_like(s_means) * 0.001, max=s_means/10)
+    # s_std = torch.clamp(noise/100, min=torch.ones_like(s_means) * 0.001, max=s_means/10)
+    s_std = torch.max(torch.min(noise/100, s_means/10), torch.ones_like(s_means) * 0.001)
     s_epochs = torch.floor(next_epoch * 9).int() + 1
     assigned_priorities = torch.normal(s_means, s_std)
     return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
@@ -230,8 +232,14 @@ def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smoot
         smooth_angle = instantaneous_angle
     else:
         smooth_angle = (round - 1)/round * smooth_angle + 1/round * instantaneous_angle
+    
+    with open("smooth_angle.txt", "a+") as file:
+        file.write(str(list(smooth_angle.detach().numpy())) + "\n")
 
     impact_factor = torch.squeeze(5 * (1 - torch.exp( - torch.exp(- 5 * (smooth_angle - torch.ones_like(smooth_angle))))))
+
+    with open("impact_factor.txt", "a+") as file:
+        file.write(str(list(impact_factor.detach().numpy())) + "\n")
 
     normalized_impact_factor = torch.exp(impact_factor)/torch.sum(torch.exp(impact_factor))
 
