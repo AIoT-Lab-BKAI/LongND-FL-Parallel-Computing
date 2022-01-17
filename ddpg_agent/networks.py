@@ -25,7 +25,7 @@ class ValueNetwork(nn.Module):
 
     def forward(self, state, action, batch_size):
         state = state.reshape([batch_size, self.num_inputs])
-        action = state.reshape([batch_size, self.num_actions])
+        action = action.reshape([batch_size, self.num_actions])
 
         # print("State", state.shape)
         # print("Action", action.shape)
