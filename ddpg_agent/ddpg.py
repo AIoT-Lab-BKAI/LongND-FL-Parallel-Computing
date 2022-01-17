@@ -24,7 +24,7 @@ class DDPG_Agent(nn.Module):
         replay_buffer_size=1000000,
         max_steps=16*50,
         max_frames=12000,
-        batch_size=4,
+        batch_size=2,
         log_dir="./log/epochs",
     ):
         super(DDPG_Agent, self).__init__()
@@ -53,10 +53,10 @@ class DDPG_Agent(nn.Module):
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).cuda().double() # 30 + 30 = 60 as input
+        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double() # 40 + 30 = 70 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
-        self.target_value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).cuda().double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
         # store all the (s, a, s', r) during the transition process
