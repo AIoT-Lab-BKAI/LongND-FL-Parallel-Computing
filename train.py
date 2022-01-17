@@ -3,6 +3,7 @@ from math import ceil
 import os.path
 from os import path
 from os import stat
+from re import M
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
 from numpy.lib.function_base import _percentile_dispatcher
@@ -69,10 +70,10 @@ def load_dataset(dataset_name, path_data_idx):
         transforms_mnist = transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         )
-        train_dataset = datasets.FashionMNIST("./data/cifar/", train=True, download=True,
+        train_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=True, download=True,
                                          transform=transforms_mnist)
 
-        test_dataset = datasets.FashionMNIST("./data/cifar/", train=False, download=True,
+        test_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=False, download=True,
                                         transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
     else:
@@ -89,7 +90,7 @@ def init_model(dataset_name):
         model = vgg11(100)
         print(model)
     elif dataset_name == "fashionmnist":
-        model = vgg11(10)
+        model = MNIST_CNN()
     else:
         warnings.warn("Model not supported")
     return model
@@ -136,7 +137,8 @@ def main(args):
     action_dim = args.clients_per_round # = 10
     # action_dim = args.clients_per_round * 4  # = 10
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).to(device)
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).to(device)
+    # agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
@@ -252,7 +254,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-ideas",
+    wandb.init(project="federated-learning-dqn",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
@@ -273,6 +275,7 @@ if __name__ == "__main__":
                    "log_dir": parse_args.log_dir,
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
+                   "beta": parse_args.beta,
                })
 
     args = wandb.config

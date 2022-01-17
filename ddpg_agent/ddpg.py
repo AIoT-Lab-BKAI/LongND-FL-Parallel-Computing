@@ -56,10 +56,10 @@ class DDPG_Agent(nn.Module):
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
+        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
-        self.target_value_net = ValueNetwork(state_dim, action_dim * 4, hidden_dim).to(self.device).double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(self.device).double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
         # store all the (s, a, s', r) during the transition process
