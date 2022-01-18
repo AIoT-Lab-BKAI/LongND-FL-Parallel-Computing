@@ -132,9 +132,9 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 3  # each agent {id, L, e, n} = 30
+    state_dim = args.clients_per_round * 2  # each agent {id, L, e, n} = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round * 3 # = 10
+    action_dim = args.clients_per_round * 2 # = 10
     # action_dim = args.clients_per_round * 4  # = 10
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).to(device)

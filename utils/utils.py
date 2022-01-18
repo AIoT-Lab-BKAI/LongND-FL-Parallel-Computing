@@ -179,13 +179,14 @@ def standardize_weights(dqn_weights, n_models):
     # return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
 
     s_func = nn.Softmax(dim=0)
-    means = [dqn_weights[0, cli*3] for cli in range(n_models)]
+    means = [dqn_weights[0, cli*2] for cli in range(n_models)]
     s_means = s_func(torch.FloatTensor(means))
     # noise = dqn_weights[0, 2*n_models:3*n_models]
-    next_epoch = torch.Tensor([dqn_weights[0, cli*3+2] for cli in range(n_models)])
-    s_std = torch.Tensor([np.clip(dqn_weights[0, cli*3+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)])
+    # next_epoch = torch.Tensor([dqn_weights[0, cli*3+2] for cli in range(n_models)])
+    s_std = torch.Tensor([np.clip(dqn_weights[0, cli*2+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)])
     # assigned_priorities = torch.normal(s_means, s_std)
-    s_epochs = torch.floor(torch.Tensor(next_epoch) * 9).int() + 1
+    # s_epochs = torch.floor(torch.Tensor(next_epoch) * 9).int() + 1
+    s_epochs = s_std
     # s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
     assigned_priorities = torch.Tensor([np.random.normal(s_means[i], s_std[i]) for i in range(n_models)])
     
@@ -326,7 +327,8 @@ def getDictionaryLosses(losses, num_clients):
 
 def get_mean_losses(local_train_losses, num_cli):
     num_epoches = [torch.count_nonzero(local_train_losses[i:,]) for i in range(num_cli)]
+    final_losses = [local_train_losses[i:, num_epoches[i]-1] for i in range(num_cli)]
     means = [torch.sum(local_train_losses[i:, ]) /
              torch.count_nonzero(local_train_losses[i:, ]) for i in range(num_cli)]
     stds = [torch.std(local_train_losses[i:, num_epoches[i]], unbiased=False) for i in range(num_cli)]
-    return means, stds
+    return final_losses, stds

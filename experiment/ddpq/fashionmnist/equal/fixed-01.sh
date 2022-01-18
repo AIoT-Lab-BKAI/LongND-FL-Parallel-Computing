@@ -10,5 +10,5 @@ source /home/acc13085dy/federated-learning/FLenv/bin/activate
 cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/
 cd $SGE_LOCALDIR/$JOB_ID
 
-python3 -u train.py --train_mode="RL-Fixed" --dataset_name="fashionmnist" --num_clients=10 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --path_data_idx="dataset_idx/fashionmnist/equal/FashionMNIST-noniid-fedavg-equal_1.json" --run_name="FedRL-Fixed-Equal-Non-IID-01" --group_name="FASHION-MNIST-FedAvg-Equal"
+python3 -u train.py --train_mode="RL-Fixed" --dataset_name="fashionmnist" --num_clients=10 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --path_data_idx="dataset_idx/fashionmnist/equal/FashionMNIST-noniid-fedavg-equal_1.json" --run_name="FedRL-Fixed-Equal-Non-IID-01-2.1.1" --group_name="FASHION-MNIST-FedAvg-Equal"
 

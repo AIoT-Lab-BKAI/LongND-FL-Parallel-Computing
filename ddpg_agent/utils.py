@@ -30,13 +30,16 @@ def get_state(losses, std_local_losses, epochs, num_samples, clients_id):
     # clients_id = np.asarray(clients_id).reshape((len(epochs), 1))
     # print('break point here')
     # retval = np.hstack((losses, std_local_losses, epochs, num_samples)).flatten()
-    retval = np.hstack((normalized_losses, std_local_losses, normalized_samples)).flatten()
+    # retval = np.hstack((normalized_losses, std_local_losses, normalized_samples)).flatten()
+    retval = np.hstack((normalized_losses, normalized_samples)).flatten()
     return retval
 
 def get_reward(losses, beta):
     # beta = 0.45
     losses = np.asarray(losses)
-    return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
+    # return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
+    return - np.mean(losses) - np.std(losses)
+
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):
     client_dicts = {}
