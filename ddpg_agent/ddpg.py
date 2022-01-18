@@ -27,12 +27,16 @@ class DDPG_Agent(nn.Module):
         batch_size=4,
         beta=0.45,
         log_dir="./log/epochs",
+        gamma = 0.99,
+        soft_tau = 2e-2,
     ):
         super(DDPG_Agent, self).__init__()
         self.lr = 3e-2
         self.num_steps = 20  # number of iterations for each episodes
         self.state_dim = state_dim
         self.action_dim = action_dim
+        self.gamma = gamma
+        self.soft_tau = soft_tau
         self.actions = []
         self.states = []
 
@@ -87,7 +91,7 @@ class DDPG_Agent(nn.Module):
             target_param.data.copy_(param.data)
 
 
-    def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=2e-2):
+    def ddpg_update(self, min_value=-np.inf, max_value=np.inf):
 
         for i in range(int(len(self.replay_buffer)/self.batch_size)):
             state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
@@ -110,7 +114,7 @@ class DDPG_Agent(nn.Module):
             next_action = self.target_policy_net(next_state)
             target_value = self.target_value_net(next_state, next_action.detach(), self.batch_size)
 
-            expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
+            expected_value = reward + (1.0 - done) * self.gamma * target_value.squeeze()
             expected_value = torch.clamp(expected_value, min_value, max_value)
 
             value = self.value_net(state, action, self.batch_size).squeeze()
@@ -127,10 +131,10 @@ class DDPG_Agent(nn.Module):
 
 
         for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
-            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+            target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
         for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
-            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+            target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
 
 
@@ -180,8 +184,8 @@ class DDPG_Agent(nn.Module):
         self.ou_noise.reset()
         self.episode_reward = 0
         self.step = 0
-        self.memory.reset()
-        self.replay_buffer.reset()
+        # self.memory.reset()
+        # self.replay_buffer.reset()
         return np.zeros(self.state_dim)
 
     def logging_per_round(self):

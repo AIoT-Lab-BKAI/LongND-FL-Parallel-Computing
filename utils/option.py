@@ -21,6 +21,14 @@ def option():
     parser.add_argument("--group_name", type=str, default="")
     parser.add_argument("--train_mode", type=str, default="")
     parser.add_argument("--beta", type=float, default=0.45)
-
+    parser.add_argument("--hidden_dim", type=int, default = 256)
+    parser.add_argument("--init_w", type=float, default = 1e-3)
+    parser.add_argument("--value_lr", type=float, default = 1e-3)
+    parser.add_argument("--policy_lr", type=float, default = 1e-4)
+    parser.add_argument("--max_steps", type=int, default = 16*50)
+    parser.add_argument("--max_frames", type=int, default = 12000)
+    parser.add_argument("--batch_size", type=int, default = 4)
+    parser.add_argument("--gamma", type=float, default = 0.99)
+    parser.add_argument("--soft_tau", type=float, default = 2e-2)
     args = parser.parse_args()
     return args

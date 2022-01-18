@@ -276,8 +276,16 @@ if __name__ == "__main__":
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
                    "beta": parse_args.beta,
+                    "hidden_dim": parse_args.hidden_dim,
+                    "init_w": parse_args.init_w,
+                    "value_lr": parse_args.value_lr,
+                    "policy_lr": parse_args.policy_lr,
+                    "max_steps": parse_args.max_steps,
+                    "max_frames": parse_args.max_frames,
+                    "batch_size": parse_args.batch_size,
+                    "gamma": parse_args.gamma,
+                    "soft_tau": parse_args.soft_tau,
                })
-
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name, args.train_mode, args.dataset_name))
