@@ -3,6 +3,7 @@ from math import ceil
 import os.path
 from os import path
 from os import stat
+from pathlib import Path
 from re import M
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
@@ -133,6 +134,15 @@ def main(args):
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
+    if Path("model/policy_net.pth").exists():
+        agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
+    if Path("model/value_net.pth").exists():
+        agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
+    if Path("model/target_policy_net.pth").exists():
+        agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
+    if Path("model/target_value_net.pth").exists():
+        agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
+
     # Multi-process training
     pool = mp.Pool(args.num_core)
     smooth_angle = None         # Use for fedadp
@@ -239,6 +249,13 @@ def main(args):
             }
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
             wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+
+    # Save model
+    print("Saving models...")
+    torch.save(agent.policy_net.state_dict(), "model/policy_net.pth")
+    torch.save(agent.value_net.state_dict(), "model/value_net.pth")
+    torch.save(agent.target_policy_net.state_dict(), "model/target_policy_net.pth")
+    torch.save(agent.target_value_net.state_dict(), "model/target_value_net.pth")
 
     del pool
 
