@@ -11,6 +11,7 @@ import numpy as np
 import torch.nn.functional as F
 from torch.distributions import Normal
 from ddpg_agent.policy import NormalizedActions
+import wandb
 
 class DDPG_Agent(nn.Module):
     def __init__(
@@ -130,7 +131,13 @@ class DDPG_Agent(nn.Module):
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
         prev_reward = get_reward(local_losses, beta=self.beta)
-
+        sample = {
+            "reward": prev_reward,
+            "mean_losses": np.mean(local_losses),
+            "std_losses": np.std(local_losses),
+            "episode_reward": self.episode_reward,
+        }
+        wandb.log({'dqn_inside/reward': sample})
         if self.step == self.max_steps - 1 or done:
             self.rewards.append(self.episode_reward)
             self.logging_per_round()
