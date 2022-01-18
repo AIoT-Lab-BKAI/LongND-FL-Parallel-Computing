@@ -127,9 +127,9 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 30
+    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 40
     # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round # = 10
+    action_dim = args.clients_per_round * 3 # = 30
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
@@ -247,9 +247,9 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-dqn",
+    wandb.init(project="federated-learning-ideas",
                entity="aiotlab",
-               name=parse_args.run_name,
+               name=parse_args.run_name + "-20.20",
                group=parse_args.group_name,
                #    mode="disabled",
                config={

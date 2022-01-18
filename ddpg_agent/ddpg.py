@@ -55,11 +55,17 @@ class DDPG_Agent(nn.Module):
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double() # 40 + 30 = 70 as input
+        # For learning impact factor and noise
+        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda().double() # 40 + 30 = 70 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
-
-        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda().double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+
+        self.epochs_value_net = None
+        self.epochs_policy_net = None
+        self.epochs_target_value_net = None
+        self.epochs_target_policy_net = None
+
 
         # store all the (s, a, s', r) during the transition process
         self.memory = (Memory())

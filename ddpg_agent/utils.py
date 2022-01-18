@@ -30,6 +30,7 @@ def get_state(losses, epochs, num_samples, clients_id):
 
 def get_reward(losses, beta):
     # beta = 0.45
+    beta = 20
     losses = np.asarray(losses)
     return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
 
