@@ -20,21 +20,30 @@ def plot(frame_idx, rewards):
     plt.show()
 
 
-def get_state(losses, std_local_losses, epochs, num_samples, clients_id):
-    losses = np.asarray(losses).reshape((len(epochs), 1))
+def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, clients_id):
+    # losses = np.asarray(losses).reshape((len(epochs), 1))
+    start_loss = np.asarray(start_loss).reshape((len(epochs), 1))
+    final_loss = np.asarray(final_loss).reshape((len(epochs), 1))
+
     std_local_losses = np.asarray(std_local_losses).reshape((len(epochs), 1))
-    mu_loss = np.sum(losses)
-    normalized_losses = losses/mu_loss
+
+    normalized_start_loss = start_loss/(np.sum(start_loss))
+    normalized_final_loss = final_loss/(np.sum(final_loss))
+
+    # mu_loss = np.sum(losses)
+    # normalized_losses = losses/mu_loss
+
     num_samples = np.asarray(num_samples).reshape((len(num_samples), 1))/100
     normalized_samples = num_samples/(np.sum(num_samples))
     # clients_id = np.asarray(clients_id).reshape((len(epochs), 1))
     # print('break point here')
     # retval = np.hstack((losses, std_local_losses, epochs, num_samples)).flatten()
     # retval = np.hstack((normalized_losses, std_local_losses, normalized_samples)).flatten()
-    retval = np.hstack((normalized_losses, normalized_samples)).flatten()
+    retval = np.hstack(
+        (normalized_start_loss, normalized_final_loss, normalized_samples)).flatten()
     return retval
 
-def get_reward(losses, beta):
+def get_reward(losses, beta=0.45):
     # beta = 0.45
     losses = np.asarray(losses)
     # return - beta * np.mean(losses) - (1 - beta) * np.std(losses)

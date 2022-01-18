@@ -137,16 +137,15 @@ class DDPG_Agent(nn.Module):
             target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
 
-
-    def get_action(self, local_losses, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None):
+    def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward= None):
         # reach to maximum step for each episode or get the done for this iteration
-        state = get_state(losses=local_losses, std_local_losses=std_local_losses,epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
-        prev_reward = get_reward(local_losses, beta=self.beta)
+        state = get_state(start_loss = start_loss, final_loss = final_loss, std_local_losses=std_local_losses,epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
+        # prev_reward = get_reward(local_losses, beta=self.beta)
         
         sample = {
             "reward": prev_reward,
-            "mean_losses": np.mean(local_losses),
-            "std_losses": np.std(local_losses),
+            "mean_losses": np.mean(final_loss),
+            "std_losses": np.std(final_loss),
             "episode_reward": self.episode_reward,
         }
         wandb.log({'dqn_inside/reward': sample})

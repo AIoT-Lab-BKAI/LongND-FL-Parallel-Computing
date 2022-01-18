@@ -30,7 +30,7 @@ from utils.utils import (
     unflatten_model,
     load_epoch,
 )
-from utils.trainer import train
+from utils.trainer import train, test_local
 import random
 import numpy as np
 import torch
@@ -113,6 +113,7 @@ def main(args):
     train_dataset, test_dataset, list_idx_sample = load_dataset(args.dataset_name, args.path_data_idx)
     client_model = init_model(args.dataset_name)
     n_params = count_params(client_model)
+    prev_reward = None
 
     list_client = [
         Client(
@@ -132,7 +133,7 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 2  # each agent {id, L, e, n} = 30
+    state_dim = args.clients_per_round * 3  # each agent {start_loss, end_loss, } = 30
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round * 2 # = 10
     # action_dim = args.clients_per_round * 4  # = 10
@@ -204,8 +205,12 @@ def main(args):
         else:
             done = 0
             num_cli = len(train_clients)
-            mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
-            dqn_weights = agent.get_action(mean_local_losses, std_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients)
+            # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
+            start_loss, final_loss, std_local_losses = get_mean_losses(
+                train_local_loss, num_cli)
+
+            dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
+                                           dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
             # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
@@ -220,6 +225,19 @@ def main(args):
         client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
+        local_loss = [0 for _ in range(len(train_clients))]
+        for i in range(len(train_clients)):
+            test_args = (
+                    i,
+                    train_clients[i],
+                    copy.deepcopy(client_model),
+                    list_client[train_clients[i]],
+                    local_model_weight,
+                    local_loss
+                )
+            test_local(test_args)
+        # print(local_loss)
+        prev_reward = get_reward(local_loss)
         print("ROUND: ", round, " TEST ACC: ", acc)
 
         train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
@@ -236,12 +254,12 @@ def main(args):
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
-            dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
+            dictionaryLosses = getDictionaryLosses(np.asarray(final_loss).reshape((num_cli)), local_loss, num_cli)
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
                 "n_epochs": args.num_epochs,
-                "local_train_loss": dictionaryLosses,
+                "local_info": dictionaryLosses,
                 "local_train_time": max_time,
                 "delay": delay,
                 "test_loss": test_loss,

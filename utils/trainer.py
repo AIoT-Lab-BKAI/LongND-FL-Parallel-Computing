@@ -8,6 +8,36 @@ from tqdm import trange, tqdm
 import torch.nn as nn
 from utils.utils import flatten_model
 
+def test_local(args):
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    (id, pid, model, client, local_model_weight, local_loss) = args
+    model = model.to(device)
+    local_model = copy.deepcopy(model).to(device)
+    # optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)
+    criterion = nn.CrossEntropyLoss()
+    train_dataloader = client.train_dataloader
+    train_loss = 0
+    ep_loss = 0
+    for X, y in train_dataloader:
+        X = X.to(device)
+        y = y.to(device)
+        # optimizer.zero_grad()
+        output = local_model(X)
+
+        # if algorithm == "FedProx":
+        #     proximal_term = torch.tensor(0.).to(device)
+        #     for w, w_t in zip(model.parameters(), local_model.parameters()):
+        #         proximal_term += torch.pow(torch.norm(w - w_t), 2)
+        #     loss = criterion(output, y) + proximal_term * client.mu / 2
+        # else:
+        loss = criterion(output, y)
+
+        # loss.backward()
+        # optimizer.step()
+        train_loss += loss.item()
+
+    ep_loss = train_loss / len(train_dataloader)
+    local_loss[id] = ep_loss
 
 def train(args):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
