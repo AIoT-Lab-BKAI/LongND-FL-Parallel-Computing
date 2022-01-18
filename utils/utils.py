@@ -326,9 +326,9 @@ def getDictionaryLosses(losses, num_clients):
 
 
 def get_mean_losses(local_train_losses, num_cli):
-    num_epoches = [torch.count_nonzero(local_train_losses[i:,]) for i in range(num_cli)]
+    num_epoches = torch.count_nonzero(local_train_losses, dim = 1)
     final_losses = [local_train_losses[i, num_epoches[i]-1] for i in range(num_cli)]
-    means = [torch.sum(local_train_losses[i:, ]) /
-             torch.count_nonzero(local_train_losses[i:, ]) for i in range(num_cli)]
-    stds = [torch.std(local_train_losses[i:, num_epoches[i]], unbiased=False) for i in range(num_cli)]
+    means = [torch.sum(local_train_losses[i, ]) /
+             num_epoches[i] for i in range(num_cli)]
+    stds = [torch.std(local_train_losses[i, num_epoches[i]], unbiased=False) for i in range(num_cli)]
     return final_losses, stds

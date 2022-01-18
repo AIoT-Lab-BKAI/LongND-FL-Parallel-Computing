@@ -23,11 +23,10 @@ def plot(frame_idx, rewards):
 def get_state(losses, std_local_losses, epochs, num_samples, clients_id):
     losses = np.asarray(losses).reshape((len(epochs), 1))
     std_local_losses = np.asarray(std_local_losses).reshape((len(epochs), 1))
-    mu_loss = np.linalg.norm(losses)
+    mu_loss = np.sum(losses)
     normalized_losses = losses/mu_loss
-    # epochs = np.asarray(epochs).reshape((len(epochs), 1))
     num_samples = np.asarray(num_samples).reshape((len(num_samples), 1))/100
-    normalized_samples = num_samples/(np.linalg.norm(num_samples))
+    normalized_samples = num_samples/(np.sum(num_samples))
     # clients_id = np.asarray(clients_id).reshape((len(epochs), 1))
     # print('break point here')
     # retval = np.hstack((losses, std_local_losses, epochs, num_samples)).flatten()

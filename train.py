@@ -137,7 +137,15 @@ def main(args):
     action_dim = args.clients_per_round * 2 # = 10
     # action_dim = args.clients_per_round * 4  # = 10
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).to(device)
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,
+        init_w=args.init_w,
+        value_lr=args.value_lr,
+        policy_lr=args.policy_lr,
+        max_steps=args.max_steps,
+        max_frames=args.max_frames,
+        batch_size=args.batch_size_ddpg,
+        gamma = args.gamma,
+        soft_tau = args.soft_tau).to(device)
     # agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
@@ -282,7 +290,7 @@ if __name__ == "__main__":
                     "policy_lr": parse_args.policy_lr,
                     "max_steps": parse_args.max_steps,
                     "max_frames": parse_args.max_frames,
-                    "batch_size": parse_args.batch_size,
+                    "batch_size_ddpg": parse_args.batch_size_ddpg,
                     "gamma": parse_args.gamma,
                     "soft_tau": parse_args.soft_tau,
                })
