@@ -127,7 +127,7 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 30
+    state_dim = args.clients_per_round * 3  # each agent {id, L, v} = 30
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round # = 10
 
@@ -156,8 +156,7 @@ def main(args):
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
-        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
-            np.array([list_client[i].eps for i in train_clients])
+        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) #* np.array([list_client[i].eps for i in train_clients])
 
         print("ROUND: ", round)
         print([list_client[i].eps for i in train_clients])
@@ -190,7 +189,8 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients)
+
+            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients, batch_size=args.batch_size)
 
             # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)

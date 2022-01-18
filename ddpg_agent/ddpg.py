@@ -126,9 +126,9 @@ class DDPG_Agent(nn.Module):
 
 
 
-    def get_action(self, local_losses, local_n_samples, local_num_epochs, done, clients_id=None):
+    def get_action(self, local_losses, local_n_samples, local_num_epochs, done, clients_id=None, batch_size=1):
         # reach to maximum step for each episode or get the done for this iteration
-        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
+        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id, batch_size=batch_size)
         prev_reward = get_reward(local_losses, beta=self.beta)
 
         if self.step == self.max_steps - 1 or done:
