@@ -19,8 +19,8 @@ class DDPG_Agent(nn.Module):
         action_dim=1,
         hidden_dim=256,
         init_w=1e-3,
-        value_lr=1e-3,
-        policy_lr=1e-4,
+        value_lr=1e-2,
+        policy_lr=1e-3,
         replay_buffer_size=1000000,
         max_steps=16*50,
         max_frames=12000,
@@ -86,7 +86,7 @@ class DDPG_Agent(nn.Module):
             target_param.data.copy_(param.data)
 
 
-    def ddpg_update(self, gamma=0.99, min_value=-np.inf, max_value=np.inf, soft_tau=2e-2):
+    def ddpg_update(self, gamma=0.8, min_value=-np.inf, max_value=np.inf, soft_tau=2e-2):
 
         for i in range(int(len(self.replay_buffer)/self.batch_size)):
             state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
