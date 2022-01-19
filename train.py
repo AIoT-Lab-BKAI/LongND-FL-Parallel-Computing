@@ -126,18 +126,19 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.num_clients * 3  # each agent {L, e, n}
+    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.num_clients * 3
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
+    action_dim = args.clients_per_round # = 10
+
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
-    smooth_angle = None
+    smooth_angle = None         # Use for fedadp
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
-        dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
+        dqn_list_epochs = [args.num_epochs for _ in range(args.clients_per_round)]
 
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
@@ -188,8 +189,9 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
+            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients)
 
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
+            # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
@@ -243,33 +245,32 @@ def main(args):
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
-    args = parse_args
-    # wandb.init(project="federated-learning-dqn",
-    #            entity="aiotlab",
-    #            name=parse_args.run_name,
-    #            group=parse_args.group_name,
-    #            #    mode="disabled",
-    #            config={
-    #                "num_rounds": parse_args.num_rounds,
-    #                "num_clients": parse_args.num_clients,
-    #                "clients_per_round": parse_args.clients_per_round,
-    #                "batch_size": parse_args.batch_size,
-    #                "num_epochs": parse_args.num_epochs,
-    #                "path_data_idx": parse_args.path_data_idx,
-    #                "learning_rate": parse_args.learning_rate,
-    #                "algorithm": parse_args.algorithm,
-    #                "mu": parse_args.mu,
-    #                "seed": parse_args.seed,
-    #                "drop_percent": parse_args.drop_percent,
-    #                "num_core": parse_args.num_core,
-    #                "log_dir": parse_args.log_dir,
-    #                "train_mode": parse_args.train_mode,
-    #                "dataset_name": parse_args.dataset_name,
-    #            })
+    wandb.init(project="federated-learning-dqn",
+               entity="aiotlab",
+               name=parse_args.run_name,
+               group=parse_args.group_name,
+               #    mode="disabled",
+               config={
+                   "num_rounds": parse_args.num_rounds,
+                   "num_clients": parse_args.num_clients,
+                   "clients_per_round": parse_args.clients_per_round,
+                   "batch_size": parse_args.batch_size,
+                   "num_epochs": parse_args.num_epochs,
+                   "path_data_idx": parse_args.path_data_idx,
+                   "learning_rate": parse_args.learning_rate,
+                   "algorithm": parse_args.algorithm,
+                   "mu": parse_args.mu,
+                   "seed": parse_args.seed,
+                   "drop_percent": parse_args.drop_percent,
+                   "num_core": parse_args.num_core,
+                   "log_dir": parse_args.log_dir,
+                   "train_mode": parse_args.train_mode,
+                   "dataset_name": parse_args.dataset_name,
+                   "beta": parse_args.beta,
+               })
 
-    # args = wandb.config
-    # wandb.define_metric("test_acc", summary="max")
-    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
-          args.train_mode, args.dataset_name))
+    args = wandb.config
+    wandb.define_metric("test_acc", summary="max")
+    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name, args.train_mode, args.dataset_name))
     main(args)
-    # wandb.finish()
+    wandb.finish()
