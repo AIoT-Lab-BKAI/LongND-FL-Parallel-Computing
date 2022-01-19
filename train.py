@@ -114,6 +114,7 @@ def main(args):
     client_model = init_model(args.dataset_name)
     n_params = count_params(client_model)
     prev_reward = None
+    start_l, final_l = 0,0
 
     list_client = [
         Client(
@@ -208,10 +209,12 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             infer_local_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
-            start_loss, final_loss, std_local_losses = get_mean_losses(
+            infer_server_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
+            start_l, final_l = infer_server_loss.copy(), infer_local_loss.copy()
+            _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
 
-            dqn_weights = agent.get_action(start_loss, infer_local_loss, std_local_losses, local_n_sample,
+            dqn_weights = agent.get_action(start_l, final_l, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
             # print("Here final output: ", dqn_weights.shape)            
@@ -259,7 +262,7 @@ def main(args):
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
-            dictionaryLosses = getDictionaryLosses(np.asarray(final_loss).reshape((num_cli)), local_loss, num_cli)
+            dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,

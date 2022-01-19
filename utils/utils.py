@@ -316,12 +316,12 @@ def getLoggingDictionary(sample, num_clients):
     return client_dicts
 
 
-def getDictionaryLosses(losses, local_loss, num_clients):
+def getDictionaryLosses(start_l, final_l, num_clients):
     client_dicts = {}
     for cli in range(num_clients):
         cli_dict = {}
-        cli_dict["local_loss"] = losses[cli]
-        cli_dict["local_test_loss"] = local_loss[cli]
+        cli_dict["inf_local_loss"] = final_l[cli]
+        cli_dict["inf_server_loss"] = start_l[cli]
         client_dicts[cli] = cli_dict
     return client_dicts
 
