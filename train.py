@@ -178,6 +178,7 @@ def main(args):
         local_inference_loss.share_memory_()
         print("ROUND: ", round)
         print([list_client[i].eps for i in train_clients])
+        start_l, final_l = 0, 0
 
         # Huan luyen song song tren cac client
         pool.map(
@@ -208,10 +209,11 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
-            start_loss, final_loss, std_local_losses = get_mean_losses(
+            _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
             start_loss = [local_inference_loss[i,0] for i in range(num_cli)]
             final_loss = [local_inference_loss[i,1] for i in range(num_cli)]
+            start_l, final_l = start_loss.copy(), final_loss.copy()
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
@@ -260,7 +262,7 @@ def main(args):
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
-            dictionaryLosses = getDictionaryLosses(np.asarray(final_loss).reshape((num_cli)), local_loss, num_cli)
+            dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
