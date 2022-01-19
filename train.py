@@ -174,7 +174,8 @@ def main(args):
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
             np.array([list_client[i].eps for i in train_clients])
-
+        local_inference_loss = torch.zeros(len(train_client), 2)
+        local_inference_loss.share_memory_()
         print("ROUND: ", round)
         print([list_client[i].eps for i in train_clients])
 
@@ -189,6 +190,7 @@ def main(args):
                     list_client[train_clients[i]],
                     local_model_weight,
                     train_local_loss,
+                    local_inference_loss,
                     args.algorithm,
                 )
                 for i in range(len(train_clients))
@@ -226,6 +228,7 @@ def main(args):
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
         local_loss = [0 for _ in range(len(train_clients))]
+
         for i in range(len(train_clients)):
             test_args = (
                     i,
@@ -237,6 +240,8 @@ def main(args):
                 )
             test_local(test_args)
         # print(local_loss)
+        for i in range(len(train_clients)):
+            local_loss[i] = local_inference_loss[i, 0]
         prev_reward = get_reward(local_loss)
         print("ROUND: ", round, " TEST ACC: ", acc)
 
