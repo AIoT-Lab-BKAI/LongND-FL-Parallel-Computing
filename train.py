@@ -216,6 +216,15 @@ def main(args):
             start_l, final_l = start_loss.copy(), final_loss.copy()
             if round:
                 prev_reward = get_reward(start_loss)
+                np_infer_server_loss = np.asarray(start_loss)
+                sample = {
+                    "reward": prev_reward,
+                    "mean_losses": np.mean(start_loss),
+                    "std_losses": np.std(start_loss),
+                    "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
+                    # "episode_reward": self.episode_reward,
+                }
+                wandb.log({'dqn_inside/reward': sample})
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
