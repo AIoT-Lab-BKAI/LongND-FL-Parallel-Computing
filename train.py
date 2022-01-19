@@ -40,7 +40,7 @@ from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
-from models.vgg import vgg11
+from models.vgg import vgg11, vgg11_mnist
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
@@ -85,9 +85,8 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
-        print(model)
     elif dataset_name == "fashionmnist":
-        model = MNIST_CNN()
+        model = vgg11_mnist(10)
     else:
         warnings.warn("Model not supported")
     return model
@@ -244,7 +243,7 @@ def main(args):
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
-
+    # args = parse_args
     wandb.init(project="federated-learning-dqn",
                entity="aiotlab",
                name=parse_args.run_name,
