@@ -213,7 +213,8 @@ def main(args):
             start_l, final_l = infer_server_loss.copy(), infer_local_loss.copy()
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
-
+            if round:
+                prev_reward = get_reward(infer_local_loss)
             dqn_weights = agent.get_action(start_l, final_l, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
@@ -243,9 +244,9 @@ def main(args):
         #         )
             # test_local(test_args)
         # print(local_loss)
-        for i in range(len(train_clients)):
-            local_loss[i] = local_inference_loss[i, 1]
-        prev_reward = get_reward(local_loss)
+        # for i in range(len(train_clients)):
+        #     local_loss[i] = local_inference_loss[i, 1]
+        # prev_reward = get_reward(local_loss)
         print("ROUND: ", round, " TEST ACC: ", acc)
 
         train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
