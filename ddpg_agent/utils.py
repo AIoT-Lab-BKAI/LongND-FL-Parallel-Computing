@@ -40,7 +40,7 @@ def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, cli
     # retval = np.hstack((losses, std_local_losses, epochs, num_samples)).flatten()
     # retval = np.hstack((normalized_losses, std_local_losses, normalized_samples)).flatten()
     retval = np.hstack(
-        (normalized_start_loss, normalized_final_loss, normalized_samples)).flatten()
+        (normalized_final_loss, normalized_samples)).flatten()
     return retval
 
 def get_reward(losses, beta=0.45):

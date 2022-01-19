@@ -133,7 +133,7 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 3  # each agent {start_loss, end_loss, } = 30
+    state_dim = args.clients_per_round * 2  # each agent {start_loss, end_loss, } = 30
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round * 2 # = 10
     # action_dim = args.clients_per_round * 4  # = 10
@@ -207,11 +207,11 @@ def main(args):
         else:
             done = 0
             num_cli = len(train_clients)
-            # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
+            infer_local_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
             start_loss, final_loss, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
 
-            dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
+            dqn_weights = agent.get_action(start_loss, infer_local_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
             # print("Here final output: ", dqn_weights.shape)            
@@ -229,19 +229,19 @@ def main(args):
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
         local_loss = [0 for _ in range(len(train_clients))]
 
-        for i in range(len(train_clients)):
-            test_args = (
-                    i,
-                    train_clients[i],
-                    copy.deepcopy(client_model),
-                    list_client[train_clients[i]],
-                    local_model_weight,
-                    local_loss
-                )
-            test_local(test_args)
+        # for i in range(len(train_clients)):
+        #     test_args = (
+        #             i,
+        #             train_clients[i],
+        #             copy.deepcopy(client_model),
+        #             list_client[train_clients[i]],
+        #             local_model_weight,
+        #             local_loss
+        #         )
+            # test_local(test_args)
         # print(local_loss)
         for i in range(len(train_clients)):
-            local_loss[i] = local_inference_loss[i, 0]
+            local_loss[i] = local_inference_loss[i, 1]
         prev_reward = get_reward(local_loss)
         print("ROUND: ", round, " TEST ACC: ", acc)
 
