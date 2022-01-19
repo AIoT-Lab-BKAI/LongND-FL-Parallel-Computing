@@ -27,7 +27,6 @@ def train(args):
             y = y.cuda()
             optimizer.zero_grad()
             output = local_model(X)
-
             if algorithm == "FedProx":
                 proximal_term = torch.tensor(0.).cuda()
                 for w, w_t in zip(model.parameters(), local_model.parameters()):
@@ -62,7 +61,9 @@ def test(model, test_dataloader):
         y_grt.append(y.cpu())
     loss = loss/len(test_dataloader)
 
+
     y_ = np.concatenate([i.numpy() for i in y_prd])
     y_gt = np.concatenate([i.numpy() for i in y_grt])
+
 
     return accuracy_score(y_, y_gt), loss
