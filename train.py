@@ -157,6 +157,13 @@ def main(args):
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.clients_per_round)]
 
+        if round > 500: 
+            dqn_list_epochs = [3 for _ in range(args.clients_per_round)]
+            load_epoch(list_client, dqn_list_epochs)
+        if round > 800:
+            dqn_list_epochs = [1 for _ in range(args.clients_per_round)]
+            load_epoch(list_client, dqn_list_epochs)
+        
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(selected_client, args.drop_percent)
@@ -300,7 +307,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-dqn",
+    wandb.init(project="federated-learning-2.6.1.3",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
