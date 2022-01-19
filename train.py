@@ -217,7 +217,7 @@ def main(args):
                 "delay": delay,
                 "test_loss": test_loss
             }
-            # wandb.log({'test_acc': acc, 'summary/summary': logging})
+            wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
             dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
@@ -237,7 +237,7 @@ def main(args):
                 "assigned_priorities": assigned_priorities,
             }
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
-            # wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+            wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
     del pool
 
