@@ -70,8 +70,31 @@ def make_layers(cfg,output_dim, batch_norm=False):
             nn.Linear(512, output_dim),]
     return nn.Sequential(*layers)
 
+def make_layers_mnist(cfg,output_dim, batch_norm=False):
+    layers = []
+    in_channels = 1
+    for v in cfg:
+        if v == "M":
+            layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
+        else:
+            conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
+            if batch_norm:
+                layers += [conv2d, nn.BatchNorm2d(v), nn.ReLU(inplace=True)]
+            else:
+                layers += [conv2d, nn.ReLU(inplace=True)]
+            in_channels = v
+    layers += [nn.Flatten(1,-1)]
+    layers += [nn.Dropout(),
+            nn.Linear(512, 512),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(512, 512),
+            nn.ReLU(True),
+            nn.Linear(512, output_dim),]
+    return nn.Sequential(*layers)
+
 cfg = {
-    "A": [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
+    "A": [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512,"M"],
     "B": [64, 64, "M", 128, 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
     "D": [
         64,
@@ -117,7 +140,9 @@ cfg = {
         "M",
     ],
 }
-
+def vgg11_mnist(output_dim):
+    """VGG 11-layer model (configuration "A")"""
+    return make_layers_mnist(cfg["A"],output_dim)
 
 def vgg11(output_dim):
     """VGG 11-layer model (configuration "A")"""
@@ -160,4 +185,3 @@ def vgg19():
 def vgg19_bn():
     """VGG 19-layer model (configuration 'E') with batch normalization"""
     return VGG(make_layers(cfg["E"], batch_norm=True))
-
