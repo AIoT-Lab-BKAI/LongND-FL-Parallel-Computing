@@ -3,6 +3,7 @@ from math import ceil
 import os.path
 from os import path
 from os import stat
+from re import M
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
 from numpy.lib.function_base import _percentile_dispatcher
@@ -39,7 +40,7 @@ from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
-from models.vgg import vgg11
+from models.vgg import vgg11, vgg11_mnist
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
@@ -64,12 +65,12 @@ def load_dataset(dataset_name, path_data_idx):
         list_idx_sample = load_dataset_idx(path_data_idx)
     elif dataset_name == "fashionmnist":
         transforms_mnist = transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+            [transforms.Resize(32),transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         )
-        train_dataset = datasets.FashionMNIST("./data/cifar/", train=True, download=True,
+        train_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=True, download=True,
                                          transform=transforms_mnist)
 
-        test_dataset = datasets.FashionMNIST("./data/cifar/", train=False, download=True,
+        test_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=False, download=True,
                                         transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
     else:
@@ -84,9 +85,8 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
-        print(model)
     elif dataset_name == "fashionmnist":
-        model = vgg11(10)
+        model = vgg11_mnist(10)
     else:
         warnings.warn("Model not supported")
     return model
@@ -215,7 +215,7 @@ def main(args):
                 "delay": delay,
                 "test_loss": test_loss
             }
-            wandb.log({'test_acc': acc, 'summary/summary': logging})
+            # wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
             dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
@@ -235,7 +235,7 @@ def main(args):
                 "assigned_priorities": assigned_priorities,
             }
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
-            wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+            # wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
     del pool
 
@@ -243,33 +243,33 @@ def main(args):
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
+    args = parse_args
+    # wandb.init(project="federated-learning-dqn",
+    #            entity="aiotlab",
+    #            name=parse_args.run_name,
+    #            group=parse_args.group_name,
+    #            #    mode="disabled",
+    #            config={
+    #                "num_rounds": parse_args.num_rounds,
+    #                "num_clients": parse_args.num_clients,
+    #                "clients_per_round": parse_args.clients_per_round,
+    #                "batch_size": parse_args.batch_size,
+    #                "num_epochs": parse_args.num_epochs,
+    #                "path_data_idx": parse_args.path_data_idx,
+    #                "learning_rate": parse_args.learning_rate,
+    #                "algorithm": parse_args.algorithm,
+    #                "mu": parse_args.mu,
+    #                "seed": parse_args.seed,
+    #                "drop_percent": parse_args.drop_percent,
+    #                "num_core": parse_args.num_core,
+    #                "log_dir": parse_args.log_dir,
+    #                "train_mode": parse_args.train_mode,
+    #                "dataset_name": parse_args.dataset_name,
+    #            })
 
-    wandb.init(project="federated-learning-dqn",
-               entity="aiotlab",
-               name=parse_args.run_name,
-               group=parse_args.group_name,
-               #    mode="disabled",
-               config={
-                   "num_rounds": parse_args.num_rounds,
-                   "num_clients": parse_args.num_clients,
-                   "clients_per_round": parse_args.clients_per_round,
-                   "batch_size": parse_args.batch_size,
-                   "num_epochs": parse_args.num_epochs,
-                   "path_data_idx": parse_args.path_data_idx,
-                   "learning_rate": parse_args.learning_rate,
-                   "algorithm": parse_args.algorithm,
-                   "mu": parse_args.mu,
-                   "seed": parse_args.seed,
-                   "drop_percent": parse_args.drop_percent,
-                   "num_core": parse_args.num_core,
-                   "log_dir": parse_args.log_dir,
-                   "train_mode": parse_args.train_mode,
-                   "dataset_name": parse_args.dataset_name,
-               })
-
-    args = wandb.config
-    wandb.define_metric("test_acc", summary="max")
+    # args = wandb.config
+    # wandb.define_metric("test_acc", summary="max")
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
           args.train_mode, args.dataset_name))
     main(args)
-    wandb.finish()
+    # wandb.finish()
