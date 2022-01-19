@@ -128,7 +128,7 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 3  # each agent {id, L, v} = 30
+    state_dim = args.clients_per_round * (3 + n_params)  # each agent {id, L, v, params}
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round # = 10
 
@@ -200,7 +200,13 @@ def main(args):
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
 
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients, batch_size=args.batch_size)
+            dqn_weights = agent.get_action(mean_local_losses, 
+                                            local_n_sample, 
+                                            dqn_list_epochs, 
+                                            done, 
+                                            clients_id=train_clients, 
+                                            batch_size=args.batch_size,
+                                            local_model_weight=local_model_weight)
 
             # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
@@ -264,7 +270,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-dqn",
+    wandb.init(project="federated-learning-ideas",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,

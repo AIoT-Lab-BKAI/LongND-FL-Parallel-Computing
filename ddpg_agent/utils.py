@@ -19,6 +19,7 @@ def plot(frame_idx, rewards):
     plt.savefig('./log/images/'+date_time)
     plt.show()
 
+
 def get_state(losses, epochs, num_samples, clients_id, batch_size=1):
     losses = np.asarray(losses).reshape((len(epochs), 1))
     epochs = np.asarray(epochs).reshape((len(epochs), 1))
@@ -30,10 +31,12 @@ def get_state(losses, epochs, num_samples, clients_id, batch_size=1):
     retval = np.hstack((losses, v_value, clients_id)).flatten()
     return retval
 
+
 def get_reward(losses, beta):
     # beta = 0.45
     losses = np.asarray(losses)
     return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
+
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):
     client_dicts = {}
