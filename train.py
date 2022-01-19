@@ -210,7 +210,8 @@ def main(args):
             # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
             start_loss, final_loss, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
-
+            start_loss = [local_inference_loss[i,0] for i in range(num_cli)]
+            final_loss = [local_inference_loss[i,1] for i in range(num_cli)]
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
