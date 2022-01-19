@@ -47,7 +47,7 @@ def get_reward(losses, beta=0.45):
     # beta = 0.45
     losses = np.asarray(losses)
     # return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
-    return - np.mean(losses) - np.std(losses)
+    return - np.mean(losses) - (losses.max() - losses.min())
 
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):
