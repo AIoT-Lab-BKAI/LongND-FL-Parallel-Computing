@@ -11,6 +11,7 @@ import numpy as np
 import torch.nn.functional as F
 from torch.distributions import Normal
 from ddpg_agent.policy import NormalizedActions
+import wandb
 
 class DDPG_Agent(nn.Module):
     def __init__(
@@ -24,7 +25,8 @@ class DDPG_Agent(nn.Module):
         replay_buffer_size=1000000,
         max_steps=16*50,
         max_frames=12000,
-        batch_size=16,
+        batch_size=4,
+        beta = 0.45,
         log_dir="./log/epochs",
     ):
         super(DDPG_Agent, self).__init__()
@@ -46,13 +48,18 @@ class DDPG_Agent(nn.Module):
         self.frame_idx = 0
         self.max_frames = max_frames  # number of episodes
         self.episode_reward = 0
+        self.beta = beta # coefficient for mean and std losses inside reward func
 
-        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
+        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim * 3,))
         self.ou_noise = OUNoise(new_action_space)
 
-        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+        print("Init State dim", state_dim)
+        print("Init Action dim", action_dim)
+
+        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double() # 40 + 30 = 70 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
-        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).cuda().double()
+
+        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).cuda().double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).cuda().double()
 
         # store all the (s, a, s', r) during the transition process
@@ -91,15 +98,15 @@ class DDPG_Agent(nn.Module):
             reward = torch.DoubleTensor(reward).cuda()
             done = torch.DoubleTensor(np.float32(done)).cuda()
 
-            policy_loss = self.value_net(state, self.policy_net(state))
+            policy_loss = self.value_net(state, self.policy_net(state), self.batch_size)
             policy_loss = -policy_loss.mean()
             next_action = self.target_policy_net(next_state)
-            target_value = self.target_value_net(next_state, next_action.detach())
+            target_value = self.target_value_net(next_state, next_action.detach(), self.batch_size)
 
             expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
             expected_value = torch.clamp(expected_value, min_value, max_value)
 
-            value = self.value_net(state, action).squeeze()
+            value = self.value_net(state, action, self.batch_size).squeeze()
 
             value_loss = self.value_criterion(value, expected_value)
 
@@ -120,11 +127,17 @@ class DDPG_Agent(nn.Module):
 
 
 
-    def get_action(self, local_losses, local_n_samples, local_num_epochs, done):
+    def get_action(self, local_losses, local_n_samples, local_num_epochs, done, clients_id=None):
         # reach to maximum step for each episode or get the done for this iteration
-        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples)
-        prev_reward = get_reward(local_losses)
-
+        state = get_state(losses=local_losses, epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
+        prev_reward = get_reward(local_losses, beta=self.beta)
+        sample = {
+            "reward": prev_reward,
+            "mean_losses": np.mean(local_losses),
+            "std_losses": np.std(local_losses),
+            "episode_reward": self.episode_reward,
+        }
+        wandb.log({'dqn_inside/reward': sample})
         if self.step == self.max_steps - 1 or done:
             self.rewards.append(self.episode_reward)
             self.logging_per_round()

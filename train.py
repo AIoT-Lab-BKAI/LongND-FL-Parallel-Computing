@@ -3,6 +3,7 @@ from math import ceil
 import os.path
 from os import path
 from os import stat
+from re import M
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
 from numpy.lib.function_base import _percentile_dispatcher
@@ -39,7 +40,7 @@ from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
-from models.vgg import vgg11
+from models.vgg import vgg11, vgg11_mnist
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
@@ -64,12 +65,12 @@ def load_dataset(dataset_name, path_data_idx):
         list_idx_sample = load_dataset_idx(path_data_idx)
     elif dataset_name == "fashionmnist":
         transforms_mnist = transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+            [transforms.Resize(32),transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         )
-        train_dataset = datasets.FashionMNIST("./data/cifar/", train=True, download=True,
+        train_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=True, download=True,
                                          transform=transforms_mnist)
 
-        test_dataset = datasets.FashionMNIST("./data/cifar/", train=False, download=True,
+        test_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=False, download=True,
                                         transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
     else:
@@ -84,9 +85,8 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
-        print(model)
     elif dataset_name == "fashionmnist":
-        model = vgg11(10)
+        model = vgg11_mnist(10)
     else:
         warnings.warn("Model not supported")
     return model
@@ -126,18 +126,19 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.num_clients * 3  # each agent {L, e, n}
+    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.num_clients * 3
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
+    action_dim = args.clients_per_round # = 10
+
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
-    smooth_angle = None
+    smooth_angle = None         # Use for fedadp
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
-        dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
+        dqn_list_epochs = [args.num_epochs for _ in range(args.clients_per_round)]
 
         # Ngau nhien lua chon client de train
         selected_client = select_client(args.num_clients, args.clients_per_round)
@@ -188,8 +189,9 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
+            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients)
 
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
+            # print("Here final output: ", dqn_weights.shape)            
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
@@ -215,7 +217,7 @@ def main(args):
                 "delay": delay,
                 "test_loss": test_loss
             }
-            wandb.log({'test_acc': acc, 'summary/summary': logging})
+            # wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
             dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
@@ -235,7 +237,7 @@ def main(args):
                 "assigned_priorities": assigned_priorities,
             }
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
-            wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+            # wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
     del pool
 
@@ -243,7 +245,6 @@ def main(args):
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
-
     wandb.init(project="federated-learning-dqn",
                entity="aiotlab",
                name=parse_args.run_name,
@@ -265,11 +266,11 @@ if __name__ == "__main__":
                    "log_dir": parse_args.log_dir,
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
+                   "beta": parse_args.beta,
                })
 
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
-    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
-          args.train_mode, args.dataset_name))
+    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name, args.train_mode, args.dataset_name))
     main(args)
     wandb.finish()
