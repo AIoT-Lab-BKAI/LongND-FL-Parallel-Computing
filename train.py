@@ -3,6 +3,7 @@ from math import ceil
 import os.path
 from os import path
 from os import stat
+from pathlib import Path
 from re import M
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
@@ -44,6 +45,7 @@ from models.vgg import vgg11
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
+from sklearn.decomposition import PCA
 
 
 def load_dataset(dataset_name, path_data_idx):
@@ -127,11 +129,21 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 4  # each agent {id, L, e, n} = 30
+    state_dim = args.clients_per_round * (4 + args.clients_per_round)  # each agent {id, L, e, n, client_per_round} = 30
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round # = 10
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
+
+    if args.load_model:
+        if Path("model/policy_net.pth").exists():
+            agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
+        if Path("model/value_net.pth").exists():
+            agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
+        if Path("model/target_policy_net.pth").exists():
+            agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
+        if Path("model/target_value_net.pth").exists():
+            agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
@@ -156,8 +168,7 @@ def main(args):
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
-        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
-            np.array([list_client[i].eps for i in train_clients])
+        local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) #* np.array([list_client[i].eps for i in train_clients])
 
         print("ROUND: ", round)
         print([list_client[i].eps for i in train_clients])
@@ -190,9 +201,21 @@ def main(args):
             done = 0
             num_cli = len(train_clients)
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done, clients_id=train_clients)
 
-            # print("Here final output: ", dqn_weights.shape)            
+            norm_len = torch.norm(local_model_weight, dim=1).reshape(local_model_weight.shape[0], 1)
+            local_model_weight = local_model_weight/norm_len
+
+            M_matrix = local_model_weight.cpu().numpy()
+            similarity_matrix = np.multiply(np.matmul(M_matrix, M_matrix.transpose()), 1 - np.eye(M_matrix.shape[0]))
+
+            dqn_weights = agent.get_action(mean_local_losses,
+                                            local_n_sample,
+                                            dqn_list_epochs,
+                                            done,
+                                            clients_id=train_clients,
+                                            M_matrix=similarity_matrix)
+
+            # print("Here final output: ", dqn_weights.shape)         
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
@@ -240,6 +263,16 @@ def main(args):
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
             wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
+
+    if(args.save_model):
+        if not Path("model/").exists():
+            os.system("mkdir model")
+        print("Saving models...")
+        torch.save(agent.policy_net.state_dict(), "model/policy_net.pth")
+        torch.save(agent.value_net.state_dict(), "model/value_net.pth")
+        torch.save(agent.target_policy_net.state_dict(), "model/target_policy_net.pth")
+        torch.save(agent.target_value_net.state_dict(), "model/target_value_net.pth")
+
     del pool
 
 
@@ -247,7 +280,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-dqn",
+    wandb.init(project="federated-learning-ideas",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
@@ -269,6 +302,9 @@ if __name__ == "__main__":
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
                    "beta": parse_args.beta,
+                   "pca_components": parse_args.pca_components,
+                   "load_model": parse_args.load_model,
+                   "save_model": parse_args.save_model
                })
 
     args = wandb.config

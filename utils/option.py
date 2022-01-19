@@ -21,6 +21,9 @@ def option():
     parser.add_argument("--group_name", type=str, default="")
     parser.add_argument("--train_mode", type=str, default="")
     parser.add_argument("--beta", type=float, default=0.45)
+    parser.add_argument("--save_model", type=int, default=0)
+    parser.add_argument("--load_model", type=int, default=0)
+    parser.add_argument("--pca_components", type=int, default=10)
 
     args = parser.parse_args()
     return args
