@@ -86,7 +86,8 @@ def init_model(dataset_name):
     elif dataset_name == "cifar100":
         model = vgg11(100)
     elif dataset_name == "fashionmnist":
-        model = vgg11_mnist(10)
+        # model = vgg11_mnist(10)
+        model = MNIST_CNN()
     else:
         warnings.warn("Model not supported")
     return model
