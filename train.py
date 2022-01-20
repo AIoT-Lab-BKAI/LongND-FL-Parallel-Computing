@@ -197,6 +197,21 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
+        start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
+        final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
+        start_l, final_l = start_loss.copy(), final_loss.copy()
+        if round:
+            prev_reward = get_reward(start_loss)
+            np_infer_server_loss = np.asarray(start_loss)
+            sample = {
+                "round": round + 1,
+                "reward": prev_reward,
+                "mean_losses": np.mean(start_loss),
+                "std_losses": np.std(start_loss),
+                "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
+                # "episode_reward": self.episode_reward,
+            }
+            wandb.log({'loss_inside/reward': sample})
 
         if args.train_mode == "benchmark":
             flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
@@ -211,20 +226,6 @@ def main(args):
             # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
-            start_loss = [local_inference_loss[i,0] for i in range(num_cli)]
-            final_loss = [local_inference_loss[i,1] for i in range(num_cli)]
-            start_l, final_l = start_loss.copy(), final_loss.copy()
-            if round:
-                prev_reward = get_reward(start_loss)
-                np_infer_server_loss = np.asarray(start_loss)
-                sample = {
-                    "reward": prev_reward,
-                    "mean_losses": np.mean(start_loss),
-                    "std_losses": np.std(start_loss),
-                    "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
-                    # "episode_reward": self.episode_reward,
-                }
-                wandb.log({'dqn_inside/reward': sample})
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
@@ -241,40 +242,24 @@ def main(args):
         client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
-        local_loss = [0 for _ in range(len(train_clients))]
-
-        # for i in range(len(train_clients)):
-        #     test_args = (
-        #             i,
-        #             train_clients[i],
-        #             copy.deepcopy(client_model),
-        #             list_client[train_clients[i]],
-        #             local_model_weight,
-        #             local_loss
-        #         )
-        #     test_local(test_args)
-        # print(local_loss)
-        # for i in range(len(train_clients)):
-        #     local_loss[i] = local_inference_loss[i, 0]
-        # prev_reward = get_reward(local_loss)
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
         train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
-
+        dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
         if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,    
                 "n_epochs": args.num_epochs,
                 "local_train_time": max_time,
+                "local_info": dictionaryLosses,
                 "delay": delay,
                 "test_loss": test_loss
             }
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
-            dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
