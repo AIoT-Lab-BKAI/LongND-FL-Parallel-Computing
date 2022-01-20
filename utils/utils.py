@@ -183,7 +183,7 @@ def standardize_weights(dqn_weights, n_models):
     s_means = s_func(torch.FloatTensor(means))
     # noise = dqn_weights[0, 2*n_models:3*n_models]
     # next_epoch = torch.Tensor([dqn_weights[0, cli*3+2] for cli in range(n_models)])
-    s_std = torch.Tensor([np.clip(dqn_weights[0, cli*2+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)])
+    s_std = torch.Tensor([np.clip(dqn_weights[0, cli*2+1]/100, 0.001, s_means[cli] * 0.2) for cli in range(n_models)])
     # assigned_priorities = torch.normal(s_means, s_std)
     # s_epochs = torch.floor(torch.Tensor(next_epoch) * 9).int() + 1
     s_epochs = s_std
