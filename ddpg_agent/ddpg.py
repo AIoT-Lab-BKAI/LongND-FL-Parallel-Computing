@@ -55,16 +55,16 @@ class DDPG_Agent(nn.Module):
         self.beta = beta # coefficient for mean and std losses inside reward func
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim,))
+        new_action_space = spaces.Box(low=0, high=1, shape=(action_dim * 3,))
         self.ou_noise = OUNoise(new_action_space)
 
         print("Init State dim", state_dim)
         print("Init Action dim", action_dim)
 
-        self.value_net = ValueNetwork(state_dim, action_dim, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
+        self.value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(self.device).double() # 30 + 30 = 60 as input
         self.policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
-        self.target_value_net = ValueNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
+        self.target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(self.device).double()
         self.target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(self.device).double()
 
         # store all the (s, a, s', r) during the transition process
@@ -129,7 +129,7 @@ class DDPG_Agent(nn.Module):
             target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
 
-    def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward= None, M_matrix=None):
+    def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward=None, M_matrix=None):
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(start_loss=start_loss, 
                             final_loss=final_loss, 

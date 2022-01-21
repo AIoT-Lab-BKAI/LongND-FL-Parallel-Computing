@@ -167,6 +167,7 @@ def communicate(tensors, communication_op):
 
 
 def standardize_weights(dqn_weights, n_models):
+
     next_epoch = dqn_weights[0:n_models]
     impact_factor = dqn_weights[n_models:2*n_models]
     noise = dqn_weights[2*n_models:3*n_models]
@@ -176,6 +177,7 @@ def standardize_weights(dqn_weights, n_models):
     s_epochs = torch.floor(next_epoch * 9).int() + 1
     assigned_priorities = torch.normal(s_means, s_std)
     return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
+
 
 def standardize_weights_test(next_epoch, impact_factor, noise):
 

@@ -135,9 +135,9 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * (5 + args.clients_per_round)
+    state_dim = args.clients_per_round * (4 + args.clients_per_round)
     # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round * 2
+    action_dim = args.clients_per_round
 
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,
@@ -225,8 +225,14 @@ def main(args):
             start_loss = [local_inference_loss[i,0] for i in range(num_cli)]
             final_loss = [local_inference_loss[i,1] for i in range(num_cli)]
             start_l, final_l = start_loss.copy(), final_loss.copy()
+
+            norm_len = torch.norm(local_model_weight, dim=1).reshape(local_model_weight.shape[0], 1)
+            local_model_weight_normed = local_model_weight/norm_len
+            M_matrix = local_model_weight_normed.cpu().numpy()
+            similarity_matrix = np.multiply(np.matmul(M_matrix, M_matrix.transpose()), 1 - np.eye(M_matrix.shape[0]))
+
             if round:
-                prev_reward = get_reward(start_loss)
+                prev_reward = get_reward(start_loss, similarity_matrix)
                 np_infer_server_loss = np.asarray(start_loss)
                 sample = {
                     "reward": prev_reward,
@@ -237,11 +243,10 @@ def main(args):
                 }
                 wandb.log({'dqn_inside/reward': sample})
             
-            norm_len = torch.norm(local_model_weight, dim=1).reshape(local_model_weight.shape[0], 1)
-            local_model_weight_normed = local_model_weight/norm_len
-            M_matrix = local_model_weight_normed.cpu().numpy()
-            similarity_matrix = np.multiply(np.matmul(M_matrix, M_matrix.transpose()), 1 - np.eye(M_matrix.shape[0]))
-            dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
+            dqn_weights = agent.get_action(start_loss, 
+                                           final_loss, 
+                                           std_local_losses, 
+                                           local_n_sample,
                                            dqn_list_epochs, done, 
                                            clients_id=train_clients, 
                                            prev_reward=prev_reward,
