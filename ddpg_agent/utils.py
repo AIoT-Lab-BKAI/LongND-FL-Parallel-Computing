@@ -19,7 +19,6 @@ def plot(frame_idx, rewards):
     plt.savefig('./log/images/'+date_time)
     plt.show()
 
-
 def get_state(losses, epochs, num_samples, clients_id, M_matrix):
     losses = np.asarray(losses).reshape((len(epochs), 1))
     epochs = np.asarray(epochs).reshape((len(epochs), 1))
@@ -32,11 +31,29 @@ def get_state(losses, epochs, num_samples, clients_id, M_matrix):
     
     return retval
 
+def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, clients_id, M_matrix):
+    # losses = np.asarray(losses).reshape((len(epochs), 1))
+    start_loss = np.asarray(start_loss).reshape((len(epochs), 1))
+    final_loss = np.asarray(final_loss).reshape((len(epochs), 1))
 
-def get_reward(losses, beta, M_matrix):
+    std_local_losses = np.asarray(std_local_losses).reshape((len(epochs), 1))
+
+    normalized_start_loss = start_loss/(np.sum(start_loss))
+    normalized_final_loss = final_loss/(np.sum(final_loss))
+
+    num_samples = np.asarray(num_samples).reshape((len(num_samples), 1))/100
+    normalized_samples = num_samples/(np.sum(num_samples))
+
+    retval = np.hstack((normalized_start_loss, normalized_final_loss, normalized_samples)).flatten()
+    retval = np.hstack((retval, M_matrix)).flatten()
+
+    return retval
+
+def get_reward(losses, M_matrix, beta=0.45):
     # beta = 0.45
     losses = np.asarray(losses)
-    return - beta * np.mean(losses) - (1 - beta) * np.std(losses) + 0.05 * np.sum(M_matrix)/2
+    # return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
+    return - np.mean(losses) - (losses.max() - losses.min()) + 0.05 * np.sum(M_matrix)/2
 
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):

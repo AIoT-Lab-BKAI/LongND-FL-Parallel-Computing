@@ -10,7 +10,7 @@ from random import random
 from collections import OrderedDict
 import numpy as np
 from numpy.core.defchararray import count
-from torch.cuda.memory import reset_accumulated_memory_stats
+# from torch.cuda.memory import reset_accumulated_memory_stats
 import torch
 import torch.nn as nn
 import wandb
@@ -177,8 +177,8 @@ def standardize_weights(dqn_weights, n_models):
     assigned_priorities = torch.normal(s_means, s_std)
     return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
 
-
 def standardize_weights_test(next_epoch, impact_factor, noise):
+
     s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
     s_std = torch.clamp(noise/100, min=0.001, max=s_means/10)
     s_epochs = torch.floor(next_epoch * 9) + 1
@@ -300,14 +300,22 @@ def getLoggingDictionary(sample, num_clients):
     return client_dicts
 
 
-def getDictionaryLosses(losses, num_clients):
+def getDictionaryLosses(start_loss, final_loss, num_clients):
     client_dicts = {}
     for cli in range(num_clients):
         cli_dict = {}
-        cli_dict["local_loss"] = losses[cli]
+        cli_dict["local_inference_loss"] = final_loss[cli]
+        cli_dict["server_inference_loss"] = start_loss[cli]
         client_dicts[cli] = cli_dict
     return client_dicts
 
 
 def get_mean_losses(local_train_losses, num_cli):
-    return [torch.sum(local_train_losses[i:, ])/torch.count_nonzero(local_train_losses[i:, ]) for i in range(num_cli)]
+    num_epoches = torch.count_nonzero(local_train_losses, dim = 1)
+    final_losses = [local_train_losses[i, num_epoches[i]-1] for i in range(num_cli)]
+    start_losses = [local_train_losses[i, 0]
+                    for i in range(num_cli)]
+    means = [torch.sum(local_train_losses[i, ]) /
+             num_epoches[i] for i in range(num_cli)]
+    stds = [torch.std(local_train_losses[i, num_epoches[i]], unbiased=False) for i in range(num_cli)]
+    return start_losses, final_losses, stds
