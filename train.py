@@ -30,7 +30,7 @@ from utils.utils import (
     unflatten_model,
     load_epoch,
 )
-from utils.trainer import train
+from utils.trainer import train, test_local
 import random
 import numpy as np
 import torch
@@ -45,12 +45,15 @@ from ddpg_agent.ddpg import *
 import wandb
 import warnings
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = "cuda" if torch.cuda.is_available() else "cpu"
+
 
 def load_dataset(dataset_name, path_data_idx):
     if dataset_name == "mnist":
         transforms_mnist = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-        train_dataset = datasets.MNIST("./data/mnist/", train=True, download=True, transform=transforms_mnist)
-        test_dataset = datasets.MNIST("./data/mnist/", train=False, download=True, transform=transforms_mnist)
+        train_dataset = datasets.MNIST("data/mnist/", train=True, download=True, transform=transforms_mnist)
+        test_dataset = datasets.MNIST("data/mnist/", train=False, download=True, transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
 
     elif dataset_name == "cifar100":
@@ -97,8 +100,10 @@ def main(args):
     """ Parse command line arguments or load defaults """
     random.seed(args.seed)
     np.random.seed(args.seed)
-    torch.cuda.manual_seed(args.seed)
-    torch.manual_seed(args.seed)
+    if device == torch.device("cuda"):
+        torch.cuda.manual_seed(args.seed)
+    else:
+        torch.manual_seed(args.seed)
 
     generate_abiprocess(mu=100, sigma=5, n_client=args.num_clients)
     list_abiprocess_client = read_abiprocesss()
@@ -108,6 +113,7 @@ def main(args):
     train_dataset, test_dataset, list_idx_sample = load_dataset(args.dataset_name, args.path_data_idx)
     client_model = init_model(args.dataset_name)
     n_params = count_params(client_model)
+    prev_reward = None
 
     list_client = [
         Client(
@@ -127,10 +133,21 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.num_clients * 3  # each agent {L, e, n}
+    state_dim = args.clients_per_round * 3  # each agent {start_loss, end_loss, } = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.num_clients * 3
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir).cuda()
+    action_dim = args.clients_per_round * 2 # = 10
+    # action_dim = args.clients_per_round * 4  # = 10
+
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,
+        init_w=args.init_w,
+        value_lr=args.value_lr,
+        policy_lr=args.policy_lr,
+        max_steps=args.max_steps,
+        max_frames=args.max_frames,
+        batch_size=args.batch_size_ddpg,
+        gamma = args.gamma,
+        soft_tau = args.soft_tau).to(device)
+    # agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
@@ -157,9 +174,11 @@ def main(args):
         list_abiprocess = [list_client[i].abiprocess for i in train_clients]
         local_n_sample = np.array([list_client[i].n_samples for i in train_clients]) * \
             np.array([list_client[i].eps for i in train_clients])
-
+        local_inference_loss = torch.zeros(len(train_client), 2)
+        local_inference_loss.share_memory_()
         print("ROUND: ", round)
         print([list_client[i].eps for i in train_clients])
+        start_l, final_l = 0, 0
 
         # Huan luyen song song tren cac client
         pool.map(
@@ -172,11 +191,27 @@ def main(args):
                     list_client[train_clients[i]],
                     local_model_weight,
                     train_local_loss,
+                    local_inference_loss,
                     args.algorithm,
                 )
                 for i in range(len(train_clients))
             ],
         )
+        start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
+        final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
+        start_l, final_l = start_loss.copy(), final_loss.copy()
+        if round:
+            prev_reward = get_reward(start_loss)
+            np_infer_server_loss = np.asarray(start_loss)
+            sample = {
+                "round": round + 1,
+                "reward": prev_reward,
+                "mean_losses": np.mean(start_loss),
+                "std_losses": np.std(start_loss),
+                "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
+                # "episode_reward": self.episode_reward,
+            }
+            wandb.log({'loss_inside/reward': sample})
 
         if args.train_mode == "benchmark":
             flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
@@ -188,7 +223,11 @@ def main(args):
         else:
             done = 0
             num_cli = len(train_clients)
-            mean_local_losses = get_mean_losses(train_local_loss, num_cli)
+            # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
+            _, _, std_local_losses = get_mean_losses(
+                train_local_loss, num_cli)
+            dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
+                                           dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
             dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
@@ -203,28 +242,29 @@ def main(args):
         client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
+
         print("ROUND: ", round, " TEST ACC: ", acc)
 
         train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
-
+        dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
         if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
                 "n_epochs": args.num_epochs,
                 "local_train_time": max_time,
+                "local_info": dictionaryLosses,
                 "delay": delay,
                 "test_loss": test_loss
             }
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
         else:
-            dictionaryLosses = getDictionaryLosses(np.asarray(mean_local_losses).reshape((num_cli)), num_cli)
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
                 "n_epochs": args.num_epochs,
-                "local_train_loss": dictionaryLosses,
+                "local_info": dictionaryLosses,
                 "local_train_time": max_time,
                 "delay": delay,
                 "test_loss": test_loss,
@@ -244,7 +284,8 @@ def main(args):
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
-    wandb.init(project="federated-learning-dqn",
+
+    wandb.init(project="federated-learning-ICDCS",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
@@ -265,8 +306,17 @@ if __name__ == "__main__":
                    "log_dir": parse_args.log_dir,
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
+                   "beta": parse_args.beta,
+                    "hidden_dim": parse_args.hidden_dim,
+                    "init_w": parse_args.init_w,
+                    "value_lr": parse_args.value_lr,
+                    "policy_lr": parse_args.policy_lr,
+                    "max_steps": parse_args.max_steps,
+                    "max_frames": parse_args.max_frames,
+                    "batch_size_ddpg": parse_args.batch_size_ddpg,
+                    "gamma": parse_args.gamma,
+                    "soft_tau": parse_args.soft_tau,
                })
-
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
