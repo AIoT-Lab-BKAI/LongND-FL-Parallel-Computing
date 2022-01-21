@@ -203,9 +203,9 @@ def main(args):
             mean_local_losses = get_mean_losses(train_local_loss, num_cli)
 
             norm_len = torch.norm(local_model_weight, dim=1).reshape(local_model_weight.shape[0], 1)
-            local_model_weight = local_model_weight/norm_len
+            local_model_weight_normed = local_model_weight/norm_len
 
-            M_matrix = local_model_weight.cpu().numpy()
+            M_matrix = local_model_weight_normed.cpu().numpy()
             similarity_matrix = np.multiply(np.matmul(M_matrix, M_matrix.transpose()), 1 - np.eye(M_matrix.shape[0]))
 
             dqn_weights = agent.get_action(mean_local_losses,

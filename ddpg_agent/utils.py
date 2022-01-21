@@ -36,7 +36,7 @@ def get_state(losses, epochs, num_samples, clients_id, M_matrix):
 def get_reward(losses, beta, M_matrix):
     # beta = 0.45
     losses = np.asarray(losses)
-    return - beta * np.mean(losses) - (1 - beta) * np.std(losses) + 0.001 * np.sum(M_matrix)/2
+    return - beta * np.mean(losses) - (1 - beta) * np.std(losses) + 0.05 * np.sum(M_matrix)/2
 
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):
