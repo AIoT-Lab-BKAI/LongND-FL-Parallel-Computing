@@ -329,43 +329,43 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    # wandb.init(
-    #         project="federated-learning-ideas",
-    #         entity="aiotlab",
-    #         name=parse_args.run_name,
-    #         group=parse_args.group_name,
-    #         config={
-    #             "num_rounds": parse_args.num_rounds,
-    #             "num_clients": parse_args.num_clients,
-    #             "clients_per_round": parse_args.clients_per_round,
-    #             "batch_size": parse_args.batch_size,
-    #             "num_epochs": parse_args.num_epochs,
-    #             "path_data_idx": parse_args.path_data_idx,
-    #             "learning_rate": parse_args.learning_rate,
-    #             "algorithm": parse_args.algorithm,
-    #             "mu": parse_args.mu,
-    #             "seed": parse_args.seed,
-    #             "drop_percent": parse_args.drop_percent,
-    #             "num_core": parse_args.num_core,
-    #             "log_dir": parse_args.log_dir,
-    #             "train_mode": parse_args.train_mode,
-    #             "dataset_name": parse_args.dataset_name,
-    #             "beta": parse_args.beta,
-    #             "pca_components": parse_args.pca_components,
-    #             "load_model": parse_args.load_model,
-    #             "save_model": parse_args.save_model
-    #             "hidden_dim": parse_args.hidden_dim,
-    #             "init_w": parse_args.init_w,
-    #             "value_lr": parse_args.value_lr,
-    #             "policy_lr": parse_args.policy_lr,
-    #             "max_steps": parse_args.max_steps,
-    #             "max_frames": parse_args.max_frames,
-    #             "batch_size_ddpg": parse_args.batch_size_ddpg,
-    #             "gamma": parse_args.gamma,
-    #             "soft_tau": parse_args.soft_tau
-    #             }
-    #         )
-
+    wandb.init(
+        project="federated-learning-ideas",
+        entity="aiotlab",
+        name=parse_args.run_name,
+        group=parse_args.group_name,
+        config={
+            "num_rounds": parse_args.num_rounds,
+            "num_clients": parse_args.num_clients,
+            "clients_per_round": parse_args.clients_per_round,
+            "batch_size": parse_args.batch_size,
+            "num_epochs": parse_args.num_epochs,
+            "path_data_idx": parse_args.path_data_idx,
+            "learning_rate": parse_args.learning_rate,
+            "algorithm": parse_args.algorithm,
+            "mu": parse_args.mu,
+            "seed": parse_args.seed,
+            "drop_percent": parse_args.drop_percent,
+            "num_core": parse_args.num_core,
+            "log_dir": parse_args.log_dir,
+            "train_mode": parse_args.train_mode,
+            "dataset_name": parse_args.dataset_name,
+            "beta": parse_args.beta,
+            "pca_components": parse_args.pca_components,
+            "load_model": parse_args.load_model,
+            "save_model": parse_args.save_model,
+            "hidden_dim": parse_args.hidden_dim,
+            "init_w": parse_args.init_w,
+            "value_lr": parse_args.value_lr,
+            "policy_lr": parse_args.policy_lr,
+            "max_steps": parse_args.max_steps,
+            "max_frames": parse_args.max_frames,
+            "batch_size_ddpg": parse_args.batch_size_ddpg,
+            "gamma": parse_args.gamma,
+            "soft_tau": parse_args.soft_tau
+        }
+    )
+            
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name, args.train_mode, args.dataset_name))
