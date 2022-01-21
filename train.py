@@ -161,6 +161,7 @@ def main(args):
         selected_client = select_client(args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(selected_client, args.drop_percent)
         train_clients = list(set(selected_client) - set(drop_clients))
+        num_cli = len(train_clients)
 
         # Khoi tao cac bien su dung train
         local_model_weight = torch.zeros(len(train_clients), n_params)
@@ -197,6 +198,7 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
+        
         start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
         start_l, final_l = start_loss.copy(), final_loss.copy()
@@ -222,7 +224,6 @@ def main(args):
 
         else:
             done = 0
-            num_cli = len(train_clients)
             # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
@@ -285,7 +286,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-ICDCS",
+    wandb.init(project="PROJECT-HERE",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
