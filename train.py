@@ -46,6 +46,7 @@ import wandb
 import warnings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def load_dataset(dataset_name, path_data_idx):
@@ -92,6 +93,7 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
+        print(model)
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
     else:
@@ -157,11 +159,12 @@ def main(args):
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
-    smooth_angle = None
+    smooth_angle = None         # Use for fedadp
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
-        dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
+        dqn_list_epochs = [
+            args.num_epochs for _ in range(args.clients_per_round)]
 
         # Ngau nhien lua chon client de train
         selected_client = select_client(
@@ -206,7 +209,6 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
-
         start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
         start_l, final_l = start_loss.copy(), final_loss.copy()
@@ -233,15 +235,11 @@ def main(args):
 
         else:
             done = 0
-            mean_local_losses, std_local_losses = get_mean_losses(
-                train_local_loss, num_cli)
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
-            dqn_weights = agent.get_action(
-                mean_local_losses, local_n_sample, dqn_list_epochs, done)
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(
                 dqn_weights, num_cli)
 
