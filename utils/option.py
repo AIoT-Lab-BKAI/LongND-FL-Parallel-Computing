@@ -30,5 +30,6 @@ def option():
     parser.add_argument("--batch_size_ddpg", type=int, default = 4)
     parser.add_argument("--gamma", type=float, default = 0.99)
     parser.add_argument("--soft_tau", type=float, default = 2e-2)
+    parser.add_argument("--num_workers", type=int, default = 1)
     args = parser.parse_args()
     return args
