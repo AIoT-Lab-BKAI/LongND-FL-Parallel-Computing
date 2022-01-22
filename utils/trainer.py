@@ -8,8 +8,10 @@ from tqdm import trange, tqdm
 import torch.nn as nn
 from utils.utils import flatten_model
 
+
 def test_local(args):
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    device = torch.device(
+        "cuda") if torch.cuda.is_available() else torch.device("cpu")
     (id, pid, model, client, local_model_weight, local_loss) = args
     model = model.to(device)
     local_model = copy.deepcopy(model).to(device)
@@ -28,15 +30,18 @@ def test_local(args):
     ep_loss = train_loss / len(train_dataloader)
     local_loss[id] = ep_loss
 
+
 def train(args):
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    (id, pid, model, client, local_model_weight, train_local_loss, local_inference_loss, algorithm) = args
+    device = torch.device(
+        "cuda") if torch.cuda.is_available() else torch.device("cpu")
+    (id, pid, model, client, local_model_weight,
+     train_local_loss, local_inference_loss, algorithm) = args
     # model = model.cuda()
     model = model.to(device)
     train_dataloader = client.train_dataloader
     # local_model = copy.deepcopy(model).cuda()
     _, start_inference_loss = test(model, train_dataloader)
-    local_inference_loss[id,0] = start_inference_loss
+    local_inference_loss[id, 0] = start_inference_loss
     local_model = copy.deepcopy(model).to(device)
     optimizer = torch.optim.SGD(local_model.parameters(), lr=client.lr)
     criterion = nn.CrossEntropyLoss()
@@ -68,7 +73,7 @@ def train(args):
         train_local_loss[id, i] = ep_loss
 
     _, final_inference_loss = test(local_model, train_dataloader)
-    local_inference_loss[id,1] = final_inference_loss
+    local_inference_loss[id, 1] = final_inference_loss
     local_model_weight[id] = flatten_model(local_model)
 
 
@@ -89,9 +94,7 @@ def test(model, test_dataloader):
         y_grt.append(y.cpu())
     loss = loss/len(test_dataloader)
 
-
     y_ = np.concatenate([i.numpy() for i in y_prd])
     y_gt = np.concatenate([i.numpy() for i in y_grt])
-
 
     return accuracy_score(y_, y_gt), loss
