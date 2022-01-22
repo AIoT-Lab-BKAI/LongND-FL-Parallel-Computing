@@ -1,5 +1,5 @@
 # Benchmark 
-### NOT RUN
+### 2022-01-22 7:20
 qsub -g gad50699 ../experiment/benchmark/mnist/equal/Upperbound-01.sh
 qsub -g gad50699 ../experiment/benchmark/mnist/featured/Upperbound-01.sh
 qsub -g gad50699 ../experiment/benchmark/mnist/pareto/Upperbound-01.sh
