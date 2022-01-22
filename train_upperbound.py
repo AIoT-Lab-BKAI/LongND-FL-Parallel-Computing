@@ -74,6 +74,7 @@ def init_model(dataset_name):
     return model
 
 def train(model, dataloader,optimizer, criterion, device):
+    model.train()
     train_loss =0 
     for (X,y) in dataloader:
         X = X.to(device)
