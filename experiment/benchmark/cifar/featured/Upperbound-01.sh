@@ -10,4 +10,4 @@ source /home/acc13085dy/federated-learning/FLenv/bin/activate
 cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/
 cd $SGE_LOCALDIR/$JOB_ID
 
-python3 -u train.py --train_mode="benchmark" --dataset_name="cifar100" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/cifar/featured/CIFAR-noniid-featured_1_all_data.json" --run_name="Upperbound-Featured-01" --group_name="CIFAR-Featured"
+python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="cifar100" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/cifar/featured/CIFAR-noniid-featured_1_all_data.json" --run_name="Upperbound-Featured-01" --group_name="CIFAR-Featured"
