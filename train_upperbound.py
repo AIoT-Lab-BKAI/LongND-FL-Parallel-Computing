@@ -102,7 +102,7 @@ def main(args):
     train_dataset = CustomDataset(train_dataset, data_idx)
     train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
     test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
-    optimizer = torch.optim.Adam(model.parameters(), lr = args.learning_rate)
+    optimizer = torch.optim.SGD(model.parameters(), lr = args.learning_rate)
     cel_loss =  nn.CrossEntropyLoss()
     # breakpoint()
     for round in tqdm(range(args.num_rounds)):
@@ -130,7 +130,6 @@ if __name__ == '__main__':
                })
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
-    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
-          args.train_mode, args.dataset_name))
+    print(">>> START RUNNING: {}  - Dataset: {}".format(parse_args.run_name, args.dataset_name))
     main(args)
     wandb.finish()
