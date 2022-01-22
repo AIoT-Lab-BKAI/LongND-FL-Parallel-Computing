@@ -51,9 +51,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load_dataset(dataset_name, path_data_idx):
     if dataset_name == "mnist":
-        transforms_mnist = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-        train_dataset = datasets.MNIST("data/mnist/", train=True, download=True, transform=transforms_mnist)
-        test_dataset = datasets.MNIST("data/mnist/", train=False, download=True, transform=transforms_mnist)
+        transforms_mnist = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
+        train_dataset = datasets.MNIST(
+            "data/mnist/", train=True, download=True, transform=transforms_mnist)
+        test_dataset = datasets.MNIST(
+            "data/mnist/", train=False, download=True, transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
 
     elif dataset_name == "cifar100":
@@ -61,9 +64,11 @@ def load_dataset(dataset_name, path_data_idx):
             [transforms.ToTensor(),
              transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-        train_dataset = datasets.CIFAR10("./data/cifar/", train=True, download=True,transform=apply_transform)
+        train_dataset = datasets.CIFAR10(
+            "./data/cifar/", train=True, download=True, transform=apply_transform)
 
-        test_dataset = datasets.CIFAR10("./data/cifar/", train=False, download=True,transform=apply_transform)
+        test_dataset = datasets.CIFAR10(
+            "./data/cifar/", train=False, download=True, transform=apply_transform)
 
         list_idx_sample = load_dataset_idx(path_data_idx)
     elif dataset_name == "fashionmnist":
@@ -71,10 +76,10 @@ def load_dataset(dataset_name, path_data_idx):
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         )
         train_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=True, download=True,
-                                         transform=transforms_mnist)
+                                              transform=transforms_mnist)
 
         test_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=False, download=True,
-                                        transform=transforms_mnist)
+                                             transform=transforms_mnist)
         list_idx_sample = load_dataset_idx(path_data_idx)
     else:
         warnings.warn("Dataset not supported")
@@ -88,7 +93,7 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
-        # print(model)
+        print(model)
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
     else:
@@ -107,10 +112,12 @@ def main(args):
 
     generate_abiprocess(mu=100, sigma=5, n_client=args.num_clients)
     list_abiprocess_client = read_abiprocesss()
-    assert len(list_abiprocess_client) == args.num_clients, "not enough abi-processes"
+    assert len(
+        list_abiprocess_client) == args.num_clients, "not enough abi-processes"
 
     # >>>> START: LOAD DATASET & INIT MODEL
-    train_dataset, test_dataset, list_idx_sample = load_dataset(args.dataset_name, args.path_data_idx)
+    train_dataset, test_dataset, list_idx_sample = load_dataset(
+        args.dataset_name, args.path_data_idx)
     client_model = init_model(args.dataset_name)
     n_params = count_params(client_model)
     prev_reward = None
@@ -133,34 +140,39 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    state_dim = args.clients_per_round * 3  # each agent {start_loss, end_loss, } = 30
+    # each agent {start_loss, end_loss, } = 30
+    state_dim = args.clients_per_round * 3
     # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round * 2 # = 10
+    action_dim = args.clients_per_round * 2  # = 10
     # action_dim = args.clients_per_round * 4  # = 10
 
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,
-        init_w=args.init_w,
-        value_lr=args.value_lr,
-        policy_lr=args.policy_lr,
-        max_steps=args.max_steps,
-        max_frames=args.max_frames,
-        batch_size=args.batch_size_ddpg,
-        gamma = args.gamma,
-        soft_tau = args.soft_tau).to(device)
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim=args.hidden_dim,
+                       init_w=args.init_w,
+                       value_lr=args.value_lr,
+                       policy_lr=args.policy_lr,
+                       max_steps=args.max_steps,
+                       max_frames=args.max_frames,
+                       batch_size=args.batch_size_ddpg,
+                       gamma=args.gamma,
+                       soft_tau=args.soft_tau).to(device)
     # agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
-    smooth_angle = None
+    smooth_angle = None         # Use for fedadp
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
-        dqn_list_epochs = [args.num_epochs for _ in range(args.num_clients)]
+        dqn_list_epochs = [
+            args.num_epochs for _ in range(args.clients_per_round)]
 
         # Ngau nhien lua chon client de train
-        selected_client = select_client(args.num_clients, args.clients_per_round)
-        drop_clients, train_client = select_drop_client(selected_client, args.drop_percent)
+        selected_client = select_client(
+            args.num_clients, args.clients_per_round)
+        drop_clients, train_client = select_drop_client(
+            selected_client, args.drop_percent)
         train_clients = list(set(selected_client) - set(drop_clients))
+        num_cli = len(train_clients)
 
         # Khoi tao cac bien su dung train
         local_model_weight = torch.zeros(len(train_clients), n_params)
@@ -214,38 +226,41 @@ def main(args):
             wandb.log({'loss_inside/reward': sample})
 
         if args.train_mode == "benchmark":
-            flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
-        
+            flat_tensor = aggregate_benchmark(
+                local_model_weight, len(train_clients))
+
         elif args.train_mode == "fedadp":
             flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
                 local_model_weight, flatten_model(client_model), list_client, smooth_angle, round)
 
         else:
             done = 0
-            num_cli = len(train_clients)
-            # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
-            dqn_weights = agent.get_action(mean_local_losses, local_n_sample, dqn_list_epochs, done)
-            s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
+            s_means, s_std, s_epochs, assigned_priorities = standardize_weights(
+                dqn_weights, num_cli)
 
-            flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
+            flat_tensor = aggregate(local_model_weight, len(
+                train_clients), assigned_priorities)
 
             # Update epochs
             if args.train_mode == "RL-Hybrid":
                 dqn_list_epochs = s_epochs
                 load_epoch(list_client, dqn_list_epochs)
 
-        client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
+        client_model.load_state_dict(
+            unflatten_model(flat_tensor, client_model))
         # >>>> Test model
-        acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
+        acc, test_loss = test(
+            client_model, DataLoader(test_dataset, 32, False))
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
-        train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
+        train_time, delay, max_time, min_time = get_train_time(
+            local_n_sample, list_abiprocess)
         dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
         if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
@@ -276,7 +291,8 @@ def main(args):
                 "assigned_priorities": assigned_priorities,
             }
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
-            wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+            wandb.log(
+                {'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
     del pool
 
@@ -285,7 +301,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-ICDCS",
+    wandb.init(project=parse_args.project_name,
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
@@ -307,15 +323,15 @@ if __name__ == "__main__":
                    "train_mode": parse_args.train_mode,
                    "dataset_name": parse_args.dataset_name,
                    "beta": parse_args.beta,
-                    "hidden_dim": parse_args.hidden_dim,
-                    "init_w": parse_args.init_w,
-                    "value_lr": parse_args.value_lr,
-                    "policy_lr": parse_args.policy_lr,
-                    "max_steps": parse_args.max_steps,
-                    "max_frames": parse_args.max_frames,
-                    "batch_size_ddpg": parse_args.batch_size_ddpg,
-                    "gamma": parse_args.gamma,
-                    "soft_tau": parse_args.soft_tau,
+                   "hidden_dim": parse_args.hidden_dim,
+                   "init_w": parse_args.init_w,
+                   "value_lr": parse_args.value_lr,
+                   "policy_lr": parse_args.policy_lr,
+                   "max_steps": parse_args.max_steps,
+                   "max_frames": parse_args.max_frames,
+                   "batch_size_ddpg": parse_args.batch_size_ddpg,
+                   "gamma": parse_args.gamma,
+                   "soft_tau": parse_args.soft_tau,
                })
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
