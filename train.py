@@ -46,7 +46,6 @@ import wandb
 import warnings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def load_dataset(dataset_name, path_data_idx):
@@ -93,7 +92,6 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
-        # print(model)
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
     else:
@@ -235,7 +233,8 @@ def main(args):
 
         else:
             done = 0
-            # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
+            mean_local_losses, std_local_losses = get_mean_losses(
+                train_local_loss, num_cli)
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
