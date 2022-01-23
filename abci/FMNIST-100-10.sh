@@ -13,7 +13,7 @@
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Featured/fedAVG-100.sh
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Featured/fedProx-100.sh
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Featured/fixed-100.sh
-# qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Featured/Upperbound.sh
+qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Featured/Upperbound.sh
 
 # ### Pareto
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Pareto/fedAVG-100.sh
@@ -25,7 +25,7 @@
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Quantitative/fedAVG-100.sh
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Quantitative/fedProx-100.sh
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Quantitative/fixed-100.sh
-# qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Quantitative/Upperbound.sh
+qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Quantitative/Upperbound.sh
 
 # ### Unequal
 # qsub -g gad50699 ../experiment/FMNIST-100-10-01/Main/Unequal/fedAVG-100.sh
