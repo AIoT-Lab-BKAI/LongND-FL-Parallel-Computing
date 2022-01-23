@@ -10,5 +10,4 @@ source /home/acc13085dy/federated-learning/FLenv/bin/activate
 cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/
 cd $SGE_LOCALDIR/$JOB_ID
 
-python3 -u train.py --train_mode="benchmark" --dataset_name="mnist" --num_clients=100 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --num_epochs=5 --path_data_idx="dataset_idx/mnist/100client/pareto/MNIST-noniid-pareto_1.json" --run_name="FedAVG-Pareto-100-Clients-01" --group_name="MNIST-Pareto"
-
+python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="mnist" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/mnist/100client/featured/MNIST-noniid-featured_1_all_data.json" --run_name="Upperbound-Featured-100-01" --group_name="MNIST-100-10"
