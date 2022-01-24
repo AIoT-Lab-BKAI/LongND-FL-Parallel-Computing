@@ -234,11 +234,13 @@ def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smoot
     corel_norm = torch.clip(corel / (torch.norm(F_i) * torch.norm(F)), min=-1, max=1)
     instantaneous_angle = torch.squeeze(torch.arccos(corel_norm))
 
-    with open("corel.txt", "a+") as file:
-        file.write(str(list(corel.detach().numpy())) + "\n")
+    # with open("corel.txt", "a+") as file:
+    #     file.write(str(list(corel.detach().numpy())) + "\n")
+    print(list(corel.detach().numpy()))
 
-    with open("corel_norm.txt", "a+") as file:
-        file.write(str(list(corel_norm.detach().numpy())) + "\n")
+    # with open("corel_norm.txt", "a+") as file:
+    #     file.write(str(list(corel_norm.detach().numpy())) + "\n")
+    print(list(corel_norm.detach().numpy()))
 
     if (smooth_angle is None):
         smooth_angle = instantaneous_angle
