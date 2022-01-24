@@ -231,7 +231,7 @@ def main(args):
 
         elif args.train_mode == "fedadp":
             flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
-                local_model_weight, flatten_model(client_model), list_client, smooth_angle, round)
+                local_model_weight, flatten_model(client_model), [list_client[train_clients[i]] for i in range(len(train_client))], smooth_angle, round)
 
         else:
             done = 0
