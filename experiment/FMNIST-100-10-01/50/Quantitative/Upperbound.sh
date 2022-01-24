@@ -10,4 +10,4 @@ source /home/acc13085dy/federated-learning/FLenv/bin/activate
 cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/
 cd $SGE_LOCALDIR/$JOB_ID
 
-python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="mnist" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/mnist/100client/quantitative/60/MNIST-noniid-quantitative_60_all_data.json" --run_name="Upperbound-Quantitative-100-01-Main" --group_name="MNIST-100-10"
+python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="fashionmnist" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/fashionmnist/100client/quantitative/50/FashionMNIST-noniid-quantitative_50_all_data.json" --run_name="Quantitative-Upperbound-100-01-50%" --group_name="FMNIST-100-10"
