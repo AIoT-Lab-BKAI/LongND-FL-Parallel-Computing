@@ -341,4 +341,4 @@ def get_delta_weights(local_model_w, global_w):
     for weight in local_model_w:
         update.append(torch.sub(global_w,weight))
     up = torch.stack(update)
-    print("start here")
+    return up

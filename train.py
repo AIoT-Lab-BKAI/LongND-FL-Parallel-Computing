@@ -214,7 +214,7 @@ def main(args):
             if round:
                 delta_loss = [start_loss[i] - final_loss[i] for i in range(num_cli)]
             else:
-                delta_loss = [0,0]
+                delta_loss = [0 for _ in range(num_cli)]
             start_l, final_l = start_loss.copy(), final_loss.copy()
             if round:
                 prev_reward = get_reward(start_loss)
@@ -232,7 +232,7 @@ def main(args):
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
-            get_delta_weights(local_model_weight, flatten_model(client_model))
+            # get_delta_weights(local_model_weight, flatten_model(client_model))
             # Update epochs
             if args.train_mode == "RL-Hybrid":
                 dqn_list_epochs = s_epochs
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-2.5.1.3",
+    wandb.init(project="federated-learning-dqn",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
