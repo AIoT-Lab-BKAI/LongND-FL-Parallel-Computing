@@ -139,7 +139,6 @@ def main(args):
     # plus action for numbers of epochs for each client
     action_dim = args.clients_per_round
 
-
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,
         init_w=args.init_w,
         value_lr=args.value_lr,
@@ -165,6 +164,10 @@ def main(args):
     pool = mp.Pool(args.num_core)
     smooth_angle = None         # Use for fedadp
 
+    last_acc = 0
+    acc = 0
+    chosen_frequency = torch.zeros((args.num_clients))
+
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.clients_per_round)]
@@ -173,6 +176,8 @@ def main(args):
         selected_client = select_client(args.num_clients, args.clients_per_round)
         drop_clients, train_client = select_drop_client(selected_client, args.drop_percent)
         train_clients = list(set(selected_client) - set(drop_clients))
+
+        chosen_frequency[train_clients] += 1
 
         # Khoi tao cac bien su dung train
         local_model_weight = torch.zeros(len(train_clients), n_params)
@@ -225,21 +230,29 @@ def main(args):
             start_loss = [local_inference_loss[i,0] for i in range(num_cli)]
             final_loss = [local_inference_loss[i,1] for i in range(num_cli)]
             start_l, final_l = start_loss.copy(), final_loss.copy()
+            
 
-            norm_len = torch.norm(local_model_weight, dim=1).reshape(local_model_weight.shape[0], 1)
-            local_model_weight_normed = local_model_weight/norm_len
-            M_matrix = local_model_weight_normed.cpu().numpy()
+            local_model_weight_diff = local_model_weight.cpu() - flatten_model(client_model).cpu()
+            norm_len = torch.norm(local_model_weight_diff, dim=1).reshape(local_model_weight_diff.shape[0], 1)
+            local_model_weight_normed = local_model_weight_diff/norm_len
+            M_matrix = local_model_weight_normed.detach().cpu().numpy()
             similarity_matrix = np.multiply(np.matmul(M_matrix, M_matrix.transpose()), 1 - np.eye(M_matrix.shape[0]))
 
+
             if round:
-                prev_reward = get_reward(start_loss, similarity_matrix)
+                # prev_reward = get_reward(start_loss, similarity_matrix)
+                delta_acc = acc - last_acc
+                prev_reward = delta_acc + 0.1 * np.sum(similarity_matrix)/2
+                last_acc = acc
+
                 np_infer_server_loss = np.asarray(start_loss)
                 sample = {
                     "reward": prev_reward,
                     "mean_losses": np.mean(start_loss),
                     "std_losses": np.std(start_loss),
-                    "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
-                    # "episode_reward": self.episode_reward,
+                    "max-min": np_infer_server_loss.max() - np_infer_server_loss.min(),
+                    "similarity": np.sum(similarity_matrix)/2,
+                    "delta_acc": delta_acc
                 }
                 wandb.log({'dqn_inside/reward': sample})
             
@@ -247,10 +260,12 @@ def main(args):
                                            final_loss, 
                                            std_local_losses, 
                                            local_n_sample,
-                                           dqn_list_epochs, done, 
+                                           dqn_list_epochs, 
+                                           done, 
                                            clients_id=train_clients, 
                                            prev_reward=prev_reward,
-                                           M_matrix=similarity_matrix)
+                                           M_matrix=similarity_matrix,
+                                           freq=chosen_frequency)
 
             # print("Here final output: ", dqn_weights.shape)         
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
@@ -266,21 +281,6 @@ def main(args):
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
         local_loss = [0 for _ in range(len(train_clients))]
-
-        # for i in range(len(train_clients)):
-        #     test_args = (
-        #             i,
-        #             train_clients[i],
-        #             copy.deepcopy(client_model),
-        #             list_client[train_clients[i]],
-        #             local_model_weight,
-        #             local_loss
-        #         )
-        #     test_local(test_args)
-        # print(local_loss)
-        # for i in range(len(train_clients)):
-        #     local_loss[i] = local_inference_loss[i, 0]
-        # prev_reward = get_reward(local_loss)
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
@@ -317,8 +317,11 @@ def main(args):
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
             wandb.log({'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
 
+        if (prev_reward is not None) and (np.abs(prev_reward) < 0.01) and (round > 250):
+            print("Done simulation, exit")
+            break
 
-    if(args.save_model):
+    if (args.save_model) and (args.train_mode not in ["benchmark", "fedadp"]):
         if not Path("model/").exists():
             os.system("mkdir model")
         print("Saving models...")

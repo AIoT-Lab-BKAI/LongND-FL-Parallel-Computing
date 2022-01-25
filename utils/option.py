@@ -30,8 +30,8 @@ def option():
     parser.add_argument("--policy_lr", type=float, default = 1e-4)
     parser.add_argument("--max_steps", type=int, default = 16*50)
     parser.add_argument("--max_frames", type=int, default = 12000)
-    parser.add_argument("--batch_size_ddpg", type=int, default = 4)
+    parser.add_argument("--batch_size_ddpg", type=int, default=8)
     parser.add_argument("--gamma", type=float, default = 0.99)
-    parser.add_argument("--soft_tau", type=float, default = 2e-2)
+    parser.add_argument("--soft_tau", type=float, default = 0.075)
     args = parser.parse_args()
     return args

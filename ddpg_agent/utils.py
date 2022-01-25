@@ -20,7 +20,7 @@ def plot(frame_idx, rewards):
     plt.show()
 
 
-def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, clients_id, M_matrix):
+def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, clients_id, M_matrix, freq):
     # losses = np.asarray(losses).reshape((len(epochs), 1))
     start_loss = np.asarray(start_loss).reshape((len(epochs), 1))
     final_loss = np.asarray(final_loss).reshape((len(epochs), 1))
@@ -41,6 +41,8 @@ def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, cli
 
     # print(retval.shape, M_matrix.shape)
     retval = np.hstack((retval, M_matrix)).flatten()
+
+    # retval = np.hstack((retval, freq.cpu().numpy())).flatten()
 
     return retval
 

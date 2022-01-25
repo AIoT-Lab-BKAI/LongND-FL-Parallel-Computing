@@ -21,7 +21,7 @@ class DDPG_Agent(nn.Module):
         hidden_dim=256,
         init_w=1e-3,
         value_lr=1e-3,
-        policy_lr=1e-4,
+        policy_lr=1e-3,
         replay_buffer_size=1000000,
         max_steps=16*50,
         max_frames=12000,
@@ -32,7 +32,7 @@ class DDPG_Agent(nn.Module):
         soft_tau = 2e-2,
     ):
         super(DDPG_Agent, self).__init__()
-        self.lr = 3e-2
+        self.lr = 0.05
         self.num_steps = 20  # number of iterations for each episodes
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -94,33 +94,34 @@ class DDPG_Agent(nn.Module):
 
     def ddpg_update(self, min_value=-np.inf, max_value=np.inf):
 
-        state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
+        for _ in range(int(len(self.replay_buffer)/self.batch_size)):
+            state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
 
-        state = torch.DoubleTensor(state).squeeze().to(self.device)
-        next_state = torch.DoubleTensor(next_state).squeeze().to(self.device)
-        action = torch.DoubleTensor(action).squeeze().to(self.device)
-        reward = torch.DoubleTensor(reward).to(self.device)
-        done = torch.DoubleTensor(np.float32(done)).to(self.device)
+            state = torch.DoubleTensor(state).squeeze().to(self.device)
+            next_state = torch.DoubleTensor(next_state).squeeze().to(self.device)
+            action = torch.DoubleTensor(action).squeeze().to(self.device)
+            reward = torch.DoubleTensor(reward).to(self.device)
+            done = torch.DoubleTensor(np.float32(done)).to(self.device)
 
-        policy_loss = self.value_net(state, self.policy_net(state), self.batch_size)
-        policy_loss = -policy_loss.mean()
-        next_action = self.target_policy_net(next_state)
-        target_value = self.target_value_net(next_state, next_action.detach(), self.batch_size)
+            policy_loss = self.value_net(state, self.policy_net(state), self.batch_size)
+            policy_loss = -policy_loss.mean()
+            next_action = self.target_policy_net(next_state)
+            target_value = self.target_value_net(next_state, next_action.detach(), self.batch_size)
 
-        expected_value = reward + (1.0 - done) * self.gamma * target_value.squeeze()
-        expected_value = torch.clamp(expected_value, min_value, max_value)
+            expected_value = reward + (1.0 - done) * self.gamma * target_value.squeeze()
+            expected_value = torch.clamp(expected_value, min_value, max_value)
 
-        value = self.value_net(state, action, self.batch_size).squeeze()
+            value = self.value_net(state, action, self.batch_size).squeeze()
 
-        value_loss = self.value_criterion(value, expected_value)
+            value_loss = self.value_criterion(value, expected_value)
 
-        self.policy_optimizer.zero_grad()
-        policy_loss.backward()
-        self.policy_optimizer.step()
+            self.policy_optimizer.zero_grad()
+            policy_loss.backward()
+            self.policy_optimizer.step()
 
-        self.value_optimizer.zero_grad()
-        value_loss.backward()
-        self.value_optimizer.step()
+            self.value_optimizer.zero_grad()
+            value_loss.backward()
+            self.value_optimizer.step()
 
         for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
             target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
@@ -129,7 +130,7 @@ class DDPG_Agent(nn.Module):
             target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
 
-    def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward=None, M_matrix=None):
+    def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward=None, M_matrix=None, freq=None):
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(start_loss=start_loss, 
                             final_loss=final_loss, 
@@ -137,12 +138,8 @@ class DDPG_Agent(nn.Module):
                             epochs=local_num_epochs, 
                             num_samples=local_n_samples, 
                             clients_id=clients_id, 
-                            M_matrix=M_matrix)
-
-        if self.frame_idx >= self.max_frames:
-            # maybe stop training?
-            self.logging_per_round()
-            state = self.reset_state()
+                            M_matrix=M_matrix,
+                            freq=freq)
 
         # state = torch.DoubleTensor(state).unsqueeze(0).cuda()  # current state
         state = torch.DoubleTensor(state).unsqueeze(0).to(self.device)  # current state
