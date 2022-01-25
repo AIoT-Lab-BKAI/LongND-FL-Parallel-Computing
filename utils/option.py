@@ -32,5 +32,7 @@ def option():
     parser.add_argument("--soft_tau", type=float, default = 2e-2)
     parser.add_argument("--num_workers", type=int, default = 1)
     parser.add_argument("--num_core", type=int, default=6)
+    parser.add_argument("--save_model", type=int, default=0)
+    parser.add_argument("--load_model", type=int, default=0)
     args = parser.parse_args()
     return args

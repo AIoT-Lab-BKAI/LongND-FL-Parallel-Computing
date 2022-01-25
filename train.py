@@ -3,6 +3,7 @@ from math import ceil
 import os.path
 from os import path
 from os import stat
+from pathlib import Path
 from re import M
 from numpy.core.arrayprint import str_format
 from numpy.core.defchararray import count
@@ -156,10 +157,25 @@ def main(args):
                        gamma=args.gamma,
                        soft_tau=args.soft_tau).to(device)
     # agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
+    
+    if args.load_model:
+        if Path("model/policy_net.pth").exists():
+            agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
+        if Path("model/value_net.pth").exists():
+            agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
+        if Path("model/target_policy_net.pth").exists():
+            agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
+        if Path("model/target_value_net.pth").exists():
+            agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
     smooth_angle = None         # Use for fedadp
+
+    last_acc = 0
+    acc = 0
+    diverge_angle = 0
+    phi = np.pi / 12
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
@@ -213,17 +229,21 @@ def main(args):
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
         start_l, final_l = start_loss.copy(), final_loss.copy()
         if round:
-            prev_reward = get_reward(start_loss)
+            # prev_reward = get_reward(start_loss, similarity_matrix)
+            delta_acc = acc - last_acc
+            diverge_angle = max(diverge_angle - phi, 0.1)
+            prev_reward = diverge_angle * delta_acc
+            last_acc = acc
+
             np_infer_server_loss = np.asarray(start_loss)
             sample = {
-                "round": round + 1,
                 "reward": prev_reward,
                 "mean_losses": np.mean(start_loss),
                 "std_losses": np.std(start_loss),
-                "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
-                # "episode_reward": self.episode_reward,
+                "max-min": np_infer_server_loss.max() - np_infer_server_loss.min(),
+                "delta_acc": delta_acc
             }
-            wandb.log({'loss_inside/reward': sample})
+            wandb.log({'dqn_inside/reward': sample})
 
         if args.train_mode == "benchmark":
             flat_tensor = aggregate_benchmark(
@@ -240,11 +260,13 @@ def main(args):
             dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
 
-            s_means, s_std, s_epochs, assigned_priorities = standardize_weights(
-                dqn_weights, num_cli)
+            s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
-            flat_tensor = aggregate(local_model_weight, len(
-                train_clients), assigned_priorities)
+            flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
+            flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients))
+
+            diverge_angle = torch.arccos((flat_tensor.T @ flat_tensor_benchmark) \
+                            /(torch.norm(flat_tensor) * torch.norm(flat_tensor_benchmark))).detach().cpu().numpy()
 
             # Update epochs
             if args.train_mode == "RL-Hybrid":
@@ -293,6 +315,15 @@ def main(args):
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
             wandb.log(
                 {'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+    
+    if (args.save_model) and (args.train_mode not in ["benchmark", "fedadp"]):
+        if not Path("model/").exists():
+            os.system("mkdir model")
+        print("Saving models...")
+        torch.save(agent.policy_net.state_dict(), "model/policy_net.pth")
+        torch.save(agent.value_net.state_dict(), "model/value_net.pth")
+        torch.save(agent.target_policy_net.state_dict(), "model/target_policy_net.pth")
+        torch.save(agent.target_value_net.state_dict(), "model/target_value_net.pth")
 
     del pool
 
@@ -332,7 +363,10 @@ if __name__ == "__main__":
                    "batch_size_ddpg": parse_args.batch_size_ddpg,
                    "gamma": parse_args.gamma,
                    "soft_tau": parse_args.soft_tau,
+                   "load_model": parse_args.load_model,
+                   "save_model": parse_args.save_model,
                })
+
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
