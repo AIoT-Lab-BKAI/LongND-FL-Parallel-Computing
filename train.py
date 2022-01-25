@@ -167,6 +167,8 @@ def main(args):
     last_acc = 0
     acc = 0
     chosen_frequency = torch.zeros((args.num_clients))
+    diverge_angle = 0
+    phi = np.pi / 12
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
@@ -242,7 +244,10 @@ def main(args):
             if round:
                 # prev_reward = get_reward(start_loss, similarity_matrix)
                 delta_acc = acc - last_acc
-                prev_reward = delta_acc + 0.1 * np.sum(similarity_matrix)/2
+
+                diverge_angle = max(diverge_angle - phi, 0.1)
+
+                prev_reward = diverge_angle * delta_acc + 0.05 * np.sum(similarity_matrix)/2
                 last_acc = acc
 
                 np_infer_server_loss = np.asarray(start_loss)
@@ -252,7 +257,8 @@ def main(args):
                     "std_losses": np.std(start_loss),
                     "max-min": np_infer_server_loss.max() - np_infer_server_loss.min(),
                     "similarity": np.sum(similarity_matrix)/2,
-                    "delta_acc": delta_acc
+                    "delta_acc": delta_acc,
+                    "diverge_angle": diverge_angle
                 }
                 wandb.log({'dqn_inside/reward': sample})
             
@@ -271,6 +277,9 @@ def main(args):
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
+            flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients))
+
+            diverge_angle = torch.arccos((flat_tensor.T @ flat_tensor_benchmark)/(torch.norm(flat_tensor) * torch.norm(flat_tensor_benchmark))).detach().cpu().numpy()
 
             # Update epochs
             if args.train_mode == "RL-Hybrid":
