@@ -335,3 +335,10 @@ def get_mean_losses(local_train_losses, num_cli):
              num_epoches[i] for i in range(num_cli)]
     stds = [torch.std(local_train_losses[i, num_epoches[i]], unbiased=False) for i in range(num_cli)]
     return start_losses, final_losses, stds
+
+def get_delta_weights(local_model_w, global_w):
+    update = []
+    for weight in local_model_w:
+        update.append(torch.sub(global_w,weight))
+    up = torch.stack(update)
+    print("start here")

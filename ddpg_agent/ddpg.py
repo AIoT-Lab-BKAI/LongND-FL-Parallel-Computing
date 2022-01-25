@@ -137,24 +137,10 @@ class DDPG_Agent(nn.Module):
             target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
 
-    def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward= None):
+    def get_action(self, num_cli, delta_loss, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward= None):
         # reach to maximum step for each episode or get the done for this iteration
-        state = get_state(start_loss = start_loss, final_loss = final_loss, std_local_losses=std_local_losses,epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
-        # prev_reward = get_reward(local_losses, beta=self.beta)
-        # if prev_reward:
-        #     sample = {
-        #         "reward": prev_reward,
-        #         "mean_losses": np.mean(start_loss),
-        #         "std_losses": np.std(start_loss),
-        #         "episode_reward": self.episode_reward,
-        #     }
-        #     wandb.log({'dqn_inside/reward': sample})
-
-
-        # if self.step == self.max_steps - 1 or done:
-        #     self.rewards.append(self.episode_reward)
-        #     self.logging_per_round()
-        #     state = self.reset_state()
+        # state = get_state(start_loss = start_loss, final_loss = final_loss, std_local_losses=std_local_losses,epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
+        state = get_state_new(delta_loss, std_local_losses, local_n_samples, num_cli)
 
         if self.frame_idx >= self.max_frames:
             # maybe stop training?

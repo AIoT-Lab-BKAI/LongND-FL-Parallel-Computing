@@ -20,6 +20,15 @@ def plot(frame_idx, rewards):
     plt.show()
 
 
+def get_state_new(delta_loss, std_local_losses, num_samples, num_cli):
+    delta_loss = np.asarray(delta_loss).reshape((num_cli, 1))
+    std_local_losses = np.asarray(std_local_losses).reshape((num_cli, 1))
+    num_samples = np.asarray(num_samples).reshape((len(num_samples), 1))
+    normalized_samples = num_samples / (np.sum(num_samples))
+    retval = np.hstack((delta_loss, std_local_losses, normalized_samples)).flatten()
+    return retval
+
+
 def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, clients_id):
     # losses = np.asarray(losses).reshape((len(epochs), 1))
     start_loss = np.asarray(start_loss).reshape((len(epochs), 1))

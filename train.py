@@ -14,6 +14,7 @@ from tqdm import tqdm
 from utils.utils import (
     aggregate_benchmark_fedadp,
     flatten_model,
+    get_delta_weights,
     get_mean_losses,
     getDictionaryLosses,
     getLoggingDictionary,
@@ -166,8 +167,6 @@ def main(args):
         local_model_weight = torch.zeros(len(train_clients), n_params)
         local_model_weight.share_memory_()
 
-        # train_local_loss = torch.zeros(len(train_client), args.num_epochs)
-        # maximum number of epochs for client is 100
         train_local_loss = torch.zeros(len(train_client), 100)
         train_local_loss.share_memory_()
         list_trained_client.append(train_clients)
@@ -208,11 +207,14 @@ def main(args):
         else:
             done = 0
             num_cli = len(train_clients)
-            # mean_local_losses, std_local_losses = get_mean_losses(train_local_loss, num_cli)
             _, _, std_local_losses = get_mean_losses(
                 train_local_loss, num_cli)
             start_loss = [local_inference_loss[i,0] for i in range(num_cli)]
             final_loss = [local_inference_loss[i,1] for i in range(num_cli)]
+            if round:
+                delta_loss = [start_loss[i] - final_loss[i] for i in range(num_cli)]
+            else:
+                delta_loss = [0,0]
             start_l, final_l = start_loss.copy(), final_loss.copy()
             if round:
                 prev_reward = get_reward(start_loss)
@@ -222,17 +224,15 @@ def main(args):
                     "mean_losses": np.mean(start_loss),
                     "std_losses": np.std(start_loss),
                     "max-min": np_infer_server_loss.max() - np_infer_server_loss.min()
-                    # "episode_reward": self.episode_reward,
                 }
                 wandb.log({'dqn_inside/reward': sample})
-            dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
+            dqn_weights = agent.get_action(num_cli, delta_loss, start_loss, final_loss, std_local_losses, local_n_sample,
                                            dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
-
-            # print("Here final output: ", dqn_weights.shape)            
+         
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
-
+            get_delta_weights(local_model_weight, flatten_model(client_model))
             # Update epochs
             if args.train_mode == "RL-Hybrid":
                 dqn_list_epochs = s_epochs
@@ -242,21 +242,6 @@ def main(args):
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
         local_loss = [0 for _ in range(len(train_clients))]
-
-        # for i in range(len(train_clients)):
-        #     test_args = (
-        #             i,
-        #             train_clients[i],
-        #             copy.deepcopy(client_model),
-        #             list_client[train_clients[i]],
-        #             local_model_weight,
-        #             local_loss
-        #         )
-        #     test_local(test_args)
-        # print(local_loss)
-        # for i in range(len(train_clients)):
-        #     local_loss[i] = local_inference_loss[i, 0]
-        # prev_reward = get_reward(local_loss)
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
