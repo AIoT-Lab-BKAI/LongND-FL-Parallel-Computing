@@ -47,7 +47,7 @@ import wandb
 import warnings
 from sklearn.decomposition import PCA
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
