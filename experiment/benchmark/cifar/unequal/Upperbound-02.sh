@@ -10,5 +10,5 @@ source /home/acc13085dy/federated-learning/FLenv/bin/activate
 cp -rp /home/acc13085dy/federated-learning/LongND-FL-Parallel-Computing $SGE_LOCALDIR/$JOB_ID/
 cd $SGE_LOCALDIR/$JOB_ID
 
-python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="cifar100" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/cifar/100client/unequal/CIFAR-noniid-fedavg_unequal_100_all_data.json" --run_name="Upperbound-UnEqual-100-01" --group_name="CIFAR-100-10"
+python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="cifar100" --num_rounds=1000 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/cifar/unequal/CIFAR-noniid-fedavg_unequal_2_all_data.json" --run_name="Upperbound-UnEqual-02" --group_name="CIFAR-FedAvg-Unequal"
 
