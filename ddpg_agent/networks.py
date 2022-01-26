@@ -21,20 +21,14 @@ class ValueNetwork(nn.Module):
 
         self.linear3.weight.data.uniform_(-init_w, init_w)
         self.linear3.bias.data.uniform_(-init_w, init_w)
-        # self.linear1 = nn.Linear(num_inputs + num_actions, hidden_size)
-        # self.linear2 = nn.Linear(hidden_size, hidden_size)
-        # self.linear3 = nn.Linear(hidden_size, 1)
-
-        # self.linear3.weight.data.uniform_(-init_w, init_w)
-        # self.linear3.bias.data.uniform_(-init_w, init_w)
 
     def forward(self, state, action, batch_size):
         state = state.reshape([batch_size, self.num_inputs])
         action = action.reshape([batch_size, self.num_actions])
 
         x = torch.cat([state, action], dim=1)
-        x = F.relu(self.linear1(x))
-        x = F.relu(self.linear2(x))
+        x = F.leaky_relu(self.linear1(x))
+        x = F.leaky_relu(self.linear2(x))
         x = self.linear3(x)
         return x
 
@@ -68,35 +62,24 @@ class PolicyNetwork(nn.Module):
 
         self.linear3n.weight.data.uniform_(-init_w, init_w)
         self.linear3n.bias.data.uniform_(-init_w, init_w)
-        # self.linear1 = nn.Linear(num_inputs, hidden_size)
-        # self.linear2 = nn.Linear(hidden_size, hidden_size)
-        # self.linear3 = nn.Linear(hidden_size, num_actions)
-        # self.tanh = nn.Tanh()
-
-        # self.linear3.weight.data.uniform_(-init_w, init_w)
-        # self.linear3.bias.data.uniform_(-init_w, init_w)
         
 
     def forward(self, state):
-        x = F.relu(self.linear1(state))
-        x = F.relu(self.linear2(x))
+        x = F.leaky_relu(self.linear1(state))
+        x = F.leaky_relu(self.linear2(x))
 
-        epochs = F.relu(self.linear3e(x))
-        epochs = F.relu(self.linear4e(epochs))
+        epochs = F.leaky_relu(self.linear3e(x))
+        epochs = F.leaky_relu(self.linear4e(epochs))
         epochs = self.activation(epochs)
 
-        impact = F.relu(self.linear3i(x))
-        impact = F.relu(self.linear4i(impact))
+        impact = F.leaky_relu(self.linear3i(x))
+        impact = F.leaky_relu(self.linear4i(impact))
         impact = self.activation(impact)
 
-        noise = F.relu(self.linear3n(x))
+        noise = F.leaky_relu(self.linear3n(x))
         noise = self.activation(noise)
 
         return torch.cat([epochs, impact, noise])
-        # x = F.relu(self.linear1(state))
-        # x = F.relu(self.linear2(x))
-        # x = self.tanh(self.linear3(x))
-        # return x
 
     def get_action(self, state):
         action = self.forward(state)

@@ -47,7 +47,7 @@ import wandb
 import warnings
 from sklearn.decomposition import PCA
 
-device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
@@ -217,12 +217,14 @@ def main(args):
             ],
         )
 
+        flatten_local_model = flatten_model(client_model)
+
         if args.train_mode == "benchmark":
             flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
         
         elif args.train_mode == "fedadp":
             flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
-                local_model_weight, flatten_model(client_model), list_client, smooth_angle, round)
+                local_model_weight, flatten_local_model, list_client, smooth_angle, round)
 
         else:
             done = 0
@@ -234,7 +236,7 @@ def main(args):
             start_l, final_l = start_loss.copy(), final_loss.copy()
             
 
-            local_model_weight_diff = local_model_weight.cpu() - flatten_model(client_model).cpu()
+            local_model_weight_diff = local_model_weight.cpu() - flatten_local_model.cpu()
             norm_len = torch.norm(local_model_weight_diff, dim=1).reshape(local_model_weight_diff.shape[0], 1)
             local_model_weight_normed = local_model_weight_diff/norm_len
             M_matrix = local_model_weight_normed.detach().cpu().numpy()
@@ -244,10 +246,9 @@ def main(args):
             if round:
                 # prev_reward = get_reward(start_loss, similarity_matrix)
                 delta_acc = acc - last_acc
-
+                diverge_angle_true = diverge_angle
                 diverge_angle = max(diverge_angle - phi, 0.1)
-
-                prev_reward = diverge_angle * delta_acc + 0.05 * np.sum(similarity_matrix)/2
+                prev_reward = diverge_angle * delta_acc #+ 0.05 * np.sum(similarity_matrix)/2
                 last_acc = acc
 
                 np_infer_server_loss = np.asarray(start_loss)
@@ -258,7 +259,8 @@ def main(args):
                     "max-min": np_infer_server_loss.max() - np_infer_server_loss.min(),
                     "similarity": np.sum(similarity_matrix)/2,
                     "delta_acc": delta_acc,
-                    "diverge_angle": diverge_angle
+                    "diverge_angle_clipped": diverge_angle,
+                    "diverge_angle_origin": diverge_angle_true
                 }
                 wandb.log({'dqn_inside/reward': sample})
             
@@ -273,13 +275,30 @@ def main(args):
                                            M_matrix=similarity_matrix,
                                            freq=chosen_frequency)
 
-            # print("Here final output: ", dqn_weights.shape)         
+            # print("Here final output: ", dqn_weights.shape)
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
             flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients))
 
-            diverge_angle = torch.arccos((flat_tensor.T @ flat_tensor_benchmark)/(torch.norm(flat_tensor) * torch.norm(flat_tensor_benchmark))).detach().cpu().numpy()
+            flat_tensor_diff = flat_tensor - flatten_local_model
+            flat_tensor_benchmark_diff = flat_tensor_benchmark - flatten_local_model
+
+            inner_product = flat_tensor_diff.T @ flat_tensor_benchmark_diff
+            norm_product = torch.norm(flat_tensor_diff) * torch.norm(flat_tensor_benchmark_diff)
+            cosin = inner_product/norm_product
+
+            diverge_angle = torch.arccos(torch.clip(cosin, -0.99, 0.99)).detach().cpu().numpy()
+
+            print("Inner product:", inner_product.detach().cpu().numpy(), 
+                    "\nNorm product:", norm_product.detach().cpu().numpy(), 
+                    "\nCosin:", cosin.detach().cpu().numpy())
+
+            if (np.isnan(diverge_angle).any()):
+                print("Wrong diverge ", diverge_angle)
+                print("Up: ", inner_product)
+                print("Down: ", norm_product)
+                exit(286)
 
             # Update epochs
             if args.train_mode == "RL-Hybrid":

@@ -167,20 +167,29 @@ def communicate(tensors, communication_op):
 
 
 def standardize_weights(dqn_weights, n_models):
-
     next_epoch = dqn_weights[0:n_models]
     impact_factor = dqn_weights[n_models:2*n_models]
     noise = dqn_weights[2*n_models:3*n_models]
 
     s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
-    s_std = torch.max(torch.min(noise/100, s_means/5), torch.ones_like(s_means) * 0.001)
+    s_std = torch.max(torch.min(noise/50, s_means/5), torch.ones_like(s_means) * 0.001)
+
     s_epochs = torch.floor(next_epoch * 9).int() + 1
-    assigned_priorities = torch.normal(s_means, s_std)
+
+    if (s_std < 0).any():
+        print("Wrong std: ", s_std.detach().cpu().numpy())
+        exit(181)
+
+    try:
+        assigned_priorities = torch.normal(s_means, torch.abs(s_std))
+    except:
+        print(s_std.detach().cpu().numpy())
+        exit(187)
+
     return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
 
 
 def standardize_weights_test(next_epoch, impact_factor, noise):
-
     s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
     s_std = torch.clamp(noise/100, min=0.001, max=s_means/10)
     s_epochs = torch.floor(next_epoch * 9) + 1
@@ -190,6 +199,7 @@ def standardize_weights_test(next_epoch, impact_factor, noise):
 
 def aggregate(local_weight, n_models, assigned_priorities):
     ratio = torch.Tensor(np.array(assigned_priorities))
+    print("Impact factor RL:", assigned_priorities)
     return torch.squeeze(ratio.t() @ local_weight)
 
 
