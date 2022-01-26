@@ -31,8 +31,8 @@ def test_local(args):
 def train(args):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     (id, pid, model, client, local_model_weight, train_local_loss, local_inference_loss, algorithm) = args
-    # model = model.cuda()
-    model = model.to(device)
+    model = model.cuda()
+    # model = model.to(device)
     train_dataloader = client.train_dataloader
     # local_model = copy.deepcopy(model).cuda()
     _, start_inference_loss = test(model, train_dataloader)
@@ -75,7 +75,8 @@ def train(args):
 
 def test(model, test_dataloader):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = model.to(device)
+    # model = model.to(device)
+    model = model.cuda()
     y_prd = []
     y_grt = []
     cel = nn.CrossEntropyLoss()

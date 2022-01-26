@@ -281,24 +281,11 @@ def main(args):
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
             flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients))
 
-            flat_tensor_diff = flat_tensor - flatten_local_model
-            flat_tensor_benchmark_diff = flat_tensor_benchmark - flatten_local_model
+            model_diff = flat_tensor - flat_tensor_benchmark
 
-            inner_product = flat_tensor_diff.T @ flat_tensor_benchmark_diff
-            norm_product = torch.norm(flat_tensor_diff) * torch.norm(flat_tensor_benchmark_diff)
-            cosin = inner_product/norm_product
+            model_diff_val = torch.norm(model_diff)
 
-            diverge_angle = torch.arccos(torch.clip(cosin, -0.99, 0.99)).detach().cpu().numpy()
-
-            print("Inner product:", inner_product.detach().cpu().numpy(), 
-                    "\nNorm product:", norm_product.detach().cpu().numpy(), 
-                    "\nCosin:", cosin.detach().cpu().numpy())
-
-            if (np.isnan(diverge_angle).any()):
-                print("Wrong diverge ", diverge_angle)
-                print("Up: ", inner_product)
-                print("Down: ", norm_product)
-                exit(286)
+            print("Model diff:", model_diff_val.detach().cpu().numpy())
 
             # Update epochs
             if args.train_mode == "RL-Hybrid":
@@ -308,7 +295,6 @@ def main(args):
         client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
-        local_loss = [0 for _ in range(len(train_clients))]
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
@@ -366,7 +352,7 @@ if __name__ == "__main__":
     parse_args = option()
 
     wandb.init(
-        project="federated-learning-ideas",
+        project="federated-learning-FedRL-Baselinev2",
         entity="aiotlab",
         name=parse_args.run_name,
         group=parse_args.group_name,
