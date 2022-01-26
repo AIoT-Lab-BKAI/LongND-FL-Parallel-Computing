@@ -102,7 +102,7 @@ def init_model(dataset_name):
     return model
 
 
-def main(args):
+def main(args, agent):
     """ Parse command line arguments or load defaults """
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -113,8 +113,7 @@ def main(args):
 
     generate_abiprocess(mu=100, sigma=5, n_client=args.num_clients)
     list_abiprocess_client = read_abiprocesss()
-    assert len(
-        list_abiprocess_client) == args.num_clients, "not enough abi-processes"
+    assert len(list_abiprocess_client) == args.num_clients, "not enough abi-processes"
 
     # >>>> START: LOAD DATASET & INIT MODEL
     train_dataset, test_dataset, list_idx_sample = load_dataset(
@@ -141,32 +140,7 @@ def main(args):
 
     # >>>> SERVER: INITIALIZE MODEL
     # This is dimensions' configurations for the DQN agent
-    # each agent {start_loss, end_loss, } = 30
-    state_dim = args.clients_per_round * 3
-    # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round * 2  # = 10
-    # action_dim = args.clients_per_round * 4  # = 10
-
-    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim=args.hidden_dim,
-                       init_w=args.init_w,
-                       value_lr=args.value_lr,
-                       policy_lr=args.policy_lr,
-                       max_steps=args.max_steps,
-                       max_frames=args.max_frames,
-                       batch_size=args.batch_size_ddpg,
-                       gamma=args.gamma,
-                       soft_tau=args.soft_tau).to(device)
     # agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta).cuda()
-    
-    if args.load_model:
-        if Path("model/policy_net.pth").exists():
-            agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
-        if Path("model/value_net.pth").exists():
-            agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
-        if Path("model/target_policy_net.pth").exists():
-            agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
-        if Path("model/target_value_net.pth").exists():
-            agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
 
     # Multi-process training
     pool = mp.Pool(args.num_core)
@@ -176,6 +150,8 @@ def main(args):
     acc = 0
     diverge_angle = 0
     phi = np.pi / 12
+
+    episode_reward = 0
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
@@ -225,6 +201,7 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
+
         start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
         start_l, final_l = start_loss.copy(), final_loss.copy()
@@ -234,6 +211,8 @@ def main(args):
             diverge_angle = max(diverge_angle - phi, 0.1)
             prev_reward = diverge_angle * delta_acc
             last_acc = acc
+
+            episode_reward += prev_reward
 
             np_infer_server_loss = np.asarray(start_loss)
             sample = {
@@ -315,8 +294,92 @@ def main(args):
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
             wandb.log(
                 {'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
+
+    del pool
+    return episode_reward
+
+
+if __name__ == "__main__":
+    torch.multiprocessing.set_start_method('spawn')
+    parse_args = option()
+    num_episode = parse_args.num_episode
+
+    # Define agent
+    state_dim = parse_args.clients_per_round * 3
+    action_dim = parse_args.clients_per_round * 2  # = 10
+
+    agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, 
+                       log_dir=parse_args.log_dir, 
+                       beta=parse_args.beta, 
+                       hidden_dim=parse_args.hidden_dim,
+                       init_w=parse_args.init_w,
+                       value_lr=parse_args.value_lr,
+                       policy_lr=parse_args.policy_lr,
+                       max_steps=parse_args.max_steps,
+                       max_frames=parse_args.max_frames,
+                       batch_size=parse_args.batch_size_ddpg,
+                       gamma=parse_args.gamma,
+                       soft_tau=parse_args.soft_tau).to(device)
+
+    # Load the agent
+    if parse_args.load_model:
+        if Path("model/policy_net.pth").exists():
+            agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
+        if Path("model/value_net.pth").exists():
+            agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
+        if Path("model/target_policy_net.pth").exists():
+            agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
+        if Path("model/target_value_net.pth").exists():
+            agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
     
-    if (args.save_model) and (args.train_mode not in ["benchmark", "fedadp"]):
+
+    # Run multi-episodic experiments
+    for episode in range(num_episode):
+        wandb.init(project=parse_args.project_name,
+                entity="aiotlab",
+                name=parse_args.run_name + f"-ep{episode}",
+                group=parse_args.group_name,
+                #    mode="disabled",
+                config={
+                    "num_rounds": parse_args.num_rounds,
+                    "num_clients": parse_args.num_clients,
+                    "clients_per_round": parse_args.clients_per_round,
+                    "batch_size": parse_args.batch_size,
+                    "num_epochs": parse_args.num_epochs,
+                    "path_data_idx": parse_args.path_data_idx,
+                    "learning_rate": parse_args.learning_rate,
+                    "algorithm": parse_args.algorithm,
+                    "mu": parse_args.mu,
+                    "seed": parse_args.seed,
+                    "drop_percent": parse_args.drop_percent,
+                    "num_core": parse_args.num_core,
+                    "log_dir": parse_args.log_dir,
+                    "train_mode": parse_args.train_mode,
+                    "dataset_name": parse_args.dataset_name,
+                    "beta": parse_args.beta,
+                    "hidden_dim": parse_args.hidden_dim,
+                    "init_w": parse_args.init_w,
+                    "value_lr": parse_args.value_lr,
+                    "policy_lr": parse_args.policy_lr,
+                    "max_steps": parse_args.max_steps,
+                    "max_frames": parse_args.max_frames,
+                    "batch_size_ddpg": parse_args.batch_size_ddpg,
+                    "gamma": parse_args.gamma,
+                    "soft_tau": parse_args.soft_tau,
+                    "load_model": parse_args.load_model,
+                    "save_model": parse_args.save_model,
+                })
+
+        args = wandb.config
+        wandb.define_metric("test_acc", summary="max")
+        print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
+            args.train_mode, args.dataset_name))
+        total_reward = main(args, agent)
+        wandb.log({"Episodic reward": total_reward})
+        wandb.finish()
+        agent.reset_state()
+
+    if (parse_args.save_model) and (parse_args.train_mode not in ["benchmark", "fedadp"]):
         if not Path("model/").exists():
             os.system("mkdir model")
         print("Saving models...")
@@ -324,52 +387,3 @@ def main(args):
         torch.save(agent.value_net.state_dict(), "model/value_net.pth")
         torch.save(agent.target_policy_net.state_dict(), "model/target_policy_net.pth")
         torch.save(agent.target_value_net.state_dict(), "model/target_value_net.pth")
-
-    del pool
-
-
-if __name__ == "__main__":
-    torch.multiprocessing.set_start_method('spawn')
-    parse_args = option()
-
-    wandb.init(project=parse_args.project_name,
-               entity="aiotlab",
-               name=parse_args.run_name,
-               group=parse_args.group_name,
-               #    mode="disabled",
-               config={
-                   "num_rounds": parse_args.num_rounds,
-                   "num_clients": parse_args.num_clients,
-                   "clients_per_round": parse_args.clients_per_round,
-                   "batch_size": parse_args.batch_size,
-                   "num_epochs": parse_args.num_epochs,
-                   "path_data_idx": parse_args.path_data_idx,
-                   "learning_rate": parse_args.learning_rate,
-                   "algorithm": parse_args.algorithm,
-                   "mu": parse_args.mu,
-                   "seed": parse_args.seed,
-                   "drop_percent": parse_args.drop_percent,
-                   "num_core": parse_args.num_core,
-                   "log_dir": parse_args.log_dir,
-                   "train_mode": parse_args.train_mode,
-                   "dataset_name": parse_args.dataset_name,
-                   "beta": parse_args.beta,
-                   "hidden_dim": parse_args.hidden_dim,
-                   "init_w": parse_args.init_w,
-                   "value_lr": parse_args.value_lr,
-                   "policy_lr": parse_args.policy_lr,
-                   "max_steps": parse_args.max_steps,
-                   "max_frames": parse_args.max_frames,
-                   "batch_size_ddpg": parse_args.batch_size_ddpg,
-                   "gamma": parse_args.gamma,
-                   "soft_tau": parse_args.soft_tau,
-                   "load_model": parse_args.load_model,
-                   "save_model": parse_args.save_model,
-               })
-
-    args = wandb.config
-    wandb.define_metric("test_acc", summary="max")
-    print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
-          args.train_mode, args.dataset_name))
-    main(args)
-    wandb.finish()

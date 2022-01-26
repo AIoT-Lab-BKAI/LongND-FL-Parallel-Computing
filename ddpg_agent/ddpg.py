@@ -31,23 +31,12 @@ class DDPG_Agent(nn.Module):
         soft_tau = 2e-2,
     ):
         super(DDPG_Agent, self).__init__()
-        self.lr = 3e-2
-        self.num_steps = 20  # number of iterations for each episodes
         self.state_dim = state_dim
         self.action_dim = action_dim
         self.gamma = gamma
         self.soft_tau = soft_tau
-        self.actions = []
-        self.states = []
 
-        # self.policy_network = policy_network
-
-        self.log_probs = []
-        self.values = []
         self.rewards = []  # rewards for each episode
-        # self.masks     = []
-        self.entropy = 0
-        self.step_count = 0
         self.frame_idx = 0
         self.max_frames = max_frames  # number of episodes
         self.episode_reward = 0
@@ -71,11 +60,6 @@ class DDPG_Agent(nn.Module):
         # replay buffer used for main training
         self.replay_buffer = ReplayBuffer(replay_buffer_size)
 
-        # self.model = ActorCritic(num_inputs, num_outputs, hidden_size)
-        # self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
-        # self.value_lr  = 1e-3
-        # self.policy_lr = 1e-4
-
         self.value_optimizer = optim.Adam(self.value_net.parameters(), lr=value_lr)
         self.policy_optimizer = optim.Adam(self.policy_net.parameters(), lr=policy_lr)
         self.value_criterion = nn.MSELoss()
@@ -95,12 +79,6 @@ class DDPG_Agent(nn.Module):
 
         for i in range(int(len(self.replay_buffer)/self.batch_size)):
             state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
-
-            # state = torch.DoubleTensor(state).squeeze().cuda()
-            # next_state = torch.DoubleTensor(next_state).squeeze().cuda()
-            # action = torch.DoubleTensor(action).squeeze().cuda()
-            # reward = torch.DoubleTensor(reward).cuda()
-            # done = torch.DoubleTensor(np.float32(done)).cuda()
 
             state = torch.DoubleTensor(state).squeeze().to(self.device)
             next_state = torch.DoubleTensor(
@@ -141,20 +119,6 @@ class DDPG_Agent(nn.Module):
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(start_loss = start_loss, final_loss = final_loss, std_local_losses=std_local_losses,epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
         # prev_reward = get_reward(local_losses, beta=self.beta)
-        # if prev_reward:
-        #     sample = {
-        #         "reward": prev_reward,
-        #         "mean_losses": np.mean(start_loss),
-        #         "std_losses": np.std(start_loss),
-        #         "episode_reward": self.episode_reward,
-        #     }
-        #     wandb.log({'dqn_inside/reward': sample})
-
-
-        # if self.step == self.max_steps - 1 or done:
-        #     self.rewards.append(self.episode_reward)
-        #     self.logging_per_round()
-        #     state = self.reset_state()
 
         if self.frame_idx >= self.max_frames:
             # maybe stop training?
@@ -192,9 +156,11 @@ class DDPG_Agent(nn.Module):
         self.ou_noise.reset()
         self.episode_reward = 0
         self.step = 0
-        # self.memory.reset()
-        # self.replay_buffer.reset()
+        self.memory.reset()
+        self.replay_buffer.reset()
+        self.frame_idx = 0
         return np.zeros(self.state_dim)
+
 
     def logging_per_round(self):
         frame_idx, episode, total_reward = (
