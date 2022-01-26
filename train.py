@@ -234,34 +234,37 @@ def main(args, agent):
 
         else:
             done = 0
-            _, _, std_local_losses = get_mean_losses(
-                train_local_loss, num_cli)
-            dqn_weights = agent.get_action(start_loss, final_loss, std_local_losses, local_n_sample,
-                                           dqn_list_epochs, done, clients_id=train_clients, prev_reward=prev_reward)
+            _, _, std_local_losses = get_mean_losses(train_local_loss, num_cli)
+
+            dqn_weights = agent.get_action(start_loss, 
+                                            final_loss, 
+                                            std_local_losses, 
+                                            local_n_sample,
+                                            dqn_list_epochs, 
+                                            done, 
+                                            clients_id=train_clients, 
+                                            prev_reward=prev_reward)
 
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
             flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients))
 
-            diverge_angle = torch.arccos((flat_tensor.T @ flat_tensor_benchmark) \
-                            /(torch.norm(flat_tensor) * torch.norm(flat_tensor_benchmark))).detach().cpu().numpy()
+            diverge_angle = torch.arccos(torch.clip((flat_tensor.T @ flat_tensor_benchmark) \
+                            /(torch.norm(flat_tensor) * torch.norm(flat_tensor_benchmark)), -0.99, 0.99)).detach().cpu().numpy()
 
             # Update epochs
             if args.train_mode == "RL-Hybrid":
                 dqn_list_epochs = s_epochs
                 load_epoch(list_client, dqn_list_epochs)
 
-        client_model.load_state_dict(
-            unflatten_model(flat_tensor, client_model))
+        client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
         # >>>> Test model
-        acc, test_loss = test(
-            client_model, DataLoader(test_dataset, 32, False))
+        acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
-        train_time, delay, max_time, min_time = get_train_time(
-            local_n_sample, list_abiprocess)
+        train_time, delay, max_time, min_time = get_train_time(local_n_sample, list_abiprocess)
         dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
         if args.train_mode in ["benchmark", "fedadp"]:
             logging = {
@@ -323,14 +326,17 @@ if __name__ == "__main__":
 
     # Load the agent
     if parse_args.load_model:
-        if Path("model/policy_net.pth").exists():
-            agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
-        if Path("model/value_net.pth").exists():
-            agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
-        if Path("model/target_policy_net.pth").exists():
-            agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
-        if Path("model/target_value_net.pth").exists():
-            agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
+        try:
+            if Path("model/policy_net.pth").exists():
+                agent.policy_net.load_state_dict(torch.load("model/policy_net.pth"))
+            if Path("model/value_net.pth").exists():
+                agent.value_net.load_state_dict(torch.load("model/value_net.pth"))
+            if Path("model/target_policy_net.pth").exists():
+                agent.target_policy_net.load_state_dict(torch.load("model/target_policy_net.pth"))
+            if Path("model/target_value_net.pth").exists():
+                agent.target_value_net.load_state_dict(torch.load("model/target_value_net.pth"))
+        except:
+            print("Uncompatible network, run experiment anyway")
     
 
     # Run multi-episodic experiments
@@ -372,8 +378,7 @@ if __name__ == "__main__":
 
         args = wandb.config
         wandb.define_metric("test_acc", summary="max")
-        print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
-            args.train_mode, args.dataset_name))
+        print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,args.train_mode, args.dataset_name))
         total_reward = main(args, agent)
         wandb.log({"Episodic reward": total_reward})
         wandb.finish()
