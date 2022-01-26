@@ -96,12 +96,6 @@ class DDPG_Agent(nn.Module):
         for i in range(int(len(self.replay_buffer)/self.batch_size)):
             state, action, reward, next_state, done = self.replay_buffer.sample(self.batch_size)
 
-            # state = torch.DoubleTensor(state).squeeze().cuda()
-            # next_state = torch.DoubleTensor(next_state).squeeze().cuda()
-            # action = torch.DoubleTensor(action).squeeze().cuda()
-            # reward = torch.DoubleTensor(reward).cuda()
-            # done = torch.DoubleTensor(np.float32(done)).cuda()
-
             state = torch.DoubleTensor(state).squeeze().to(self.device)
             next_state = torch.DoubleTensor(
                 next_state).squeeze().to(self.device)

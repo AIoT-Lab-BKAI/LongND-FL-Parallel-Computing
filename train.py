@@ -136,7 +136,7 @@ def main(args):
     # This is dimensions' configurations for the DQN agent
     state_dim = args.clients_per_round * 3  # each agent {start_loss, end_loss, } = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round * 2 # = 10
+    action_dim = args.clients_per_round * 1 # = 10
     # action_dim = args.clients_per_round * 4  # = 10
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,

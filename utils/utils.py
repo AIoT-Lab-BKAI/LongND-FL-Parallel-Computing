@@ -167,30 +167,18 @@ def communicate(tensors, communication_op):
 
 
 def standardize_weights(dqn_weights, n_models):
-    # next_epoch = dqn_weights[0:n_models]
-    # impact_factor = dqn_weights[n_models:2*n_models]
-    # noise = dqn_weights[2*n_models:3*n_models]
-    #
-    # s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
-    # # s_std = torch.clamp(noise/100, min=torch.ones_like(s_means) * 0.001, max=s_means/10)
-    # s_std = torch.max(torch.min(noise/100, s_means/10), torch.ones_like(s_means) * 0.001)
-    # s_epochs = torch.floor(next_epoch * 9).int() + 1
-    # assigned_priorities = torch.normal(s_means, s_std)
-    # return s_means.numpy(), s_std.numpy(), list(s_epochs.numpy()), assigned_priorities.numpy()
-
     s_func = nn.Softmax(dim=0)
-    means = [dqn_weights[0, cli*2] for cli in range(n_models)]
+    means = [dqn_weights[0, cli] for cli in range(n_models)]
     s_means = s_func(torch.FloatTensor(means))
-    # noise = dqn_weights[0, 2*n_models:3*n_models]
-    # next_epoch = torch.Tensor([dqn_weights[0, cli*3+2] for cli in range(n_models)])
-    s_std = torch.Tensor([np.clip(dqn_weights[0, cli*2+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)])
+    # s_std = torch.Tensor([np.clip(dqn_weights[0, cli*2+1]/100, 0.001, s_means[cli] * 0.1) for cli in range(n_models)])
     # assigned_priorities = torch.normal(s_means, s_std)
     # s_epochs = torch.floor(torch.Tensor(next_epoch) * 9).int() + 1
-    s_epochs = s_std
+    s_epochs = s_means
     # s_epochs = [math.ceil(dqn_weights[0, cli*3+1]*10) if math.ceil(dqn_weights[0, cli*3+1]*10) > 0 else 1 for cli in range(n_models)]
-    assigned_priorities = torch.Tensor([np.random.normal(s_means[i], s_std[i]) for i in range(n_models)])
+    # assigned_priorities = torch.Tensor([np.random.normal(s_means[i], s_std[i]) for i in range(n_models)])
+    assigned_priorities = s_means
     
-    return s_means.numpy(), s_std.numpy(), s_epochs.numpy(), assigned_priorities.numpy()
+    return s_means.numpy(), s_means.numpy(), s_epochs.numpy(), assigned_priorities.numpy()
 
 
 def standardize_weights_test(next_epoch, impact_factor, noise):
