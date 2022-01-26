@@ -9,18 +9,6 @@ def freeze_layer(layer):
 class ValueNetwork(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_size, init_w=1e-1):
         super(ValueNetwork, self).__init__()
-
-        # self.num_inputs = num_inputs
-        # self.num_actions = num_actions
-        # # print("Here init num_input: ", num_inputs, "Num action:", num_actions)
-        # # print("Here init linear1 input dim: ", num_inputs + num_actions)
-        
-        # self.linear1 = nn.Linear(num_inputs + num_actions, hidden_size)
-        # self.linear2 = nn.Linear(hidden_size, hidden_size)
-        # self.linear3 = nn.Linear(hidden_size, 1)
-
-        # self.linear3.weight.data.uniform_(-init_w, init_w)
-        # self.linear3.bias.data.uniform_(-init_w, init_w)
         self.linear1 = nn.Linear(num_inputs + num_actions, hidden_size)
         self.linear2 = nn.Linear(hidden_size, hidden_size)
         self.linear3 = nn.Linear(hidden_size, 1)
@@ -33,8 +21,8 @@ class ValueNetwork(nn.Module):
         # action = action.reshape([batch_size, self.num_actions])
 
         x = torch.cat([state, action], dim=1)
-        x = F.relu(self.linear1(x))
-        x = F.relu(self.linear2(x))
+        x = F.leaky_relu(self.linear1(x))
+        x = F.leaky_relu(self.linear2(x))
         x = self.linear3(x)
         return x
 
@@ -78,23 +66,8 @@ class PolicyNetwork(nn.Module):
         
 
     def forward(self, state):
-        # x = F.relu(self.linear1(state))
-        # x = F.relu(self.linear2(x))
-
-        # epochs = F.relu(self.linear3e(x))
-        # epochs = F.relu(self.linear4e(epochs))
-        # epochs = self.activation(epochs)
-
-        # impact = F.relu(self.linear3i(x))
-        # impact = F.relu(self.linear4i(impact))
-        # impact = self.activation(impact)
-
-        # noise = F.relu(self.linear3n(x))
-        # noise = self.activation(noise)
-
-        # return torch.cat([epochs, impact, noise])
-        x = F.relu(self.linear1(state))
-        x = F.relu(self.linear2(x))
+        x = F.leaky_relu(self.linear1(state))
+        x = F.leaky_relu(self.linear2(x))
         x = self.tanh(self.linear3(x))
         return x
 
