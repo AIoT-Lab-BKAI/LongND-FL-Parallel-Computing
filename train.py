@@ -113,7 +113,10 @@ def main(args):
 
     # >>>> START: LOAD DATASET & INIT MODEL
     train_dataset, test_dataset, list_idx_sample = load_dataset(args.dataset_name, args.path_data_idx)
+    
     client_model = init_model(args.dataset_name)
+    server_test_model = copy.deepcopy(client_model)
+
     n_params = count_params(client_model)
     prev_reward = None
 
@@ -168,7 +171,7 @@ def main(args):
     acc = 0
     chosen_frequency = torch.zeros((args.num_clients))
     diverge_angle = 0
-    phi = np.pi / 12
+    phi = np.pi / 20
 
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
@@ -217,14 +220,13 @@ def main(args):
             ],
         )
 
-        flatten_local_model = flatten_model(client_model)
+        flatten_local_model = flatten_model(client_model).cuda()
 
         if args.train_mode == "benchmark":
             flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
         
         elif args.train_mode == "fedadp":
-            flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
-                local_model_weight, flatten_local_model, list_client, smooth_angle, round)
+            flat_tensor, smooth_angle = aggregate_benchmark_fedadp(local_model_weight, flatten_local_model, list_client, smooth_angle, round)
 
         else:
             done = 0
@@ -245,11 +247,11 @@ def main(args):
 
             if round:
                 # prev_reward = get_reward(start_loss, similarity_matrix)
-                delta_acc = acc - last_acc
+                delta_acc = acc - bench_acc
                 diverge_angle_true = diverge_angle
                 diverge_angle = max(diverge_angle - phi, 0.1)
                 prev_reward = diverge_angle * delta_acc #+ 0.05 * np.sum(similarity_matrix)/2
-                last_acc = acc
+                # last_acc = acc
 
                 np_infer_server_loss = np.asarray(start_loss)
                 sample = {
@@ -278,8 +280,8 @@ def main(args):
             # print("Here final output: ", dqn_weights.shape)
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
-            flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities)
-            flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients))
+            flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities).cuda()
+            flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients)).cuda()
 
             flat_tensor_diff = flat_tensor - flatten_local_model
             flat_tensor_benchmark_diff = flat_tensor_benchmark - flatten_local_model
@@ -306,8 +308,12 @@ def main(args):
                 load_epoch(list_client, dqn_list_epochs)
 
         client_model.load_state_dict(unflatten_model(flat_tensor, client_model))
+        server_test_model.load_state_dict(unflatten_model(flat_tensor_benchmark, server_test_model))
+        
         # >>>> Test model
         acc, test_loss = test(client_model, DataLoader(test_dataset, 32, False))
+        bench_acc, _ = test(server_test_model, DataLoader(test_dataset, 32, False))
+
         local_loss = [0 for _ in range(len(train_clients))]
 
         print("ROUND: ", round, " TEST ACC: ", acc)
@@ -366,7 +372,7 @@ if __name__ == "__main__":
     parse_args = option()
 
     wandb.init(
-        project="federated-learning-ideas",
+        project="federated-learning-PLeLoss",
         entity="aiotlab",
         name=parse_args.run_name,
         group=parse_args.group_name,
