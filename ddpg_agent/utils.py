@@ -35,14 +35,8 @@ def get_state(start_loss, final_loss, std_local_losses, epochs, num_samples, cli
 
     clients_id = np.asarray(clients_id).reshape([len(epochs), 1])
 
-    # print(normalized_start_loss.shape, normalized_final_loss.shape, normalized_samples.shape, clients_id.shape)
-
     retval = np.hstack((normalized_start_loss, normalized_final_loss, normalized_samples, clients_id))
-
-    # print(retval.shape, M_matrix.shape)
     retval = np.hstack((retval, M_matrix)).flatten()
-
-    # retval = np.hstack((retval, freq.cpu().numpy())).flatten()
 
     return retval
 

@@ -46,6 +46,8 @@ from ddpg_agent.ddpg import *
 import wandb
 import warnings
 from sklearn.decomposition import PCA
+import pickle
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -364,6 +366,13 @@ def main(args):
         torch.save(agent.target_policy_net.state_dict(), "model/target_policy_net.pth")
         torch.save(agent.target_value_net.state_dict(), "model/target_value_net.pth")
 
+        # Save buffer
+        if not Path("buffer/").exists():
+            os.system("mkdir buffer")
+        print("Saving experience buffer")
+        with open(f"buffer/{args.name}.exp", "ab") as fp:
+            pickle.dump(agent.replay_buffer.buffer, fp)
+
     del pool
 
 
@@ -404,7 +413,8 @@ if __name__ == "__main__":
             "max_frames": parse_args.max_frames,
             "batch_size_ddpg": parse_args.batch_size_ddpg,
             "gamma": parse_args.gamma,
-            "soft_tau": parse_args.soft_tau
+            "soft_tau": parse_args.soft_tau,
+            "name":parse_args.run_name,
         }
     )
             
