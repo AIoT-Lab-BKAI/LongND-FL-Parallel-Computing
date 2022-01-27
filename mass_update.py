@@ -24,8 +24,8 @@ soft_tau=0.01
 
 value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(device).double()
 policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(device).double()
-target_policy_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(device).double()
-target_value_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(device).double()
+target_value_net = ValueNetwork(state_dim, action_dim * 3, hidden_dim).to(device).double()
+target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(device).double()
 
 
 # Buffer training
