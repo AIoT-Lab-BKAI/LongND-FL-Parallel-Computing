@@ -30,7 +30,6 @@ target_policy_net = PolicyNetwork(state_dim, action_dim, hidden_dim).to(device).
 
 # Buffer training
 replay_buffer_size=1000000
-batch_size = 16
 replay_buffer = ReplayBuffer(replay_buffer_size)
 
 
@@ -64,7 +63,7 @@ def save_net(model_path):
 
 
 # perform update
-def ddpg_update(experience_folder_path, epochs=1, min_value=-np.inf, max_value=np.inf):
+def ddpg_update(experience_folder_path, epochs=1, batch_size = 16, min_value=-np.inf, max_value=np.inf):
 
     if not Path(experience_folder_path).exists():
         print("Experience buffer folder not found. Exit")
@@ -128,7 +127,7 @@ if __name__ == "__main__":
 
     load_net(model_path)
 
-    updated = ddpg_update(experience_folder_path, epochs=15)
+    updated = ddpg_update(experience_folder_path, batch_size=16, epochs=50)
 
     if updated:
         save_net(model_path)
