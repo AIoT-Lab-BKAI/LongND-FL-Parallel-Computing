@@ -64,7 +64,7 @@ def save_net(model_path):
 
 
 # perform update
-def ddpg_update(experience_folder_path, min_value=-np.inf, max_value=np.inf):
+def ddpg_update(experience_folder_path, epochs=1, min_value=-np.inf, max_value=np.inf):
 
     if not Path(experience_folder_path).exists():
         print("Experience buffer folder not found. Exit")
@@ -82,40 +82,41 @@ def ddpg_update(experience_folder_path, min_value=-np.inf, max_value=np.inf):
         return 0
 
     # Training with experience buffer
-    for _ in range(int(len(replay_buffer)/batch_size)):
-        state, action, reward, next_state, done = replay_buffer.sample(batch_size)
+    for _ in range(epochs):
+        for _ in range(int(len(replay_buffer)/batch_size)):
+            state, action, reward, next_state, done = replay_buffer.sample(batch_size)
 
-        state = torch.DoubleTensor(state).squeeze().to(device)
-        next_state = torch.DoubleTensor(next_state).squeeze().to(device)
-        action = torch.DoubleTensor(action).squeeze().to(device)
-        reward = torch.DoubleTensor(reward).to(device)
-        done = torch.DoubleTensor(np.float32(done)).to(device)
+            state = torch.DoubleTensor(state).squeeze().to(device)
+            next_state = torch.DoubleTensor(next_state).squeeze().to(device)
+            action = torch.DoubleTensor(action).squeeze().to(device)
+            reward = torch.DoubleTensor(reward).to(device)
+            done = torch.DoubleTensor(np.float32(done)).to(device)
 
-        policy_loss = value_net(state, policy_net(state), batch_size)
-        policy_loss = -policy_loss.mean()
-        next_action = target_policy_net(next_state)
-        target_value = target_value_net(next_state, next_action.detach(), batch_size)
+            policy_loss = value_net(state, policy_net(state), batch_size)
+            policy_loss = -policy_loss.mean()
+            next_action = target_policy_net(next_state)
+            target_value = target_value_net(next_state, next_action.detach(), batch_size)
 
-        expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
-        expected_value = torch.clamp(expected_value, min_value, max_value)
+            expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
+            expected_value = torch.clamp(expected_value, min_value, max_value)
 
-        value = value_net(state, action, batch_size).squeeze()
+            value = value_net(state, action, batch_size).squeeze()
 
-        value_loss = value_criterion(value, expected_value)
+            value_loss = value_criterion(value, expected_value)
 
-        policy_optimizer.zero_grad()
-        policy_loss.backward()
-        policy_optimizer.step()
+            policy_optimizer.zero_grad()
+            policy_loss.backward()
+            policy_optimizer.step()
 
-        value_optimizer.zero_grad()
-        value_loss.backward()
-        value_optimizer.step()
+            value_optimizer.zero_grad()
+            value_loss.backward()
+            value_optimizer.step()
 
-        for target_param, param in zip(target_value_net.parameters(), value_net.parameters()):
-            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+            for target_param, param in zip(target_value_net.parameters(), value_net.parameters()):
+                target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
 
-        for target_param, param in zip(target_policy_net.parameters(), policy_net.parameters()):
-            target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
+            for target_param, param in zip(target_policy_net.parameters(), policy_net.parameters()):
+                target_param.data.copy_(target_param.data * (1.0 - soft_tau) + param.data * soft_tau)
 
     return 1
 
@@ -127,7 +128,7 @@ if __name__ == "__main__":
 
     load_net(model_path)
 
-    updated = ddpg_update(experience_folder_path)
+    updated = ddpg_update(experience_folder_path, epochs=15)
 
     if updated:
         save_net(model_path)
