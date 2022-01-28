@@ -58,6 +58,21 @@ def get_reward(losses, beta=0.45):
     # return - beta * np.mean(losses) - (1 - beta) * np.std(losses)
     return - np.mean(losses) - (losses.max() - losses.min())
 
+def get_reward_cumulative(rewards, losses, gamma = 0.5):
+    rw = 0
+    losses = np.asarray(losses)
+    round_rw = - np.mean(losses) - (losses.max() - losses.min())
+    for i in range(len(rewards)):
+        rw += gamma**(i)*(rewards[i])
+    rw += round_rw
+    return rw
+
+def get_reward_accuracy(delta_acc, losses, gamma = 0.5):
+    losses = np.asarray(losses)
+    round_rw = np.mean(losses) + (np.std(losses))
+    rw = gamma*delta_acc/round_rw
+    return rw
+
 
 def get_info_from_dqn_weights(weights, num_clients, dqn_list_epochs):
     client_dicts = {}

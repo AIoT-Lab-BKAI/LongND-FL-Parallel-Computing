@@ -136,7 +136,7 @@ def main(args):
     # This is dimensions' configurations for the DQN agent
     state_dim = args.clients_per_round * 3  # each agent {start_loss, end_loss, } = 30
     # plus action for numbers of epochs for each client
-    action_dim = args.clients_per_round * 1 # = 10
+    action_dim = args.clients_per_round * 2 # = 10
     # action_dim = args.clients_per_round * 4  # = 10
 
     agent = DDPG_Agent(state_dim=state_dim, action_dim=action_dim, log_dir=args.log_dir, beta=args.beta, hidden_dim = args.hidden_dim,
@@ -153,8 +153,14 @@ def main(args):
     # Multi-process training
     pool = mp.Pool(args.num_core)
     smooth_angle = None         # Use for fedadp
+    rewards = []
+    prev_acc = None
+    cur_acc = None
+    acc = None
 
     for round in tqdm(range(args.num_rounds)):
+        prev_acc = cur_acc
+        cur_acc = acc
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [args.num_epochs for _ in range(args.clients_per_round)]
 
@@ -217,7 +223,12 @@ def main(args):
                 delta_loss = [0 for _ in range(num_cli)]
             start_l, final_l = start_loss.copy(), final_loss.copy()
             if round:
-                prev_reward = get_reward(start_loss)
+                # prev_reward = get_reward(start_loss)
+                if round == 1:
+                    prev_reward = get_reward_accuracy(0, start_loss)
+                else:
+                    prev_reward = get_reward_accuracy(cur_acc - prev_acc, start_loss)
+                rewards.append(prev_reward)
                 np_infer_server_loss = np.asarray(start_loss)
                 sample = {
                     "reward": prev_reward,
