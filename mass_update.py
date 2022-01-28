@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
+from tqdm import tqdm
 
 import pickle # For reading buffer files
 
@@ -62,8 +63,50 @@ def save_net(model_path):
     torch.save(target_value_net.state_dict(), f"{model_path}/target_value_net.pth")
 
 
+# Get batch form list with indexes
+def get_batch_list(buffer, batch_idx):
+    batch = []
+    for index in batch_idx:
+        batch.append(buffer[index])
+    return batch
+
+
+# Init priorities
+def init_priority(replay_buffer, min_value=-np.inf, max_value=np.inf):
+    priority_list = []
+    for i in range(len(replay_buffer)):
+        # print("Here i", i)
+        # print("Here record", replay_buffer.buffer[i])
+        state, action, reward, next_state, done = replay_buffer.buffer[i]
+
+        with torch.no_grad():
+            state = torch.DoubleTensor(state).squeeze().to(device)
+            next_state = torch.DoubleTensor(next_state).squeeze().to(device)
+            action = torch.DoubleTensor(action).squeeze().to(device)
+            reward = torch.from_numpy(np.asanyarray(reward)).to(device)
+            done = torch.from_numpy(np.asanyarray(done)).to(device)
+
+            policy_loss = value_net(state, policy_net(state), 1)
+            policy_loss = -policy_loss.mean()
+            next_action = target_policy_net(next_state)
+            target_value = target_value_net(next_state, next_action.detach(), 1)
+
+            expected_value = reward + (1.0 - done) * gamma * target_value.squeeze()
+            expected_value = torch.clamp(expected_value, min_value, max_value)
+
+            value = value_net(state, action, 1).squeeze()
+            value_loss = value_criterion(value, expected_value)
+
+            temporal_diff = torch.abs(value_loss) + torch.abs(policy_loss)
+            priority_list.append(temporal_diff.cpu().numpy())
+    
+    priority = np.abs(np.asarray(priority_list))
+    priority = priority/np.sum(priority)
+    return priority
+
+
 # perform update
-def ddpg_update(experience_folder_path, epochs=1, batch_size = 16, min_value=-np.inf, max_value=np.inf):
+def ddpg_update(experience_folder_path, epochs=1, batch_size=16, min_value=-np.inf, max_value=np.inf):
 
     if not Path(experience_folder_path).exists():
         print("Experience buffer folder not found. Exit")
@@ -80,10 +123,16 @@ def ddpg_update(experience_folder_path, epochs=1, batch_size = 16, min_value=-np
         print("No experience found. Exit")
         return 0
 
+    # Initiate priority for experiences
+    priority = init_priority(replay_buffer)
+
     # Training with experience buffer
-    for _ in range(epochs):
+    for _ in tqdm(range(epochs)):
         for _ in range(int(len(replay_buffer)/batch_size)):
-            state, action, reward, next_state, done = replay_buffer.sample(batch_size)
+            batch_idx = np.random.choice(len(replay_buffer), size=batch_size, p=priority)
+            batch = get_batch_list(replay_buffer.buffer, batch_idx)
+            state, action, reward, next_state, done = map(np.stack, zip(*batch))
+            # state, action, reward, next_state, done = replay_buffer.sample(batch_size)
 
             state = torch.DoubleTensor(state).squeeze().to(device)
             next_state = torch.DoubleTensor(next_state).squeeze().to(device)

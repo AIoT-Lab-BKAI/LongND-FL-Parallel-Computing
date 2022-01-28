@@ -123,11 +123,11 @@ class DDPG_Agent(nn.Module):
             value_loss.backward()
             self.value_optimizer.step()
 
-        for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
-            target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
+            for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
+                target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
-        for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
-            target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
+            for target_param, param in zip(self.target_policy_net.parameters(), self.policy_net.parameters()):
+                target_param.data.copy_(target_param.data * (1.0 - self.soft_tau) + param.data * self.soft_tau)
 
 
     def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward=None, M_matrix=None, freq=None):

@@ -40,9 +40,6 @@ class Memory:
             return None
         else:
             # return in the order of s, a, r, s'
-            # print(self.states[-2])
-            # print(self.actions[-2])
-            # print(self.rewards[-1])
             return self.states[-2], self.actions[-2], self.rewards[-1], self.states[-1]
     
     def act(self, s, a):
