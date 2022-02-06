@@ -172,13 +172,9 @@ def standardize_weights(dqn_weights, n_models):
     noise = dqn_weights[2*n_models:3*n_models]
 
     s_means = torch.exp(impact_factor) / torch.sum(torch.exp(impact_factor))
-    s_std = torch.max(torch.min(noise/50, s_means/5), torch.ones_like(s_means) * 0.001)
+    s_std = torch.max(torch.min(noise/50, s_means/3), torch.ones_like(s_means) * 0.001)
 
     s_epochs = torch.floor(next_epoch * 9).int() + 1
-
-    if (s_std < 0).any():
-        print("Wrong std: ", s_std.detach().cpu().numpy())
-        exit(181)
 
     try:
         assigned_priorities = torch.normal(s_means, torch.abs(s_std))
@@ -197,24 +193,28 @@ def standardize_weights_test(next_epoch, impact_factor, noise):
     return s_means.numpy(), s_std.numpy(), s_epochs.numpy(), assigned_priorities.numpy()
 
 
-def aggregate(local_weight, n_models, assigned_priorities):
+def aggregate_fedrl(local_weight, n_models, assigned_priorities):
     ratio = torch.Tensor(np.array(assigned_priorities))
     print("Impact factor RL:", assigned_priorities)
     return torch.squeeze(ratio.t() @ local_weight)
 
 
-def aggregate_benchmark(local_weight, n_models):
+def aggregate_fedprox(local_weight, n_models):
     ratio = torch.ones(1,n_models)/n_models
     return torch.squeeze(ratio @ local_weight)
 
 
-def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smooth_angle, round):
+def aggregate_fedavg(local_weight, local_samples):
+    ratio = local_samples / np.sum(local_samples)
+    return torch.squeeze(torch.from_numpy(ratio).reshape([1, local_samples.shape[0]]) @ local_weight)
+
+
+def aggregate_fedadp(local_weight, global_weight, train_clients, smooth_angle, round):
     """
     :param local_weights the weights of model after SGD updates
     :param global_weight the weight of the global model
     :param train_clients the list contain all clients trained in this round
     """
-
     model_difference = local_weight.to('cpu') - global_weight.to('cpu')
 
     F_i = - model_difference / 0.01

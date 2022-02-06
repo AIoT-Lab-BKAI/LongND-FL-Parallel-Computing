@@ -14,6 +14,9 @@ from modules.Client import Client
 from tqdm import tqdm
 from utils.utils import (
     aggregate_benchmark_fedadp,
+    aggregate_fedavg,
+    aggregate_fedprox,
+    aggregate_fedrl,
     flatten_model,
     get_mean_losses,
     getDictionaryLosses,
@@ -224,11 +227,14 @@ def main(args):
 
         flatten_local_model = flatten_model(client_model).cuda()
 
-        if args.train_mode == "benchmark":
-            flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
+        if args.train_mode == "fedavg":
+            flat_tensor = aggregate_fedavg(local_model_weight, local_n_sample)
+
+        elif args.train_mode == "fedprox":
+            flat_tensor = aggregate_fedprox(local_model_weight, len(train_clients))
         
         elif args.train_mode == "fedadp":
-            flat_tensor, smooth_angle = aggregate_benchmark_fedadp(local_model_weight, flatten_local_model, list_client, smooth_angle, round)
+            flat_tensor, smooth_angle = aggregate_fedavg(local_model_weight, flatten_local_model, list_client, smooth_angle, round)
 
         else:
             done = 0
@@ -282,7 +288,7 @@ def main(args):
             # print("Here final output: ", dqn_weights.shape)
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
-            flat_tensor = aggregate(local_model_weight, len(train_clients), assigned_priorities).cuda()
+            flat_tensor = aggregate_fedrl(local_model_weight, len(train_clients), assigned_priorities).cuda()
             flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients)).cuda()
 
             flat_tensor_diff = flat_tensor - flatten_local_model
