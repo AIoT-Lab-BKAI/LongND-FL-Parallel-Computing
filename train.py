@@ -289,7 +289,7 @@ def main(args):
             s_means, s_std, s_epochs, assigned_priorities = standardize_weights(dqn_weights, num_cli)
 
             flat_tensor = aggregate_fedrl(local_model_weight, len(train_clients), assigned_priorities).cuda()
-            flat_tensor_benchmark = aggregate_benchmark(local_model_weight, len(train_clients)).cuda()
+            flat_tensor_benchmark = aggregate_fedrl(local_model_weight, len(train_clients)).cuda()
 
             flat_tensor_diff = flat_tensor - flatten_local_model
             flat_tensor_benchmark_diff = flat_tensor_benchmark - flatten_local_model
