@@ -1,0 +1,98 @@
+wandb: Currently logged in as: aiotlab (use `wandb login --relogin` to force relogin)
+wandb: Tracking run with wandb version 0.12.9
+wandb: Syncing run FedProx-Unequal-1000-01
+wandb:  View project at https://wandb.ai/aiotlab/federated-learning-dqn
+wandb:  View run at https://wandb.ai/aiotlab/federated-learning-dqn/runs/18oylia6
+wandb: Run data is saved locally in /local/9077921.1.gpu/9077921/wandb/run-20220129_201729-18oylia6
+wandb: Run `wandb offline` to turn off syncing.
+
+>>> START RUNNING: FedProx-Unequal-1000-01 - Train mode: benchmark - Dataset: cifar100
+Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data/cifar/cifar-10-python.tar.gz
+  0% 0/170498071 [00:00<?, ?it/s]  0% 1024/170498071 [00:00<8:11:24, 5782.68it/s]  0% 33792/170498071 [00:00<25:45, 110290.36it/s]  0% 99328/170498071 [00:00<12:33, 226041.50it/s]  0% 214016/170498071 [00:00<07:16, 390199.91it/s]  0% 394240/170498071 [00:00<04:37, 612656.49it/s]  0% 803840/170498071 [00:01<02:23, 1182566.16it/s]  1% 1606656/170498071 [00:01<01:14, 2261003.97it/s]  2% 3228672/170498071 [00:01<00:37, 4428841.38it/s]  3% 5653504/170498071 [00:01<00:22, 7273583.92it/s]  5% 8668160/170498071 [00:01<00:15, 10159894.74it/s]  7% 12239872/170498071 [00:01<00:12, 12924667.79it/s]  9% 15959040/170498071 [00:02<00:10, 15070545.61it/s] 12% 19629056/170498071 [00:02<00:09, 16477131.50it/s] 14% 23118848/170498071 [00:02<00:08, 17192162.76it/s] 16% 26772480/170498071 [00:02<00:08, 17917137.89it/s] 18% 30491648/170498071 [00:02<00:07, 18506445.66it/s] 20% 34145280/170498071 [00:03<00:07, 18835327.51it/s] 22% 37733376/170498071 [00:03<00:07, 18933346.10it/s] 24% 41337856/170498071 [00:03<00:06, 18914380.80it/s] 26% 43910144/170498071 [00:03<00:06, 20104764.21it/s] 27% 45989888/170498071 [00:03<00:06, 18182567.47it/s] 28% 47850496/170498071 [00:03<00:07, 16817432.58it/s] 29% 49988608/170498071 [00:03<00:06, 17772308.74it/s] 30% 51813376/170498071 [00:04<00:07, 16530577.84it/s] 31% 53496832/170498071 [00:04<00:07, 15465709.66it/s] 33% 55723008/170498071 [00:04<00:06, 16994934.47it/s] 34% 57468928/170498071 [00:04<00:07, 15886922.19it/s] 35% 59245568/170498071 [00:04<00:07, 14905281.15it/s] 36% 61375488/170498071 [00:04<00:06, 16472758.20it/s] 37% 63077376/170498071 [00:04<00:06, 15401243.13it/s] 38% 65192960/170498071 [00:04<00:07, 14962741.01it/s] 40% 67372032/170498071 [00:05<00:06, 16567816.27it/s] 41% 69087232/170498071 [00:05<00:06, 15453397.06it/s] 42% 70976512/170498071 [00:05<00:06, 14781289.19it/s] 43% 73090048/170498071 [00:05<00:05, 16354280.96it/s] 44% 74785792/170498071 [00:05<00:06, 15170125.95it/s] 45% 76694528/170498071 [00:05<00:05, 16168083.92it/s] 46% 78363648/170498071 [00:05<00:06, 15194408.38it/s] 47% 79925248/170498071 [00:05<00:06, 14797079.45it/s] 48% 81432576/170498071 [00:06<00:08, 9921847.41it/s]  50% 85312512/170498071 [00:06<00:05, 15723085.28it/s] 51% 87311360/170498071 [00:06<00:05, 15112371.17it/s] 52% 89120768/170498071 [00:06<00:05, 13857664.24it/s] 53% 90722304/170498071 [00:06<00:05, 14272554.06it/s] 54% 92315648/170498071 [00:06<00:05, 14166920.36it/s] 55% 93847552/170498071 [00:06<00:05, 14309131.28it/s] 56% 95361024/170498071 [00:07<00:05, 14278703.59it/s] 57% 96846848/170498071 [00:07<00:05, 14346463.88it/s] 58% 98370560/170498071 [00:07<00:04, 14531996.94it/s] 59% 100058112/170498071 [00:07<00:04, 14535458.41it/s] 60% 101630976/170498071 [00:07<00:04, 14853008.86it/s] 61% 103154688/170498071 [00:07<00:04, 14884400.38it/s] 61% 104655872/170498071 [00:07<00:04, 14890532.78it/s] 62% 106153984/170498071 [00:07<00:04, 14608085.66it/s] 63% 107621376/170498071 [00:07<00:04, 14623572.39it/s] 64% 109088768/170498071 [00:08<00:04, 14577343.80it/s] 65% 110550016/170498071 [00:08<00:04, 14568928.69it/s] 66% 112009216/170498071 [00:08<00:04, 14463222.84it/s] 67% 113457152/170498071 [00:08<00:03, 14437023.64it/s] 67% 114902016/170498071 [00:08<00:03, 14420058.38it/s] 68% 116344832/170498071 [00:08<00:03, 14387469.77it/s] 69% 117834752/170498071 [00:08<00:03, 14482743.62it/s] 70% 119473152/170498071 [00:08<00:03, 15005953.06it/s] 71% 121046016/170498071 [00:08<00:03, 15189881.86it/s] 72% 122635264/170498071 [00:08<00:03, 15366891.62it/s] 73% 124172288/170498071 [00:09<00:03, 15256511.24it/s] 74% 125731840/170498071 [00:09<00:02, 15329818.72it/s] 75% 127265792/170498071 [00:09<00:02, 15049938.03it/s] 76% 128772096/170498071 [00:09<00:02, 14509641.02it/s] 76% 130228224/170498071 [00:09<00:02, 14385240.40it/s] 77% 131670016/170498071 [00:09<00:02, 14365778.13it/s] 78% 133268480/170498071 [00:09<00:02, 14751439.12it/s] 79% 134939648/170498071 [00:09<00:02, 14664957.41it/s] 80% 136561664/170498071 [00:09<00:02, 15105178.29it/s] 81% 138347520/170498071 [00:09<00:02, 15894903.29it/s] 82% 140297216/170498071 [00:10<00:01, 16948669.51it/s] 83% 142132224/170498071 [00:10<00:01, 17338082.73it/s] 84% 143870976/170498071 [00:10<00:01, 17129667.16it/s] 85% 145588224/170498071 [00:10<00:01, 14777596.75it/s] 87% 147585024/170498071 [00:10<00:01, 16159351.40it/s] 88% 149816320/170498071 [00:10<00:01, 17836193.54it/s] 89% 151815168/170498071 [00:10<00:01, 15421472.29it/s] 90% 154117120/170498071 [00:10<00:00, 17337091.80it/s] 92% 156264448/170498071 [00:10<00:00, 18432305.00it/s] 93% 158196736/170498071 [00:11<00:00, 18514238.91it/s] 94% 160111616/170498071 [00:11<00:00, 18658843.57it/s] 95% 162022400/170498071 [00:11<00:00, 16016204.34it/s] 96% 163906560/170498071 [00:11<00:00, 16739335.96it/s] 97% 166052864/170498071 [00:11<00:00, 18000875.84it/s] 98% 167921664/170498071 [00:11<00:00, 17848693.14it/s]100% 169753600/170498071 [00:11<00:00, 15212687.70it/s]170499072it [00:11, 14401872.58it/s]                   
+Extracting ./data/cifar/cifar-10-python.tar.gz to ./data/cifar/
+Files already downloaded and verified
+Sequential(
+  (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (1): ReLU(inplace=True)
+  (2): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (3): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (4): ReLU(inplace=True)
+  (5): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (6): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (7): ReLU(inplace=True)
+  (8): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (9): ReLU(inplace=True)
+  (10): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (11): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (12): ReLU(inplace=True)
+  (13): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (14): ReLU(inplace=True)
+  (15): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (16): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (17): ReLU(inplace=True)
+  (18): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (19): ReLU(inplace=True)
+  (20): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (21): Flatten(start_dim=1, end_dim=-1)
+  (22): Dropout(p=0.5, inplace=False)
+  (23): Linear(in_features=512, out_features=512, bias=True)
+  (24): ReLU(inplace=True)
+  (25): Dropout(p=0.5, inplace=False)
+  (26): Linear(in_features=512, out_features=512, bias=True)
+  (27): ReLU(inplace=True)
+  (28): Linear(in_features=512, out_features=100, bias=True)
+)
+Init State dim 300
+Init Action dim 200
+  0% 0/1000 [00:00<?, ?it/s]ROUND:  0
+[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+ROUND:  0  TEST ACC:  0.1
+  0% 1/1000 [00:39<10:52:26, 39.19s/it]ROUND:  1
+[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+  0% 1/1000 [00:42<11:53:17, 42.84s/it]
+Traceback (most recent call last):
+  File "train.py", line 340, in <module>
+    main(args)
+  File "train.py", line 198, in main
+    [
+  File "train.py", line 202, in <listcomp>
+    copy.deepcopy(client_model),
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 172, in deepcopy
+    y = _reconstruct(x, memo, *rv)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 270, in _reconstruct
+    state = deepcopy(state, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 146, in deepcopy
+    y = copier(x, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 230, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 172, in deepcopy
+    y = _reconstruct(x, memo, *rv)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 296, in _reconstruct
+    value = deepcopy(value, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 172, in deepcopy
+    y = _reconstruct(x, memo, *rv)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 270, in _reconstruct
+    state = deepcopy(state, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 146, in deepcopy
+    y = copier(x, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 230, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 172, in deepcopy
+    y = _reconstruct(x, memo, *rv)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 296, in _reconstruct
+    value = deepcopy(value, memo)
+  File "/apps/centos7/python/3.8.7/lib/python3.8/copy.py", line 153, in deepcopy
+    y = copier(memo)
+  File "/home/acc13085dy/federated-learning/FLenv/lib/python3.8/site-packages/torch/nn/parameter.py", line 32, in __deepcopy__
+    result = type(self)(self.data.clone(memory_format=torch.preserve_format), self.requires_grad)
+RuntimeError: CUDA out of memory. Tried to allocate 20.00 MiB (GPU 0; 15.78 GiB total capacity; 435.21 MiB already allocated; 10.00 MiB free; 458.00 MiB reserved in total by PyTorch)
+
+wandb: Waiting for W&B process to finish, PID 209365... (failed 1). Press ctrl-c to abort syncing.
+wandb: - 0.00MB of 0.00MB uploaded (0.00MB deduped)wandb: \ 0.00MB of 0.00MB uploaded (0.00MB deduped)wandb: | 0.00MB of 0.01MB uploaded (0.00MB deduped)wandb: / 0.00MB of 0.01MB uploaded (0.00MB deduped)wandb: - 0.00MB of 0.01MB uploaded (0.00MB deduped)wandb: \ 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb: | 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb: / 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb: - 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb: \ 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb: | 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb: / 0.01MB of 0.01MB uploaded (0.00MB deduped)wandb:                                                                                
+wandb: Run history:
+wandb:   test_acc ▁
+wandb: 
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Synced FedProx-Unequal-1000-01: https://wandb.ai/aiotlab/federated-learning-dqn/runs/18oylia6
+wandb: Find logs at: ./wandb/run-20220129_201729-18oylia6/logs/debug.log
+wandb: 

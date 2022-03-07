@@ -8,7 +8,7 @@
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Featured/fedAVG-100-01.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Featured/fedProx-100.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Featured/fixed-100.sh
-qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Featured/Upperbound-01.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Featured/Upperbound-01.sh
 
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Pareto/fedAVG-100-01.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Pareto/fedProx-100.sh
@@ -18,9 +18,27 @@ qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Featured/Upperbound-01.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Quantitative/fedAVG-100-01.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Quantitative/fedProx-100.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Quantitative/fixed-100.sh
-qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Quantitative/Upperbound-01.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Quantitative/Upperbound-01.sh
 
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Unequal/fedAVG-100-01.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Unequal/fedProx-100.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Unequal/fixed-100.sh
 # qsub -g gad50699 ../experiment/CIFAR-100-01/Main/Unequal/Upperbound-01.sh
+
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Pareto/fedAVG-100-01.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Pareto/fedProx-100.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Pareto/fixed-100.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Pareto/Upperbound-01.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Quantitative/fedAVG-100-01.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Quantitative/fedProx-100.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Quantitative/fixed-100.sh
+# qsub -g gad50699 ../experiment/CIFAR-100-02/Main/Quantitative/Upperbound-01.sh
+
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Pareto/fedAVG-100.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Pareto/fedProx-100.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Pareto/fixed-100.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Pareto/Upperbound-01.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Quantitative/fedAVG-100-01.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Quantitative/fedProx-100.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Quantitative/fixed-100.sh
+qsub -g gad50699 ../experiment/CIFAR-100-03/Main/Quantitative/Upperbound-01.sh
