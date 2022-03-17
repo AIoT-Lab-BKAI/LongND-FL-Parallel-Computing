@@ -208,18 +208,34 @@ def aggregate(local_weight, n_models, assigned_priorities):
     return torch.squeeze(ratio.t() @ local_weight)
 
 
-def aggregate_benchmark(local_weight, n_models):
+def aggregate_fedrl(local_weight, n_models, assigned_priorities):
+    ratio = torch.Tensor(np.array(assigned_priorities))
+    print("Impact factor RL:", assigned_priorities)
+    return torch.squeeze(ratio.t() @ local_weight)
+
+
+def aggregate_fedprox(local_weight, n_models):
     ratio = torch.ones(1,n_models)/n_models
     return torch.squeeze(ratio @ local_weight)
 
 
-def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smooth_angle, round):
+def aggregate_fedavg(local_weight, local_samples):
+    ratio = local_samples / np.sum(local_samples)
+    # conver ratio to pytorch float
+    ratio = torch.FloatTensor(ratio)    
+    return torch.squeeze(ratio.reshape([1, local_samples.shape[0]]) @ local_weight)
+
+
+def aggregate_benchmark(local_weight, n_models):
+    ratio = torch.ones(1,n_models)/n_models
+    return torch.squeeze(ratio @ local_weight)
+
+def aggregate_fedadp(local_weight, global_weight, train_clients, smooth_angle, round):
     """
     :param local_weights the weights of model after SGD updates
     :param global_weight the weight of the global model
     :param train_clients the list contain all clients trained in this round
     """
-
     model_difference = local_weight.to('cpu') - global_weight.to('cpu')
 
     F_i = - model_difference / 0.01
@@ -231,16 +247,7 @@ def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smoot
 
     corel = F.unsqueeze(0) @ F_i.T
 
-    corel_norm = torch.clip(corel / (torch.norm(F_i) * torch.norm(F)), min=-1, max=1)
-    instantaneous_angle = torch.squeeze(torch.arccos(corel_norm))
-
-    # with open("corel.txt", "a+") as file:
-    #     file.write(str(list(corel.detach().numpy())) + "\n")
-    print(list(corel.detach().numpy()))
-
-    # with open("corel_norm.txt", "a+") as file:
-    #     file.write(str(list(corel_norm.detach().numpy())) + "\n")
-    print(list(corel_norm.detach().numpy()))
+    instantaneous_angle = torch.squeeze(torch.arccos(corel/(torch.norm(F_i) * torch.norm(F))))
 
     if (smooth_angle is None):
         smooth_angle = instantaneous_angle
@@ -258,7 +265,6 @@ def aggregate_benchmark_fedadp(local_weight, global_weight, train_clients, smoot
     normalized_impact_factor = torch.exp(impact_factor)/torch.sum(torch.exp(impact_factor))
 
     return torch.squeeze(normalized_impact_factor.T @ local_weight), smooth_angle
-
 
 def generate_abiprocess(mu, sigma, n_client):
     s = np.random.normal(mu, sigma, n_client)

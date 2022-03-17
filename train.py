@@ -12,12 +12,16 @@ from torchvision import transforms, datasets
 from modules.Client import Client
 from tqdm import tqdm
 from utils.utils import (
-    aggregate_benchmark_fedadp,
+    aggregate_fedavg,
+    aggregate_fedprox,
+    aggregate_fedrl,
+    aggregate_fedadp,
+    aggregate_benchmark,
+    aggregate,
     flatten_model,
     get_mean_losses,
     getDictionaryLosses,
     getLoggingDictionary,
-    aggregate_benchmark,
     select_client,
     select_drop_client,
     standardize_weights,
@@ -26,7 +30,6 @@ from utils.utils import (
     load_dataset_idx,
     get_train_time,
     count_params,
-    aggregate,
     unflatten_model,
     load_epoch,
 )
@@ -226,11 +229,13 @@ def main(args):
             wandb.log({'loss_inside/reward': sample})
 
         if args.train_mode == "benchmark":
-            flat_tensor = aggregate_benchmark(
-                local_model_weight, len(train_clients))
+            flat_tensor = aggregate_fedavg(local_model_weight, local_n_sample)
+
+        elif args.train_mode == "fedprox":
+            flat_tensor = aggregate_fedprox(local_model_weight, len(train_clients))
 
         elif args.train_mode == "fedadp":
-            flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
+            flat_tensor, smooth_angle = aggregate_fedadp(
                 local_model_weight, flatten_model(client_model), [list_client[train_clients[i]] for i in range(len(train_client))], smooth_angle, round)
 
         else:
@@ -301,7 +306,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project=parse_args.project_name,
+    wandb.init(project="FL-FedAvg-Rerun",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,

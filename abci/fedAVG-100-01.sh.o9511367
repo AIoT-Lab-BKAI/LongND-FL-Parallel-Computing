@@ -1,0 +1,13 @@
+wandb: Currently logged in as: aiotlab (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.12.11 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.9
+wandb: Syncing run FedAVG-Quantitative-100-01-Main
+wandb:  View project at https://wandb.ai/aiotlab/FL-FedAvg-Rerun
+wandb:  View run at https://wandb.ai/aiotlab/FL-FedAvg-Rerun/runs/13a4hbuo
+wandb: Run data is saved locally in /local/9511367.1.gpu/9511367/wandb/run-20220310_160039-13a4hbuo
+wandb: Run `wandb offline` to turn off syncing.
+
+>>> START RUNNING: FedAVG-Quantitative-100-01-Main - Train mode: benchmark - Dataset: cifar100
+Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data/cifar/cifar-10-python.tar.gz
+  0% 0/170498071 [00:00<?, ?it/s]  0% 1024/170498071 [00:00<8:11:23, 5782.75it/s]  0% 33792/170498071 [00:00<25:52, 109798.93it/s]  0% 99328/170498071 [00:00<12:36, 225377.30it/s]  0% 214016/170498071 [00:00<07:18, 388173.64it/s]  0% 394240/170498071 [00:00<04:39, 609183.56it/s]  0% 771072/170498071 [00:01<02:32, 1113235.81it/s]  1% 1360896/170498071 [00:01<01:19, 2117858.55it/s]  1% 1655808/170498071 [00:01<01:13, 2302913.43it/s]  1% 2229248/170498071 [00:01<00:53, 3136067.16it/s]  2% 2802688/170498071 [00:01<00:44, 3808926.89it/s]  2% 3376128/170498071 [00:01<00:38, 4312348.87it/s]  2% 3965952/170498071 [00:01<00:35, 4746452.96it/s]  3% 4555776/170498071 [00:01<00:32, 5048946.44it/s]  3% 5129216/170498071 [00:01<00:31, 5241626.43it/s]  3% 5702656/170498071 [00:01<00:30, 5368142.15it/s]  4% 6276096/170498071 [00:02<00:30, 5410351.16it/s]  4% 6833152/170498071 [00:02<00:30, 5433628.73it/s]  4% 7383040/170498071 [00:02<00:30, 5426286.65it/s]  5% 7929856/170498071 [00:02<00:30, 5393487.58it/s]  5% 8472576/170498071 [00:02<00:30, 5353666.07it/s]  5% 9010176/170498071 [00:02<00:30, 5346620.37it/s]  6% 9569280/170498071 [00:02<00:29, 5400468.77it/s]  6% 10159104/170498071 [00:02<00:29, 5521032.91it/s]  6% 10732544/170498071 [00:02<00:28, 5572722.43it/s]  6% 11010048/170498071 [00:19<00:28, 5572722.43it/s]wandb: Network error (ReadTimeout), entering retry loop.

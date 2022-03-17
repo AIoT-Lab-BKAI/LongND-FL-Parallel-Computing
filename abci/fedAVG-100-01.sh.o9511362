@@ -1,0 +1,13 @@
+wandb: Currently logged in as: aiotlab (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.12.11 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.9
+wandb: Syncing run FedAVG-UnEqual-100-01
+wandb:  View project at https://wandb.ai/aiotlab/FL-FedAvg-Rerun
+wandb:  View run at https://wandb.ai/aiotlab/FL-FedAvg-Rerun/runs/igc34j66
+wandb: Run data is saved locally in /local/9511362.1.gpu/9511362/wandb/run-20220310_160042-igc34j66
+wandb: Run `wandb offline` to turn off syncing.
+
+>>> START RUNNING: FedAVG-UnEqual-100-01 - Train mode: benchmark - Dataset: cifar100
+Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data/cifar/cifar-10-python.tar.gz
+  0% 0/170498071 [00:00<?, ?it/s]

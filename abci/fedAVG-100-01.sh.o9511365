@@ -1,0 +1,13 @@
+wandb: Currently logged in as: aiotlab (use `wandb login --relogin` to force relogin)
+wandb: wandb version 0.12.11 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.9
+wandb: Syncing run FedAVG-Pareto-100-01
+wandb:  View project at https://wandb.ai/aiotlab/FL-FedAvg-Rerun
+wandb:  View run at https://wandb.ai/aiotlab/FL-FedAvg-Rerun/runs/8nirly75
+wandb: Run data is saved locally in /local/9511365.1.gpu/9511365/wandb/run-20220310_160040-8nirly75
+wandb: Run `wandb offline` to turn off syncing.
+
+>>> START RUNNING: FedAVG-Pareto-100-01 - Train mode: benchmark - Dataset: cifar100
+Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data/cifar/cifar-10-python.tar.gz
+  0% 0/170498071 [00:00<?, ?it/s]  0% 1024/170498071 [00:00<8:10:01, 5798.97it/s]  0% 33792/170498071 [00:00<25:46, 110192.77it/s]  0% 99328/170498071 [00:00<12:35, 225544.58it/s]  0% 214016/170498071 [00:00<07:18, 388435.42it/s]  0% 394240/170498071 [00:00<04:39, 609585.07it/s]  0% 787456/170498071 [00:01<02:28, 1142967.37it/s]  1% 1311744/170498071 [00:01<01:24, 2013016.13it/s]  1% 1672192/170498071 [00:01<01:11, 2370711.44it/s]  1% 2212864/170498071 [00:01<00:54, 3103355.51it/s]  2% 2769920/170498071 [00:01<00:45, 3718509.38it/s]  2% 3310592/170498071 [00:01<00:40, 4136703.74it/s]  2% 3900416/170498071 [00:01<00:36, 4609776.65it/s]  3% 4473856/170498071 [00:01<00:33, 4909055.19it/s]  3% 5063680/170498071 [00:01<00:32, 5169418.19it/s]  3% 5144576/170498071 [00:20<00:31, 5169418.19it/s]wandb: Network error (ReadTimeout), entering retry loop.
