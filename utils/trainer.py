@@ -20,7 +20,8 @@ def test_local(args):
     ep_loss = 0
     for X, y in train_dataloader:
         X = X.to(device)
-        y = y.to(device)
+        y = y.to(device).to(torch.int64)
+        # y = y.to(device)
         output = local_model(X)
         loss = criterion(output, y)
         train_loss += loss.item()
@@ -48,7 +49,8 @@ def train(args):
         train_loss = 0.0
         for X, y in train_dataloader:
             X = X.to(device)
-            y = y.to(device)
+            # y = y.to(device)
+            y = y.to(device).to(torch.int64)
             optimizer.zero_grad()
             output = local_model(X)
 
@@ -82,7 +84,8 @@ def test(model, test_dataloader):
     loss = 0.0
     for X, y in test_dataloader:
         X = X.to(device)
-        y = y.to(device)
+        # y = y.to(device)
+        y = y.to(device).to(torch.int64)
         output = model(X)
         loss += cel(output, y).item()
         output = output.argmax(-1)

@@ -80,7 +80,7 @@ def select_drop_client(list_cl_per_round, drop_percent):
 
 
 def count_params(model):
-    return sum(p.numel() for p in model.parameters())
+    return sum(p.numel() for p in model.state_dict().values())
 
 
 def flatten_tensors(tensors):
@@ -102,9 +102,14 @@ def flatten_tensors(tensors):
     return flat
 
 
+# def flatten_model(model):
+#     ten = torch.cat([flatten_tensors(i) for i in model.parameters()])
+#     return ten
 def flatten_model(model):
-    ten = torch.cat([flatten_tensors(i) for i in model.parameters()])
+    ten = torch.cat([torch.flatten(p) for p in model.state_dict().values()])
     return ten
+
+
 
 
 def unflatten_tensors(flat, tensors):
@@ -129,11 +134,25 @@ def unflatten_tensors(flat, tensors):
     return tuple(outputs)
 
 
+# def unflatten_model(flat, model):
+#     count = 0
+#     l = []
+#     output = []
+#     for tensor in model.parameters():
+#         n = tensor.numel()
+#         output.append(flat[count: count + n].view_as(tensor))
+#         count += n
+#     output = tuple(output)
+#     temp = OrderedDict()
+#     for i, j in enumerate(model.state_dict().keys()):
+#         temp[j] = output[i]
+#     return temp
+
 def unflatten_model(flat, model):
     count = 0
     l = []
     output = []
-    for tensor in model.parameters():
+    for tensor in model.state_dict().values():
         n = tensor.numel()
         output.append(flat[count: count + n].view_as(tensor))
         count += n
@@ -141,6 +160,7 @@ def unflatten_model(flat, model):
     temp = OrderedDict()
     for i, j in enumerate(model.state_dict().keys()):
         temp[j] = output[i]
+
     return temp
 
 
@@ -206,6 +226,11 @@ def aggregate(local_weight, n_models, assigned_priorities):
     ratio = torch.Tensor(np.array(assigned_priorities))
     return torch.squeeze(ratio.t() @ local_weight)
 
+def aggregate_fedavg(local_weight, local_samples):
+    ratio = local_samples / np.sum(local_samples)
+    # conver ratio to pytorch float
+    ratio = torch.FloatTensor(ratio)    
+    return torch.squeeze(ratio.reshape([1, local_samples.shape[0]]) @ local_weight)
 
 def aggregate_benchmark(local_weight, n_models):
     ratio = torch.ones(1,n_models)/n_models

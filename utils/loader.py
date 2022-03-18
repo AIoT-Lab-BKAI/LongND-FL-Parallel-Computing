@@ -1,5 +1,9 @@
 import numpy as np
-
+import csv
+from torch.utils.data.dataset import random_split
+from torch.utils.data import DataLoader
+import torch
+from PIL import Image
 
 def iid_partition(dataset, clients):
     """
@@ -195,6 +199,9 @@ def mnist_noniid_client_level(dataset, n_samples):
     return dict_client
 
 from torch.utils.data import Dataset
+# import torchvision
+# from torchvision import datasets
+# import torchvision.transforms as transforms
 
 
 class CustomDataset(Dataset):
@@ -208,3 +215,116 @@ class CustomDataset(Dataset):
     def __getitem__(self, item):
         image, label = self.dataset[self.idxs[item]]
         return image, label
+class CheXpertDataSet(Dataset):
+    def __init__(self, image_list_file, transform=None, policy="ones"):
+        """
+        image_list_file: path to the file containing images with corresponding labels.
+        transform: optional transform to be applied on a sample.
+        Upolicy: name the policy with regard to the uncertain labels
+        """
+        image_names = []
+        labels = []
+
+        with open(image_list_file, "r") as f:
+            csvReader = csv.reader(f)
+            next(csvReader, None)
+            k=0
+            for line in csvReader:
+                k+=1
+                image_name= line[0]
+                label = line[5:]
+                
+                for i in range(14):
+                    if label[i]:
+                        a = float(label[i])
+                        if a == 1:
+                            label[i] = 1
+                        elif a == -1:
+                            if policy == "ones":
+                                label[i] = 1
+                            elif policy == "zeroes":
+                                label[i] = 0
+                            else:
+                                label[i] = 0
+                        else:
+                            label[i] = 0
+                    else:
+                        label[i] = 0
+                        
+                image_names.append('../data/' + image_name)
+                labels.append(label)
+
+        self.image_names = image_names
+        self.labels = labels
+        self.transform = transform
+
+    def __getitem__(self, index):
+        """Take the index of item and returns the image and its labels"""
+        
+        image_name = self.image_names[index]
+        image = Image.open(image_name).convert('RGB')
+        label = self.labels[index]
+        # print(f"label[0] : {label[0]}\nlabel shape: {len(label)}")
+        # print(f"torch.FloatTensor(label[0]): {torch.FloatTensor(np.asarray(float(label[0])))}")
+        if self.transform is not None:
+            image = self.transform(image)
+        return image, torch.FloatTensor(np.asarray(float(label[0])))
+
+    def __len__(self):
+        return len(self.image_names)
+
+def find_indices(lst, condition):
+    return [i for i, elem in enumerate(lst) if condition(elem)]
+
+def load_cheXpert_dataset():
+    # Paths to the files with training, and validation sets.
+    # Each file contains pairs (path to image, output vector)
+    print("START LOADING CHEXPERT DATASET...")
+    pathFileTrain = '../data/CheXpert-v1.0-small/train.csv'
+    pathFileValid = '../data/CheXpert-v1.0-small/valid.csv'
+
+    # Neural network parameters:
+    nnIsTrained = False                 #pre-trained using ImageNet
+    nnClassCount = 14                   #dimension of the output
+
+    # Training settings: batch size, maximum number of epochs
+    trBatchSize = 64
+    trMaxEpoch = 3
+
+    # Parameters related to image transforms: size of the down-scaled image, cropped image
+    imgtransResize = (320, 320)
+    imgtransCrop = 224
+
+    # Class names
+    class_names = ['No Finding', 'Enlarged Cardiomediastinum', 'Cardiomegaly', 'Lung Opacity', 
+                'Lung Lesion', 'Edema', 'Consolidation', 'Pneumonia', 'Atelectasis', 'Pneumothorax', 
+                'Pleural Effusion', 'Pleural Other', 'Fracture', 'Support Devices']
+    normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    transformList = []
+    #transformList.append(transforms.Resize(imgtransCrop))
+    transformList.append(transforms.RandomResizedCrop(imgtransCrop))
+    transformList.append(transforms.RandomHorizontalFlip())
+    transformList.append(transforms.ToTensor())
+    transformList.append(normalize)      
+    transformSequence=transforms.Compose(transformList)
+
+    #LOAD DATASET
+
+    dataset = CheXpertDataSet(pathFileTrain ,transformSequence, policy="ones")
+    datasetTest, datasetTrain = random_split(dataset, [500, len(dataset) - 500])
+    datasetValid = CheXpertDataSet(pathFileValid, transformSequence)            
+    #Problèmes de l'overlapping de patients et du transform identique ?
+
+    dataLoaderTrain = DataLoader(dataset=datasetTrain, batch_size=trBatchSize, shuffle=True,  num_workers=24, pin_memory=True)
+    dataLoaderVal = DataLoader(dataset=datasetValid, batch_size=trBatchSize, shuffle=False, num_workers=24, pin_memory=True)
+    dataLoaderTest = DataLoader(dataset=datasetTest, num_workers=24, pin_memory=True)
+
+    np_labels = np.asarray(dataset.labels)
+    cnt_number_labels = [np.count_nonzero(np_labels[i]) for i in range(np_labels.shape[0])]
+    cnt_number_labels = np.asarray(cnt_number_labels)
+    cnt_monotonic_labels = [1 if cnt_number_labels[i] == 1 else 0 for i in range(len(cnt_number_labels))]
+    monotonic_data_idx = find_indices(cnt_monotonic_labels, lambda e: e == 1)
+    training_dataset = torch.utils.data.Subset(dataLoaderTrain, monotonic_data_idx)
+    
+    return dataset, dataLoaderTrain, dataLoaderVal, datasetTest
+    

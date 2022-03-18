@@ -18,6 +18,7 @@ from utils.utils import (
     getDictionaryLosses,
     getLoggingDictionary,
     aggregate_benchmark,
+    aggregate_fedavg,
     select_client,
     select_drop_client,
     standardize_weights,
@@ -41,15 +42,17 @@ from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
 from models.vgg import vgg11
+from models.resnet18 import resnet18
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
+from utils.loader import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def load_dataset(dataset_name, path_data_idx):
+def load_dataset(dataset_name, path_data_idx, path_data_valid_idx = None):
     if dataset_name == "mnist":
         transforms_mnist = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
         train_dataset = datasets.MNIST("data/mnist/", train=True, download=True, transform=transforms_mnist)
@@ -75,12 +78,19 @@ def load_dataset(dataset_name, path_data_idx):
 
         test_dataset = datasets.FashionMNIST("./data/fashionmnist/", train=False, download=True,
                                         transform=transforms_mnist)
+
+        list_valid_idx = json.load(open(path_data_valid_idx, 'r'))
+        valid_set = datasets.Subset(train_dataset, list_valid_idx)
+        
+        list_idx_sample = load_dataset_idx(path_data_idx)
+    elif dataset_name == "chexpert":
+        train_dataset, train_dataset_, valid_set, test_dataset = load_cheXpert_dataset()
         list_idx_sample = load_dataset_idx(path_data_idx)
     else:
         warnings.warn("Dataset not supported")
         exit()
 
-    return train_dataset, test_dataset, list_idx_sample
+    return train_dataset, test_dataset, list_idx_sample, valid_set
 
 
 def init_model(dataset_name):
@@ -91,10 +101,12 @@ def init_model(dataset_name):
         print(model)
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
+    elif dataset_name == "chexpert":
+        model = resnet18(num_classes=2)
+        # model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=False)
     else:
         warnings.warn("Model not supported")
     return model
-
 
 def main(args):
     """ Parse command line arguments or load defaults """
@@ -110,7 +122,8 @@ def main(args):
     assert len(list_abiprocess_client) == args.num_clients, "not enough abi-processes"
 
     # >>>> START: LOAD DATASET & INIT MODEL
-    train_dataset, test_dataset, list_idx_sample = load_dataset(args.dataset_name, args.path_data_idx)
+    train_dataset, test_dataset, list_idx_sample, valid_set = load_dataset(args.dataset_name, args.path_data_idx)
+
     client_model = init_model(args.dataset_name)
     n_params = count_params(client_model)
     prev_reward = None
@@ -198,9 +211,12 @@ def main(args):
             ],
         )
 
-        if args.train_mode == "benchmark":
-            flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
+        # if args.train_mode == "benchmark":
+        #     flat_tensor = aggregate_benchmark(local_model_weight, len(train_clients))
         
+        if args.train_mode == "benchmark":
+            flat_tensor = aggregate_fedavg(local_model_weight, local_n_sample)
+
         elif args.train_mode == "fedadp":
             flat_tensor, smooth_angle = aggregate_benchmark_fedadp(
                 local_model_weight, flatten_model(client_model), list_client, smooth_angle, round)
@@ -300,7 +316,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="federated-learning-2.5.1.3",
+    wandb.init(project="federated-learning-cheXpert",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
