@@ -50,7 +50,7 @@ import warnings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # device = "cuda" if torch.cuda.is_available() else "cpu"
-
+import time
 
 def load_dataset(dataset_name, path_data_idx):
     if dataset_name == "mnist":
@@ -163,7 +163,7 @@ def main(args):
     # Multi-process training
     pool = mp.Pool(args.num_core)
     smooth_angle = None         # Use for fedadp
-
+    community_time_list = []
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [
@@ -212,6 +212,7 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
+        
         start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
         start_l, final_l = start_loss.copy(), final_loss.copy()
@@ -227,7 +228,8 @@ def main(args):
                 # "episode_reward": self.episode_reward,
             }
             wandb.log({'loss_inside/reward': sample})
-
+        torch.cuda.synchronize()
+        community_time_start = time.time()
         if args.train_mode == "benchmark":
             flat_tensor = aggregate_fedavg(local_model_weight, local_n_sample)
 
@@ -250,12 +252,13 @@ def main(args):
 
             flat_tensor = aggregate(local_model_weight, len(
                 train_clients), assigned_priorities)
-
             # Update epochs
             if args.train_mode == "RL-Hybrid":
                 dqn_list_epochs = s_epochs
                 load_epoch(list_client, dqn_list_epochs)
-
+        torch.cuda.synchronize()
+        community_time = time.time() - community_time_start
+        community_time_list.append(community_time)
         client_model.load_state_dict(
             unflatten_model(flat_tensor, client_model))
         # >>>> Test model
@@ -275,7 +278,8 @@ def main(args):
                 "local_train_time": max_time,
                 "local_info": dictionaryLosses,
                 "delay": delay,
-                "test_loss": test_loss
+                "test_loss": test_loss,
+                "aggregation time": community_time
             }
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
@@ -288,6 +292,7 @@ def main(args):
                 "local_train_time": max_time,
                 "delay": delay,
                 "test_loss": test_loss,
+                "aggregation time": community_time
             }
             dqn_sample = {
                 "means": s_means,
@@ -298,7 +303,7 @@ def main(args):
             recordedSample = getLoggingDictionary(dqn_sample, num_cli)
             wandb.log(
                 {'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
-
+    wandb.run.summary['Community_time'] = sum(community_time_list)/len(community_time_list)
     del pool
 
 
@@ -340,6 +345,7 @@ if __name__ == "__main__":
                })
     args = wandb.config
     wandb.define_metric("test_acc", summary="max")
+    args = parse_args
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
           args.train_mode, args.dataset_name))
     main(args)
