@@ -164,6 +164,8 @@ def main(args):
     pool = mp.Pool(args.num_core)
     smooth_angle = None         # Use for fedadp
     community_time_list = []
+    max_training_time_list = []
+    avg_training_time_list = []
     for round in tqdm(range(args.num_rounds)):
         # mocking the number of epochs that are assigned for each client.
         dqn_list_epochs = [
@@ -191,6 +193,8 @@ def main(args):
             np.array([list_client[i].eps for i in train_clients])
         local_inference_loss = torch.zeros(len(train_client), 2)
         local_inference_loss.share_memory_()
+        training_time = torch.zeros(len(train_client), 1)
+        training_time.share_memory_()
         print("ROUND: ", round)
         print([list_client[i].eps for i in train_clients])
         start_l, final_l = 0, 0
@@ -207,6 +211,7 @@ def main(args):
                     local_model_weight,
                     train_local_loss,
                     local_inference_loss,
+                    training_time,
                     args.algorithm,
                 )
                 for i in range(len(train_clients))
@@ -215,6 +220,12 @@ def main(args):
         
         start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
+        # train_time = [training_time[i, 0] for i in range(num_cli)]
+        train_time = training_time.numpy()
+        max_training_time = np.max(train_time)
+        avg_training_time = np.mean(train_time)
+        max_training_time_list.append(max_training_time)
+        avg_training_time_list.append(avg_training_time)
         start_l, final_l = start_loss.copy(), final_loss.copy()
         if round:
             prev_reward = get_reward(start_loss)
@@ -279,7 +290,9 @@ def main(args):
                 "local_info": dictionaryLosses,
                 "delay": delay,
                 "test_loss": test_loss,
-                "aggregation time": community_time
+                "aggregation time": community_time,
+                "max_training_time": max_training_time,
+                "avg_training_time": avg_training_time
             }
             wandb.log({'test_acc': acc, 'summary/summary': logging})
 
@@ -292,7 +305,9 @@ def main(args):
                 "local_train_time": max_time,
                 "delay": delay,
                 "test_loss": test_loss,
-                "aggregation time": community_time
+                "aggregation time": community_time,
+                "max_training_time": max_training_time,
+                "avg_training_time": avg_training_time
             }
             dqn_sample = {
                 "means": s_means,
@@ -304,6 +319,8 @@ def main(args):
             wandb.log(
                 {'test_acc': acc, 'dqn/dqn_sample': recordedSample, 'summary/summary': logging})
     wandb.run.summary['Community_time'] = sum(community_time_list)/len(community_time_list)
+    wandb.run.summary['Max training time'] = max(max_training_time_list)
+    wandb.run.summary['Avg training time'] = sum(avg_training_time_list)/len(avg_training_time_list)
     del pool
 
 
@@ -311,7 +328,7 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="FL-FedAvg-Rerun",
+    wandb.init(project="Spatial_PM2.5",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,

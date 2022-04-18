@@ -35,7 +35,7 @@ def train(args):
     device = torch.device(
         "cuda") if torch.cuda.is_available() else torch.device("cpu")
     (id, pid, model, client, local_model_weight,
-     train_local_loss, local_inference_loss, algorithm) = args
+     train_local_loss, local_inference_loss, training_time, algorithm) = args
     # model = model.cuda()
     model = model.to(device)
     train_dataloader = client.train_dataloader
@@ -74,6 +74,7 @@ def train(args):
 
     _, final_inference_loss = test(local_model, train_dataloader)
     local_inference_loss[id, 1] = final_inference_loss
+    training_time[id,0] = time.time() - t
     local_model_weight[id] = flatten_model(local_model)
 
 
