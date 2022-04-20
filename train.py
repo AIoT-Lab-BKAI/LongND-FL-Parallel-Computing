@@ -1,3 +1,5 @@
+from email import parser
+import time
 import argparse
 from math import ceil
 import os.path
@@ -9,7 +11,7 @@ from numpy.core.defchararray import count
 from numpy.lib.function_base import _percentile_dispatcher
 from numpy.lib.npyio import save
 from torchvision import transforms, datasets
-from modules.Client import Client
+from modules.Client import Client, Pill_Client
 from tqdm import tqdm
 from utils.utils import (
     aggregate_fedavg,
@@ -43,14 +45,14 @@ from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
-from models.vgg import vgg11
+from models.vgg import vgg11, vgg11_pill
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # device = "cuda" if torch.cuda.is_available() else "cpu"
-import time
+
 
 def load_dataset(dataset_name, path_data_idx):
     if dataset_name == "mnist":
@@ -99,11 +101,13 @@ def init_model(dataset_name):
         print(model)
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
+    elif dataset_name == "pill_dataset":
+        model =  vgg11_pill(85)
     else:
         warnings.warn("Model not supported")
     return model
 
-
+import json
 def main(args):
     """ Parse command line arguments or load defaults """
     random.seed(args.seed)
@@ -119,25 +123,46 @@ def main(args):
         list_abiprocess_client) == args.num_clients, "not enough abi-processes"
 
     # >>>> START: LOAD DATASET & INIT MODEL
-    train_dataset, test_dataset, list_idx_sample = load_dataset(
-        args.dataset_name, args.path_data_idx)
+
     client_model = init_model(args.dataset_name)
     n_params = count_params(client_model)
     prev_reward = None
-
-    list_client = [
-        Client(
-            idx=idx,
-            dataset=train_dataset,
-            list_idx_sample=list_idx_sample,
-            list_abiprocess=list_abiprocess_client,
-            batch_size=args.batch_size,
-            lr=args.learning_rate,
-            epochs=args.num_epochs,
-            mu=args.mu,
-        )
-        for idx in range(args.num_clients)
-    ]
+    if args.dataset_name == "pill_dataset":
+        with open("pill_dataset/user_group_img.json",'r') as f:
+            user_group_img = json.load(f)
+        with open("pill_dataset/img_label_dict.json",'r') as f:
+            img_label_dict = json.load(f)
+        with open("pill_dataset/label_hash.json",'r') as f:
+            label_hash = json.load(f)
+        list_client = [
+            Pill_Client(
+                idx=idx,
+                img_folder_path="pill_dataset/pill_cropped",
+                list_idx_sample=user_group_img,
+                label_dict=img_label_dict,
+                map_label_dict=label_hash,
+                list_abiprocess=list_abiprocess_client,
+                batch_size=args.batch_size,
+                lr=args.learning_rate,
+                epochs=args.num_epochs,
+                mu=args.mu,
+            )
+            for idx in range(args.num_clients)]
+    else:
+        train_dataset, test_dataset, list_idx_sample = load_dataset(args.dataset_name, args.path_data_idx)
+        list_client = [
+            Client(
+                idx=idx,
+                dataset=train_dataset,
+                list_idx_sample=list_idx_sample,
+                list_abiprocess=list_abiprocess_client,
+                batch_size=args.batch_size,
+                lr=args.learning_rate,
+                epochs=args.num_epochs,
+                mu=args.mu,
+            )
+            for idx in range(args.num_clients)
+        ]
 
     list_trained_client = []
 
@@ -217,7 +242,7 @@ def main(args):
                 for i in range(len(train_clients))
             ],
         )
-        
+
         start_loss = [local_inference_loss[i, 0] for i in range(num_cli)]
         final_loss = [local_inference_loss[i, 1] for i in range(num_cli)]
         # train_time = [training_time[i, 0] for i in range(num_cli)]
@@ -328,40 +353,41 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    wandb.init(project="Spatial_PM2.5",
-               entity="aiotlab",
-               name=parse_args.run_name,
-               group=parse_args.group_name,
-               #    mode="disabled",
-               config={
-                   "num_rounds": parse_args.num_rounds,
-                   "num_clients": parse_args.num_clients,
-                   "clients_per_round": parse_args.clients_per_round,
-                   "batch_size": parse_args.batch_size,
-                   "num_epochs": parse_args.num_epochs,
-                   "path_data_idx": parse_args.path_data_idx,
-                   "learning_rate": parse_args.learning_rate,
-                   "algorithm": parse_args.algorithm,
-                   "mu": parse_args.mu,
-                   "seed": parse_args.seed,
-                   "drop_percent": parse_args.drop_percent,
-                   "num_core": parse_args.num_core,
-                   "log_dir": parse_args.log_dir,
-                   "train_mode": parse_args.train_mode,
-                   "dataset_name": parse_args.dataset_name,
-                   "beta": parse_args.beta,
-                   "hidden_dim": parse_args.hidden_dim,
-                   "init_w": parse_args.init_w,
-                   "value_lr": parse_args.value_lr,
-                   "policy_lr": parse_args.policy_lr,
-                   "max_steps": parse_args.max_steps,
-                   "max_frames": parse_args.max_frames,
-                   "batch_size_ddpg": parse_args.batch_size_ddpg,
-                   "gamma": parse_args.gamma,
-                   "soft_tau": parse_args.soft_tau,
-               })
-    args = wandb.config
-    wandb.define_metric("test_acc", summary="max")
+    # wandb.init(project="Spatial_PM2.5",
+    #            entity="aiotlab",
+    #            name=parse_args.run_name,
+    #            group=parse_args.group_name,
+    #            #    mode="disabled",
+    #            config={
+    #                "num_rounds": parse_args.num_rounds,
+    #                "num_clients": parse_args.num_clients,
+    #                "clients_per_round": parse_args.clients_per_round,
+    #                "batch_size": parse_args.batch_size,
+    #                "num_epochs": parse_args.num_epochs,
+    #                "path_data_idx": parse_args.path_data_idx,
+    #                "learning_rate": parse_args.learning_rate,
+    #                "algorithm": parse_args.algorithm,
+    #                "mu": parse_args.mu,
+    #                "seed": parse_args.seed,
+    #                "drop_percent": parse_args.drop_percent,
+    #                "num_core": parse_args.num_core,
+    #                "log_dir": parse_args.log_dir,
+    #                "train_mode": parse_args.train_mode,
+    #                "dataset_name": parse_args.dataset_name,
+    #                "beta": parse_args.beta,
+    #                "hidden_dim": parse_args.hidden_dim,
+    #                "init_w": parse_args.init_w,
+    #                "value_lr": parse_args.value_lr,
+    #                "policy_lr": parse_args.policy_lr,
+    #                "max_steps": parse_args.max_steps,
+    #                "max_frames": parse_args.max_frames,
+    #                "batch_size_ddpg": parse_args.batch_size_ddpg,
+    #                "gamma": parse_args.gamma,
+    #                "soft_tau": parse_args.soft_tau,
+    #            })
+    # args = wandb.config
+    args = parse_args
+    # wandb.define_metric("test_acc", summary="max")
     args = parse_args
     print(">>> START RUNNING: {} - Train mode: {} - Dataset: {}".format(parse_args.run_name,
           args.train_mode, args.dataset_name))

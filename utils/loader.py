@@ -208,3 +208,36 @@ class CustomDataset(Dataset):
     def __getitem__(self, item):
         image, label = self.dataset[self.idxs[item]]
         return image, label
+
+
+import json
+import os
+import cv2
+from PIL import Image
+class PillDataset(Dataset):
+    def __init__(self,user_idx,img_folder_path="",idx_dict=None,label_dict=None,map_label_dict=None):
+        super().__init__()
+        self.user_idx = user_idx
+        self.idx = idx_dict[str(user_idx)]
+        self.img_folder_path = img_folder_path
+        self.label_dict = label_dict
+        self.map_label_dict = map_label_dict
+        self.transform = transforms.Compose([transforms.Resize((224,224)),transforms.ToTensor()])
+
+        
+    def __len__(self):
+        # return len(self.idx)
+        return 1
+
+    def __getitem__(self, item):
+        img_name = self.idx[item]
+        img_path = os.path.join(self.img_folder_path,img_name)
+        img = Image.open(img_path).convert("RGB")
+        img = self.transform(img)
+        pill_name = self.label_dict[img_name]
+        label = self.map_label_dict[pill_name]
+        # print(img_name,pill_name,label)
+        return img,label 
+
+if __name__ == "__main__":
+    dataset = PillDataset(user_idx=0,img_folder_path="pill_dataset/pill_cropped",)

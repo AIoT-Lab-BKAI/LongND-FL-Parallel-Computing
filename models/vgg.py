@@ -72,7 +72,7 @@ def make_layers(cfg,output_dim, batch_norm=False):
 
 def make_layers_mnist(cfg,output_dim, batch_norm=False):
     layers = []
-    in_channels = 1
+    in_channels = 3
     for v in cfg:
         if v == "M":
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
@@ -85,7 +85,7 @@ def make_layers_mnist(cfg,output_dim, batch_norm=False):
             in_channels = v
     layers += [nn.Flatten(1,-1)]
     layers += [nn.Dropout(),
-            nn.Linear(512, 512),
+            nn.Linear(25088, 512),
             nn.ReLU(True),
             nn.Dropout(),
             nn.Linear(512, 512),
@@ -140,7 +140,7 @@ cfg = {
         "M",
     ],
 }
-def vgg11_mnist(output_dim):
+def vgg11_pill(output_dim):
     """VGG 11-layer model (configuration "A")"""
     return make_layers_mnist(cfg["A"],output_dim)
 
