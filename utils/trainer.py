@@ -32,6 +32,7 @@ def test_local(args):
 
 
 def train(args):
+    
     device = torch.device(
         "cuda") if torch.cuda.is_available() else torch.device("cpu")
     (id, pid, model, client, local_model_weight,
@@ -52,6 +53,7 @@ def train(args):
         ep_loss = 0
         train_loss = 0.0
         for X, y in train_dataloader:
+            print(len(train_dataloader))
             X = X.to(device)
             y = y.to(device)
             optimizer.zero_grad()

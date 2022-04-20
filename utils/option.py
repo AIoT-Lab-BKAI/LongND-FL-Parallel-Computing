@@ -32,5 +32,6 @@ def option():
     parser.add_argument("--soft_tau", type=float, default = 2e-2)
     parser.add_argument("--num_workers", type=int, default = 1)
     parser.add_argument("--num_core", type=int, default=6)
+    parser.add_argument("--pill_dataset_path",type=str, default="pill_dataset")
     args = parser.parse_args()
     return args

@@ -9,3 +9,4 @@ data/
 flatten.py
 .vscode
 pill_dataset/
+abi_process.txt

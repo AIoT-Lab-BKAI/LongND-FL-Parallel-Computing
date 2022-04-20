@@ -13,6 +13,7 @@ from numpy.lib.npyio import save
 from torchvision import transforms, datasets
 from modules.Client import Client, Pill_Client
 from tqdm import tqdm
+from utils.loader import PillDataset
 from utils.utils import (
     aggregate_fedavg,
     aggregate_fedprox,
@@ -102,7 +103,7 @@ def init_model(dataset_name):
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
     elif dataset_name == "pill_dataset":
-        model =  vgg11_pill(85)
+        model =  vgg11_pill(93)
     else:
         warnings.warn("Model not supported")
     return model
@@ -128,16 +129,22 @@ def main(args):
     n_params = count_params(client_model)
     prev_reward = None
     if args.dataset_name == "pill_dataset":
-        with open("pill_dataset/user_group_img.json",'r') as f:
+        with open(args.pill_dataset_path +"/client_dataset/user_group_img.json",'r') as f:
             user_group_img = json.load(f)
-        with open("pill_dataset/img_label_dict.json",'r') as f:
+        with open(args.pill_dataset_path +"/client_dataset/img_label_dict.json",'r') as f:
             img_label_dict = json.load(f)
-        with open("pill_dataset/label_hash.json",'r') as f:
+        with open(args.pill_dataset_path +"/client_dataset/label_hash.json",'r') as f:
             label_hash = json.load(f)
+
+        with open(args.pill_dataset_path +"/server_dataset/user_group_img.json",'r') as f:
+            server_user_group_img = json.load(f)
+        with open(args.pill_dataset_path +"/server_dataset/img_label_dict.json",'r') as f:
+            server_img_label_dict = json.load(f)  
+        test_dataset = PillDataset(0,args.pill_dataset_path +"/server_dataset/pill_cropped",server_user_group_img,server_img_label_dict,label_hash)
         list_client = [
             Pill_Client(
                 idx=idx,
-                img_folder_path="pill_dataset/pill_cropped",
+                img_folder_path=args.pill_dataset_path +"/client_dataset/pill_cropped",
                 list_idx_sample=user_group_img,
                 label_dict=img_label_dict,
                 map_label_dict=label_hash,
@@ -298,6 +305,7 @@ def main(args):
         client_model.load_state_dict(
             unflatten_model(flat_tensor, client_model))
         # >>>> Test model
+        print(">>>>Test model")
         acc, test_loss = test(
             client_model, DataLoader(test_dataset, 32, False))
 
@@ -353,39 +361,39 @@ if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
 
-    # wandb.init(project="Spatial_PM2.5",
-    #            entity="aiotlab",
-    #            name=parse_args.run_name,
-    #            group=parse_args.group_name,
-    #            #    mode="disabled",
-    #            config={
-    #                "num_rounds": parse_args.num_rounds,
-    #                "num_clients": parse_args.num_clients,
-    #                "clients_per_round": parse_args.clients_per_round,
-    #                "batch_size": parse_args.batch_size,
-    #                "num_epochs": parse_args.num_epochs,
-    #                "path_data_idx": parse_args.path_data_idx,
-    #                "learning_rate": parse_args.learning_rate,
-    #                "algorithm": parse_args.algorithm,
-    #                "mu": parse_args.mu,
-    #                "seed": parse_args.seed,
-    #                "drop_percent": parse_args.drop_percent,
-    #                "num_core": parse_args.num_core,
-    #                "log_dir": parse_args.log_dir,
-    #                "train_mode": parse_args.train_mode,
-    #                "dataset_name": parse_args.dataset_name,
-    #                "beta": parse_args.beta,
-    #                "hidden_dim": parse_args.hidden_dim,
-    #                "init_w": parse_args.init_w,
-    #                "value_lr": parse_args.value_lr,
-    #                "policy_lr": parse_args.policy_lr,
-    #                "max_steps": parse_args.max_steps,
-    #                "max_frames": parse_args.max_frames,
-    #                "batch_size_ddpg": parse_args.batch_size_ddpg,
-    #                "gamma": parse_args.gamma,
-    #                "soft_tau": parse_args.soft_tau,
-    #            })
-    # args = wandb.config
+    wandb.init(project="Spatial_PM2.5",
+               entity="aiotlab",
+               name=parse_args.run_name,
+               group=parse_args.group_name,
+               #    mode="disabled",
+               config={
+                   "num_rounds": parse_args.num_rounds,
+                   "num_clients": parse_args.num_clients,
+                   "clients_per_round": parse_args.clients_per_round,
+                   "batch_size": parse_args.batch_size,
+                   "num_epochs": parse_args.num_epochs,
+                   "path_data_idx": parse_args.path_data_idx,
+                   "learning_rate": parse_args.learning_rate,
+                   "algorithm": parse_args.algorithm,
+                   "mu": parse_args.mu,
+                   "seed": parse_args.seed,
+                   "drop_percent": parse_args.drop_percent,
+                   "num_core": parse_args.num_core,
+                   "log_dir": parse_args.log_dir,
+                   "train_mode": parse_args.train_mode,
+                   "dataset_name": parse_args.dataset_name,
+                   "beta": parse_args.beta,
+                   "hidden_dim": parse_args.hidden_dim,
+                   "init_w": parse_args.init_w,
+                   "value_lr": parse_args.value_lr,
+                   "policy_lr": parse_args.policy_lr,
+                   "max_steps": parse_args.max_steps,
+                   "max_frames": parse_args.max_frames,
+                   "batch_size_ddpg": parse_args.batch_size_ddpg,
+                   "gamma": parse_args.gamma,
+                   "soft_tau": parse_args.soft_tau,
+               })
+    args = wandb.config
     args = parse_args
     # wandb.define_metric("test_acc", summary="max")
     args = parse_args
