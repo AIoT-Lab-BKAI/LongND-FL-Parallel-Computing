@@ -226,8 +226,8 @@ class PillDataset(Dataset):
 
         
     def __len__(self):
-        # return len(self.idx)
-        return 20
+        return len(self.idx)
+        # return 20
 
     def __getitem__(self, item):
         img_name = self.idx[item]
