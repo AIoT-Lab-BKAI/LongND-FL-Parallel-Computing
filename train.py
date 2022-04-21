@@ -129,23 +129,23 @@ def main(args):
     n_params = count_params(client_model)
     prev_reward = None
     if args.dataset_name == "pill_dataset":
-        with open(args.pill_dataset_path +"/client_dataset/user_group_img.json",'r') as f:
+        with open(args.pill_dataset_path +"pill_dataset/client_dataset/user_group_img.json",'r') as f:
             user_group_img = json.load(f)
-        with open(args.pill_dataset_path +"/client_dataset/img_label_dict.json",'r') as f:
+        with open(args.pill_dataset_path +"pill_dataset/client_dataset/img_label_dict.json",'r') as f:
             img_label_dict = json.load(f)
-        with open(args.pill_dataset_path +"/client_dataset/label_hash.json",'r') as f:
+        with open(args.pill_dataset_path +"pill_dataset/client_dataset/label_hash.json",'r') as f:
             label_hash = json.load(f)
 
-        with open(args.pill_dataset_path +"/server_dataset/user_group_img.json",'r') as f:
+        with open(args.pill_dataset_path +"pill_dataset/server_dataset/user_group_img.json",'r') as f:
             server_user_group_img = json.load(f)
-        with open(args.pill_dataset_path +"/server_dataset/img_label_dict.json",'r') as f:
+        with open(args.pill_dataset_path +"pill_dataset/server_dataset/img_label_dict.json",'r') as f:
             server_img_label_dict = json.load(f)  
-        test_dataset = PillDataset(0,args.pill_dataset_path +"/server_dataset/pill_cropped",server_user_group_img,server_img_label_dict,label_hash)
+        test_dataset = PillDataset(0,args.pill_dataset_path +"pill_dataset/server_dataset/pill_cropped",server_user_group_img,server_img_label_dict,label_hash)
         print(len(test_dataset))
         list_client = [
             Pill_Client(
                 idx=idx,
-                img_folder_path=args.pill_dataset_path +"/client_dataset/pill_cropped",
+                img_folder_path=args.pill_dataset_path +"pill_dataset/client_dataset/pill_cropped",
                 list_idx_sample=user_group_img,
                 label_dict=img_label_dict,
                 map_label_dict=label_hash,
@@ -308,7 +308,7 @@ def main(args):
         # >>>> Test model
         print(">>>>Test model")
         acc, test_loss = test(
-            client_model, DataLoader(test_dataset, 32, False))
+            client_model, DataLoader(test_dataset, 1, False))
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
@@ -361,8 +361,8 @@ def main(args):
 if __name__ == "__main__":
     torch.multiprocessing.set_start_method('spawn')
     parse_args = option()
-
-    wandb.init(project="Spatial_PM2.5",
+    wandb.init(project="federated-learning-dqn",
+    # wandb.init(project="Spatial_PM2.5",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
