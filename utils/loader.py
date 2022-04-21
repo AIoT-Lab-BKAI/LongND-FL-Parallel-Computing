@@ -222,10 +222,12 @@ class PillDataset(Dataset):
         self.img_folder_path = img_folder_path
         self.label_dict = label_dict
         self.map_label_dict = map_label_dict
+        print(len(self.idx))
         self.transform = transforms.Compose([transforms.Resize((224,224)),transforms.ToTensor()])
 
         
     def __len__(self):
+        
         return len(self.idx)
         # return 20
 

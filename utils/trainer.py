@@ -53,7 +53,7 @@ def train(args):
         ep_loss = 0
         train_loss = 0.0
         for X, y in train_dataloader:
-            print(len(train_dataloader))
+            # print(len(train_dataloader))
             X = X.to(device)
             y = y.to(device)
             optimizer.zero_grad()

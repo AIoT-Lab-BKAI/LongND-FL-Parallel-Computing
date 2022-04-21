@@ -103,7 +103,7 @@ def init_model(dataset_name):
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
     elif dataset_name == "pill_dataset":
-        model =  vgg11_pill(93)
+        model =  vgg11_pill(68)
     else:
         warnings.warn("Model not supported")
     return model
@@ -141,6 +141,7 @@ def main(args):
         with open(args.pill_dataset_path +"/server_dataset/img_label_dict.json",'r') as f:
             server_img_label_dict = json.load(f)  
         test_dataset = PillDataset(0,args.pill_dataset_path +"/server_dataset/pill_cropped",server_user_group_img,server_img_label_dict,label_hash)
+        print(len(test_dataset))
         list_client = [
             Pill_Client(
                 idx=idx,
@@ -255,7 +256,7 @@ def main(args):
         # train_time = [training_time[i, 0] for i in range(num_cli)]
         train_time = training_time.numpy()
         max_training_time = np.max(train_time)
-        avg_training_time = np.mean(train_time)
+        avg_training_time = np.sum(train_time)/len(train_clients)
         max_training_time_list.append(max_training_time)
         avg_training_time_list.append(avg_training_time)
         start_l, final_l = start_loss.copy(), final_loss.copy()

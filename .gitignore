@@ -7,6 +7,9 @@ utils/__pycache__/
 modules/__pycache__/
 data/
 flatten.py
-.vscode
+.vscode/
 pill_dataset/
 abi_process.txt
+pill_dataset.zip
+.vscode-upload.json
+data_download.py
