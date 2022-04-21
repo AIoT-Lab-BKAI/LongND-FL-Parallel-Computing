@@ -12,6 +12,7 @@ import torch.nn.functional as F
 from torch.distributions import Normal
 from ddpg_agent.policy import NormalizedActions
 import wandb
+import time
 class DDPG_Agent(nn.Module):
     def __init__(
         self,
@@ -82,7 +83,7 @@ class DDPG_Agent(nn.Module):
         self.step = 0
         self.max_steps = max_steps
         self.batch_size = batch_size
-        self.log_dir = log_dir
+        # self.log_dir = log_dir
 
         for target_param, param in zip(self.target_value_net.parameters(), self.value_net.parameters()):
             target_param.data.copy_(param.data)
@@ -138,6 +139,8 @@ class DDPG_Agent(nn.Module):
 
 
     def get_action(self, start_loss, final_loss, std_local_losses, local_n_samples, local_num_epochs, done, clients_id=None, prev_reward= None):
+        torch.cuda.synchronize()
+        community_time_start = time.time()
         # reach to maximum step for each episode or get the done for this iteration
         state = get_state(start_loss = start_loss, final_loss = final_loss, std_local_losses=std_local_losses,epochs=local_num_epochs, num_samples=local_n_samples, clients_id=clients_id)
         # prev_reward = get_reward(local_losses, beta=self.beta)
@@ -158,7 +161,7 @@ class DDPG_Agent(nn.Module):
 
         if self.frame_idx >= self.max_frames:
             # maybe stop training?
-            self.logging_per_round()
+            # self.logging_per_round()
             state = self.reset_state()
 
         # state = torch.DoubleTensor(state).unsqueeze(0).cuda()  # current state
@@ -169,12 +172,13 @@ class DDPG_Agent(nn.Module):
         action = self.policy_net.get_action(state)
         action = self.ou_noise.get_action(action, self.step)
         self.memory.act(state, action)
-
+        torch.cuda.synchronize()
+        community_time = time.time() - community_time_start
         # if self.step < self.max_steps:
         if self.memory.get_last_record() is None:
             self.step += 1
             self.frame_idx += 1
-            return action
+            return action,community_time
 
         s, a, r, s_next = self.memory.get_last_record()
         self.replay_buffer.push(s, a, r, s_next, done)
@@ -186,7 +190,7 @@ class DDPG_Agent(nn.Module):
         self.frame_idx += 1
         self.step += 1
 
-        return action
+        return action,community_time
 
     def reset_state(self):
         self.ou_noise.reset()
