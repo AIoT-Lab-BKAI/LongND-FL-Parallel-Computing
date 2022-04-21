@@ -8,3 +8,4 @@ modules/__pycache__/
 data/
 flatten.py
 .vscode
+pill_dataset.zip
