@@ -6,7 +6,7 @@ from os import stat
 from re import M
 from torchvision import transforms, datasets
 from tqdm import tqdm
-from utils.loader import CustomDataset
+from utils.loader import CustomDataset, PillDataset
 from utils.utils import (
     load_dataset_idx,
 )
@@ -18,7 +18,7 @@ from utils.trainer import test
 from torch.utils.data import DataLoader
 from utils.option import option
 from models.models import MNIST_CNN, CNNCifar
-from models.vgg import vgg11
+from models.vgg import vgg11, vgg11_pill
 from ddpg_agent.ddpg import *
 import wandb
 import warnings
@@ -71,9 +71,11 @@ def init_model(dataset_name):
         model = MNIST_CNN()
     elif dataset_name == "cifar100":
         model = vgg11(100)
-        # print(model)
+        print(model)
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
+    elif dataset_name == "pill_dataset":
+        model =  vgg11_pill(68)
     else:
         warnings.warn("Model not supported")
     return model
@@ -93,7 +95,7 @@ def train(model, dataloader, optimizer, criterion, device):
         train_loss += loss.item()
     return train_loss / len(dataloader)
 
-
+import json
 def main(args):
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -102,16 +104,33 @@ def main(args):
     else:
         torch.manual_seed(args.seed)
 
-    train_dataset, test_dataset, list_idx_sample = load_dataset(
-        args.dataset_name, args.path_data_idx)
+    if args.dataset_name == "pill_dataset":
+        print(args.pill_dataset_path)
+        with open(args.pill_dataset_path +"pill_dataset/client_dataset/all_img.json",'r') as f:
+            user_group_img = json.load(f)
+        with open(args.pill_dataset_path +"pill_dataset/client_dataset/img_label_dict.json",'r') as f:
+            img_label_dict = json.load(f)
+        with open(args.pill_dataset_path +"pill_dataset/client_dataset/label_hash.json",'r') as f:
+            label_hash = json.load(f)
+        with open(args.pill_dataset_path +"pill_dataset/server_dataset/user_group_img.json",'r') as f:
+            server_user_group_img = json.load(f)
+        with open(args.pill_dataset_path +"pill_dataset/server_dataset/img_label_dict.json",'r') as f:
+            server_img_label_dict = json.load(f)  
+        train_dataset = PillDataset(0,args.pill_dataset_path +"pill_dataset/client_dataset/pill_cropped",user_group_img,img_label_dict,label_hash)
+        test_dataset = PillDataset(0,args.pill_dataset_path +"pill_dataset/server_dataset/pill_cropped",server_user_group_img,server_img_label_dict,label_hash)
+    else: 
+        train_dataset, test_dataset, list_idx_sample = load_dataset(
+            args.dataset_name, args.path_data_idx)
+        data_idx = list_idx_sample[0]
+        train_dataset = CustomDataset(train_dataset, data_idx)
+    
     model = init_model(args.dataset_name)
-    data_idx = list_idx_sample[0]
     model.to(device)
-    train_dataset = CustomDataset(train_dataset, data_idx)
     train_dataloader = DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
     test_dataloader = DataLoader(
         test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
+    
     optimizer = torch.optim.SGD(model.parameters(), lr=args.learning_rate)
     cel_loss = nn.CrossEntropyLoss()
     # breakpoint()
@@ -126,7 +145,7 @@ def main(args):
 if __name__ == '__main__':
     parse_args = option()
     args = parse_args
-    wandb.init(project=parse_args.project_name,
+    wandb.init(project="Spatial-PM2.5",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
@@ -142,7 +161,7 @@ if __name__ == '__main__':
                    "dataset_name": parse_args.dataset_name,
                    "num_workers": parse_args.num_workers,
                })
-    args = wandb.config
+    # args = wandb.config
     wandb.define_metric("test_acc", summary="max")
     print(">>> START RUNNING: {}  - Dataset: {}".format(parse_args.run_name, args.dataset_name))
     main(args)

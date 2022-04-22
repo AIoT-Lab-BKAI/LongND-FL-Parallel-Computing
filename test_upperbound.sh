@@ -1,0 +1,1 @@
+python3 -u train_upperbound.py --train_mode="benchmark" --dataset_name="pill_dataset" --num_rounds=2 --learning_rate=0.01 --batch_size=10 --path_data_idx="dataset_idx/cifar/100client/equal/CIFAR-noniid-fedavg_equal_100_all_data.json" --run_name="Upperbound-Equal-100-01" --group_name="CIFAR-100-10"

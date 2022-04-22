@@ -308,7 +308,7 @@ def main(args):
         # >>>> Test model
         print(">>>>Test model")
         acc, test_loss = test(
-            client_model, DataLoader(test_dataset, 1, False))
+            client_model, DataLoader(test_dataset, 32, False))
 
         print("ROUND: ", round, " TEST ACC: ", acc)
 
