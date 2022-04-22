@@ -285,7 +285,7 @@ def main(args):
         train_time, delay, max_time, min_time = get_train_time(
             local_n_sample, list_abiprocess)
         dictionaryLosses = getDictionaryLosses(start_l, final_l, num_cli)
-        if args.train_mode in ["benchmark", "fedadp"]:
+        if args.train_mode in ["benchmark", "fedadp","fedprox"]:
             logging = {
                 "round": round + 1,
                 "clients_per_round": args.clients_per_round,
