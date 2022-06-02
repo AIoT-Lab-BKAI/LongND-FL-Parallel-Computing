@@ -106,7 +106,7 @@ def main(args):
 
     if args.dataset_name == "pill_dataset":
         print(args.pill_dataset_path)
-        with open(args.pill_datasetidx +"/client_dataset/user_group_img.json",'r') as f:
+        with open(args.pill_datasetidx +"/client_dataset/all_data.json",'r') as f:
             user_group_img = json.load(f)
         with open(args.pill_datasetidx +"/client_dataset/img_label_dict.json",'r') as f:
             img_label_dict = json.load(f)
