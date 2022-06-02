@@ -88,6 +88,7 @@ def test(model, test_dataloader):
     cel = nn.CrossEntropyLoss()
     loss = 0.0
     for X, y in test_dataloader:
+        # breakpoint()
         X = X.to(device)
         y = y.to(device)
         output = model(X)

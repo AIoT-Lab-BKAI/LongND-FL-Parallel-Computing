@@ -33,5 +33,6 @@ def option():
     parser.add_argument("--num_workers", type=int, default = 1)
     parser.add_argument("--num_core", type=int, default=6)
     parser.add_argument("--pill_dataset_path",type=str, default="")
+    parser.add_argument("--pill_datasetidx",type=str, default="pill_data1")
     args = parser.parse_args()
     return args

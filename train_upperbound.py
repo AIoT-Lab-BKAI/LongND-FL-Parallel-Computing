@@ -75,7 +75,7 @@ def init_model(dataset_name):
     elif dataset_name == "fashionmnist":
         model = MNIST_CNN()
     elif dataset_name == "pill_dataset":
-        model =  vgg11_pill(68)
+        model =  vgg11_pill(70)
     else:
         warnings.warn("Model not supported")
     return model
@@ -106,15 +106,15 @@ def main(args):
 
     if args.dataset_name == "pill_dataset":
         print(args.pill_dataset_path)
-        with open(args.pill_dataset_path +"pill_dataset/client_dataset/all_img.json",'r') as f:
+        with open(args.pill_datasetidx +"/client_dataset/user_group_img.json",'r') as f:
             user_group_img = json.load(f)
-        with open(args.pill_dataset_path +"pill_dataset/client_dataset/img_label_dict.json",'r') as f:
+        with open(args.pill_datasetidx +"/client_dataset/img_label_dict.json",'r') as f:
             img_label_dict = json.load(f)
-        with open(args.pill_dataset_path +"pill_dataset/client_dataset/label_hash.json",'r') as f:
+        with open(args.pill_datasetidx +"/client_dataset/label_hash.json",'r') as f:
             label_hash = json.load(f)
-        with open(args.pill_dataset_path +"pill_dataset/server_dataset/user_group_img.json",'r') as f:
+        with open(args.pill_datasetidx +"/server_dataset/user_group_img.json",'r') as f:
             server_user_group_img = json.load(f)
-        with open(args.pill_dataset_path +"pill_dataset/server_dataset/img_label_dict.json",'r') as f:
+        with open(args.pill_datasetidx +"/server_dataset/img_label_dict.json",'r') as f:
             server_img_label_dict = json.load(f)  
         train_dataset = PillDataset(0,args.pill_dataset_path +"pill_dataset/client_dataset/pill_cropped",user_group_img,img_label_dict,label_hash)
         test_dataset = PillDataset(0,args.pill_dataset_path +"pill_dataset/server_dataset/pill_cropped",server_user_group_img,server_img_label_dict,label_hash)
@@ -145,7 +145,7 @@ def main(args):
 if __name__ == '__main__':
     parse_args = option()
     args = parse_args
-    wandb.init(project="Spatial-PM2.5",
+    wandb.init(project="federated-learning-dqn",
                entity="aiotlab",
                name=parse_args.run_name,
                group=parse_args.group_name,
