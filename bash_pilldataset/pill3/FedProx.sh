@@ -1,0 +1,1 @@
+python train.py --train_mode="benchmark" --dataset_name="pill_dataset" --num_clients=10 --clients_per_round=10 --num_rounds=1000 --learning_rate=0.01 --batch_size=5 --num_epochs=5 --run_name="FedProx-Pill-Dataset" --group_name="Pill-Dataset3-ICPP" --train_mode="benchmark" --algorithm="FedProx" --num_core 1 --pill_dataset_path "pill3/" --pill_datasetidx "syndata3"
